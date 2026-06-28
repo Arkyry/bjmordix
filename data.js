@@ -97,7 +97,7 @@ const PRODUCTS = [
   /* ════════ MOULINETS ════════ */
   {
     id: 'reel-metal-sea', category: 'reels', cost: usd(49.33), usd: 49.33, rating: 4.8, reviews: null, badge: 'best',
-    photos: ['1620609320769.webp','1620609320765.webp','784699245819.webp','a74315a3-639b-4936-9d30-e2313b5d36e5.webp'],
+    photos: ['1620609320769.webp'],
     name: { fr: 'Moulinet de mer tout métal', en: 'All-Metal Sea Fishing Reel', es: 'Carrete de mar todo metal' },
     desc: { fr: 'Corps métal, frein puissant, anti-corrosion.', en: 'Metal body, strong drag, anti-corrosion.', es: 'Cuerpo metálico, freno potente, anticorrosión.' },
     long: {
