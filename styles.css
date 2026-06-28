@@ -333,3 +333,7 @@ h1,h2,h3{line-height:1.15;letter-spacing:-.02em}
 .pd-thumbs .t img{max-height:52px;max-width:100%;object-fit:contain}
 .cart-item .ci-thumb img{max-height:62px;max-width:100%;object-fit:contain}
 .hero-thumb img{height:80px;width:100%;object-fit:contain;margin:0 auto 6px}
+
+/* ---------- Catalogue vide ---------- */
+.empty-catalog{grid-column:1/-1;text-align:center;padding:54px 24px;background:#fff;border:1.5px dashed var(--line);
+  border-radius:var(--radius);color:var(--muted);font-size:17px;font-weight:600}

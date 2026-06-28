@@ -76,7 +76,8 @@ function renderHome(){
 
   const featured = PRODUCTS.filter(p => p.badge === 'best').concat(PRODUCTS.filter(p=>p.badge==='new')).slice(0,4);
   const featuredHtml = featured.map(productCard).join('');
-  const allHtml = PRODUCTS.map(productCard).join('');
+  const emptyMsg = `<div class="empty-catalog">${t('catalog.empty')}</div>`;
+  const allHtml = PRODUCTS.length ? PRODUCTS.map(productCard).join('') : emptyMsg;
 
   const testimonials = TESTIMONIALS.map(r => `
     <div class="review-card reveal">
@@ -103,7 +104,7 @@ function renderHome(){
           <div><b>30j</b><span>${t('trust.return.sub')}</span></div>
         </div>
       </div>
-      <div class="hero-art">
+      ${PRODUCTS.filter(p=>p.badge).length ? `<div class="hero-art">
         <div class="hero-card">
           <div class="pgrid">
             ${PRODUCTS.filter(p=>p.badge).slice(0,4).map(p=>`
@@ -113,7 +114,7 @@ function renderHome(){
               </div>`).join('')}
           </div>
         </div>
-      </div>
+      </div>` : ''}
     </div>
     <div class="wave"><svg viewBox="0 0 1440 70" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,40 C240,80 480,0 720,30 C960,60 1200,20 1440,45 L1440,70 L0,70 Z" fill="#f6f9fb"/></svg></div>
   </section>
@@ -141,13 +142,13 @@ function renderHome(){
     </div>
   </section>
 
-  <!-- BEST SELLERS -->
+  ${featured.length ? `<!-- BEST SELLERS -->
   <section class="section" id="featured" style="padding-top:0">
     <div class="container">
       <div class="section-head"><span class="eyebrow">★ Top</span><h2>${t('featured.title')}</h2><p>${t('featured.sub')}</p></div>
       <div class="prod-grid">${featuredHtml}</div>
     </div>
-  </section>
+  </section>` : ''}
 
   <!-- POURQUOI -->
   <section class="section" style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
@@ -207,7 +208,7 @@ function renderCategory(catId){
       <span class="eyebrow">${t('nav.shop')}</span>
       <h2>${t('cat.'+catId)}</h2><p>${t('cat.'+catId+'.sub')}</p>
     </div>
-    <div class="prod-grid">${list.map(productCard).join('')}</div>
+    <div class="prod-grid">${list.length ? list.map(productCard).join('') : `<div class="empty-catalog">${t('catalog.empty')}</div>`}</div>
   </div>
   <div style="height:60px"></div>`;
   observeReveals();
