@@ -337,3 +337,13 @@ h1,h2,h3{line-height:1.15;letter-spacing:-.02em}
 /* ---------- Catalogue vide ---------- */
 .empty-catalog{grid-column:1/-1;text-align:center;padding:54px 24px;background:#fff;border:1.5px dashed var(--line);
   border-radius:var(--radius);color:var(--muted);font-size:17px;font-weight:600}
+
+/* ---------- Variantes / options produit ---------- */
+.pd-variants{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 20px}
+.pd-variants-label{font-size:14px;font-weight:700;color:var(--navy)}
+.variant-btn{padding:9px 18px;border:1.5px solid var(--line);border-radius:10px;font-weight:700;font-size:14px;
+  color:var(--navy);background:#fff;cursor:pointer;transition:border-color .15s,background .15s,color .15s}
+.variant-btn:hover{border-color:var(--aqua)}
+.variant-btn.active{border-color:var(--teal);background:var(--aqua-soft);color:var(--teal)}
+.price-from{font-size:13px;color:var(--muted);font-weight:700;margin-right:5px}
+.ci-variant{font-size:11px;font-weight:800;color:var(--teal);background:var(--aqua-soft);padding:1px 7px;border-radius:6px;margin-left:4px}

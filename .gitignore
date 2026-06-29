@@ -9,3 +9,10 @@ desktop.ini
 
 # Divers
 *.log
+
+# Captures de référence CJ (gardées en local pour les corrections, pas publiées)
+photos/*-prix.jpg
+photos/*-description.jpg
+photos/*-prix.png
+photos/*-description.png
+photos/probleme*

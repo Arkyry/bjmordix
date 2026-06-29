@@ -37,7 +37,7 @@ function starsHtml(rating, reviews){
 
 /* ---------------- Cartes produit ---------------- */
 function productCard(p){
-  const price = salePrice(p.cost);
+  const price = p.variants ? minSalePrice(p) : salePrice(p);
   const badge = p.badge ? `<span class="badge ${p.badge}">${t('badge.'+p.badge)}</span>` : '';
   return `
   <article class="card reveal" data-id="${p.id}">
@@ -52,7 +52,7 @@ function productCard(p){
       <span class="cat-tag">${t('cat.'+p.category)}</span>
       <h3 class="name" data-nav="product:${p.id}">${escapeHtml(tl(p.name))}</h3>
       ${starsHtml(p.rating, p.reviews)}
-      <div class="price-row"><span class="price">${fmt(price)}</span></div>
+      <div class="price-row">${p.variants ? `<span class="price-from">${t('product.from')}</span>` : ''}<span class="price">${fmt(price)}</span></div>
       <div class="actions">
         <button class="add" data-add="${p.id}">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
@@ -110,7 +110,7 @@ function renderHome(){
             ${PRODUCTS.filter(p=>p.badge).slice(0,4).map(p=>`
               <div class="hero-thumb" data-nav="product:${p.id}" style="cursor:pointer">
                 ${p.image}<div class="n">${escapeHtml(tl(p.name).split(' ').slice(0,2).join(' '))}</div>
-                <div class="p">${fmt(salePrice(p.cost))}</div>
+                <div class="p">${fmt(salePrice(p))}</div>
               </div>`).join('')}
           </div>
         </div>
@@ -218,7 +218,7 @@ function renderCategory(catId){
 function renderProduct(id){
   const p = product(id);
   if(!p){ location.hash = '#/'; return; }
-  const price = salePrice(p.cost);
+  const price = salePrice(p);
   const related = PRODUCTS.filter(x => x.category === p.category && x.id !== p.id).slice(0,4);
   const longText = escapeHtml(tl(p.long));
 
@@ -237,7 +237,8 @@ function renderProduct(id){
           ${starsHtml(p.rating, p.reviews)}
           <span class="instock"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> ${t('product.instock')}</span>
         </div>
-        <div class="pd-price"><span class="now">${fmt(price)}</span></div>
+        <div class="pd-price"><span class="now" id="pd-price-now">${fmt(price)}</span></div>
+        ${p.variants ? `<div class="pd-variants"><span class="pd-variants-label">${t('product.option')} :</span>${p.variants.map((v,i)=>`<button class="variant-btn ${i===0?'active':''}" data-variant="${escapeHtml(v.label)}">${escapeHtml(v.label)}</button>`).join('')}</div>` : ''}
         <p class="pd-desc">${escapeHtml(tl(p.desc))}</p>
         <div class="pd-buy">
           <div class="qty" id="pd-qty">
@@ -269,8 +270,16 @@ function renderProduct(id){
     const b = e.target.closest('[data-q]'); if(!b) return;
     qty = Math.max(1, qty + parseInt(b.dataset.q,10)); qtyVal.textContent = qty;
   });
-  document.getElementById('pd-add').addEventListener('click', () => { addToCart(p.id, qty); });
-  document.getElementById('pd-buy').addEventListener('click', () => { addToCart(p.id, qty, true); });
+  let selectedVariant = p.variants ? p.variants[0].label : null;
+  document.querySelectorAll('.variant-btn').forEach(btn => btn.addEventListener('click', () => {
+    document.querySelectorAll('.variant-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedVariant = btn.dataset.variant;
+    const now = document.getElementById('pd-price-now');
+    if(now) now.textContent = fmt(salePrice(p, selectedVariant));
+  }));
+  document.getElementById('pd-add').addEventListener('click', () => { addToCart(p.id, qty, true, selectedVariant); });
+  document.getElementById('pd-buy').addEventListener('click', () => { addToCart(p.id, qty, true, selectedVariant); });
 
   // galerie : clic sur une miniature change l'image principale
   document.querySelectorAll('.pd-thumbs .t').forEach(th => th.addEventListener('click', () => {
@@ -333,26 +342,28 @@ function setActiveNav(key){
 }
 
 /* ---------------- Panier ---------------- */
-function addToCart(id, qty=1, openAfter=true){
+function itemKey(c){ return c.id + (c.variant ? '~~' + c.variant : ''); }
+function addToCart(id, qty=1, openAfter=true, variant=null){
+  variant = variant || null;
   const cart = STORE.cart;
-  const item = cart.find(c => c.id === id);
-  if(item) item.qty += qty; else cart.push({ id, qty });
+  const item = cart.find(c => c.id === id && (c.variant||null) === variant);
+  if(item) item.qty += qty; else cart.push({ id, variant, qty });
   STORE.cart = cart;
   updateCartCount();
   toast(t('product.added'), 'ok');
   renderCart();
   if(openAfter) openCart();
 }
-function setQty(id, delta){
+function setQtyByKey(key, delta){
   let cart = STORE.cart;
-  const item = cart.find(c => c.id === id);
+  const item = cart.find(c => itemKey(c) === key);
   if(!item) return;
   item.qty += delta;
-  if(item.qty <= 0){ cart = cart.filter(c => c.id !== id); toast(t('toast.removed')); }
+  if(item.qty <= 0){ cart = cart.filter(c => itemKey(c) !== key); toast(t('toast.removed')); }
   STORE.cart = cart; updateCartCount(); renderCart();
 }
-function removeFromCart(id){ STORE.cart = STORE.cart.filter(c => c.id !== id); updateCartCount(); renderCart(); toast(t('toast.removed')); }
-function cartTotal(){ return STORE.cart.reduce((s,c)=>{ const p=product(c.id); return p ? s + salePrice(p.cost)*c.qty : s; },0); }
+function removeFromCartKey(key){ STORE.cart = STORE.cart.filter(c => itemKey(c) !== key); updateCartCount(); renderCart(); toast(t('toast.removed')); }
+function cartTotal(){ return STORE.cart.reduce((s,c)=>{ const p=product(c.id); return p ? s + salePrice(p, c.variant)*c.qty : s; },0); }
 function cartCount(){ return STORE.cart.reduce((s,c)=>s+c.qty,0); }
 function updateCartCount(){
   const n = cartCount();
@@ -377,10 +388,10 @@ function renderCart(){
     return `<div class="cart-item">
       <div class="ci-thumb">${p.image}</div>
       <div class="ci-info">
-        <div class="ci-name">${escapeHtml(tl(p.name))}</div>
-        <div class="ci-price">${fmt(salePrice(p.cost)*c.qty)}</div>
-        <div class="qty"><button data-dec="${c.id}">−</button><span>${c.qty}</span><button data-inc="${c.id}">+</button></div>
-        <div><button class="ci-remove" data-rm="${c.id}">${t('cart.remove')}</button></div>
+        <div class="ci-name">${escapeHtml(tl(p.name))}${c.variant ? ` <span class="ci-variant">${escapeHtml(c.variant)}</span>` : ''}</div>
+        <div class="ci-price">${fmt(salePrice(p, c.variant)*c.qty)}</div>
+        <div class="qty"><button data-dec="${itemKey(c)}">−</button><span>${c.qty}</span><button data-inc="${itemKey(c)}">+</button></div>
+        <div><button class="ci-remove" data-rm="${itemKey(c)}">${t('cart.remove')}</button></div>
       </div>
     </div>`;
   }).join('');
@@ -388,8 +399,8 @@ function renderCart(){
   foot.classList.remove('hidden');
   foot.innerHTML = `
     <div class="sum-row"><span>${t('cart.subtotal')}</span><span>${fmt(sub)}</span></div>
-    <div class="sum-row"><span>${t('cart.shipping')}</span><span>${sub>=60?t('cart.free'):fmt(4.90)}</span></div>
-    <div class="sum-row total"><span>${t('cart.total')}</span><span>${fmt(sub>=60?sub:sub+4.90)}</span></div>
+    <div class="sum-row"><span>${t('cart.shipping')}</span><span>${t('cart.free')}</span></div>
+    <div class="sum-row total"><span>${t('cart.total')}</span><span>${fmt(sub)}</span></div>
     <button class="btn btn-primary btn-block btn-lg" id="checkout">${t('cart.checkout')}</button>
     <p class="drawer-note">${t('cart.note')}</p>`;
   const co = document.getElementById('checkout');
@@ -533,11 +544,11 @@ function bindGlobalClicks(){
     if(nav){ e.preventDefault(); navTo(nav.dataset.nav); if(nav.hasAttribute('data-close-cart')) closeCart(); closeMobileNav(); return; }
     const scr = e.target.closest('[data-scroll]');
     if(scr){ const tgt = document.getElementById(scr.dataset.scroll); if(tgt) tgt.scrollIntoView({behavior:'smooth'}); return; }
-    if(e.target.closest('[data-add]')){ addToCart(e.target.closest('[data-add]').dataset.add, 1); return; }
+    if(e.target.closest('[data-add]')){ const _pid = e.target.closest('[data-add]').dataset.add; const _pr = product(_pid); addToCart(_pid, 1, true, (_pr && _pr.variants) ? _pr.variants[0].label : null); return; }
     if(e.target.closest('[data-wish]')){ toast('❤'); return; }
-    if(e.target.closest('[data-inc]')){ setQty(e.target.closest('[data-inc]').dataset.inc, 1); return; }
-    if(e.target.closest('[data-dec]')){ setQty(e.target.closest('[data-dec]').dataset.dec, -1); return; }
-    if(e.target.closest('[data-rm]')){ removeFromCart(e.target.closest('[data-rm]').dataset.rm); return; }
+    if(e.target.closest('[data-inc]')){ setQtyByKey(e.target.closest('[data-inc]').dataset.inc, 1); return; }
+    if(e.target.closest('[data-dec]')){ setQtyByKey(e.target.closest('[data-dec]').dataset.dec, -1); return; }
+    if(e.target.closest('[data-rm]')){ removeFromCartKey(e.target.closest('[data-rm]').dataset.rm); return; }
     if(e.target.closest('[data-close-cart]')){ closeCart(); return; }
     if(e.target.closest('[data-close-auth]')){ closeAuth(); return; }
   });
