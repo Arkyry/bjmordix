@@ -1,0 +1,10 @@
+# Configuration Netlify pour BJMordix
+# - Le site (HTML/CSS/JS) est servi depuis la racine du depot
+# - Les fonctions serveur (paiement Stripe) sont dans netlify/functions
+
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"

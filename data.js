@@ -8,8 +8,19 @@
    sert d'image principale. Mets tes photos dans le dossier  photos/.
    ============================================================ */
 
-const MARKUP = 3;        // tous les prix x3
+const MARKUP = 3;        // marge par défaut (rétrocompat)
 const USD_TO_CAD = 1.37; // taux USD -> CAD (à ajuster)
+
+/* Marge dégressive selon le coût du produit en USD :
+   - moins de 20 $  -> x3
+   - de 20 à 60 $   -> x2.5
+   - plus de 60 $   -> x1.6
+   (la marge s'applique AU PRODUIT seulement, jamais aux frais de port) */
+function markupFor(costUSD) {
+  if (costUSD < 20) return 3;
+  if (costUSD <= 60) return 2.5;
+  return 1.6;
+}
 
 const photo = (file, alt) => `<img src="photos/${file}" alt="${alt}" loading="lazy">`;
 function usd(v){ return Math.round(v * USD_TO_CAD * 100) / 100; }
@@ -151,30 +162,6 @@ const PRODUCTS = [
       es: "El kit todo en uno del pescador. Esta caja compacta de doble cara reúne 184 piezas en 24 tipos de accesorios imprescindibles: anzuelos, destorcedores, perlas, topes, plomos, conectores marinos y mucho más. Se acabó buscar una pieza que falta a la orilla del agua: todo está ordenado y a mano. Ideal para la pesca a roca, en el mar y la pesca fina. Caja resistente con compartimentos extraíbles." }
   },
   {
-    id: 'cj-01', category: 'gear', usd: 0.40, ship: 6.02, rating: 4.6, reviews: null, badge: null, sku: 'CJDY111663101AZ',
-    photos: ['1-1.jpg','1-2.jpg','1-3.jpg','1-4.jpg','1-5.jpg'],
-    name: { fr: 'Hameçon automatique « Magic Hook »', en: 'Automatic Fishing Hook (Magic Hook)', es: 'Anzuelo automático «Magic Hook»' },
-    desc: { fr: 'Se ferme tout seul à la touche.', en: 'Sets the hook on its own.', es: 'Se clava solo en la picada.' },
-    long: {
-      fr: "Hameçon « magique » à ressort qui se referme automatiquement dès qu'un poisson mord — plus besoin de ferrer au bon moment. En métal inoxydable, idéal pour la pêche posée à plusieurs cannes ou quand on s'éloigne un instant. Un petit gadget malin et redoutablement efficace.",
-      en: "Spring-loaded 'magic' hook that closes automatically the moment a fish bites — no need to time your strike. Stainless metal, ideal for still fishing with several rods or when you step away. A clever, deadly-effective little gadget.",
-      es: "Anzuelo «mágico» con resorte que se cierra automáticamente en cuanto un pez muerde — sin necesidad de clavar en el momento justo. Metal inoxidable, ideal para la pesca al fondo con varias cañas o cuando te alejas un momento. Un accesorio ingenioso y muy eficaz." }
-  },
-  {
-    id: 'cj-02', category: 'lures', usd: 0.59, ship: 5.20, rating: 4.5, reviews: null, badge: 'new', sku: 'CJYE107522801AZ',
-    variants: [
-      { label: 'N°10', usd: 0.59 }, { label: 'N°12', usd: 0.59 }, { label: 'N°14', usd: 0.59 },
-      { label: 'N°16', usd: 0.59 }, { label: 'N°18', usd: 0.59 }, { label: 'N°20', usd: 0.59 }
-    ],
-    photos: ['2-1.jpg','2-2.jpg','2-3.jpg','2-4.jpg','2-5.jpg'],
-    name: { fr: 'Leurre mouche larve / asticot', en: 'Maggot / Grub Fly Lure', es: 'Señuelo mosca larva / gusano' },
-    desc: { fr: 'Imitation d\'asticot, plusieurs tailles d\'hameçon.', en: 'Maggot imitation, several hook sizes.', es: 'Imitación de gusano, varias tallas de anzuelo.' },
-    long: {
-      fr: "Imitation ultra-réaliste d'asticot/larve montée sur hameçon, parfaite pour la truite, le gardon et la pêche fine en mouche. Sa silhouette et sa souplesse déclenchent les touches même sur les poissons méfiants. Disponible en plusieurs tailles d'hameçon (10 à 20).",
-      en: "Ultra-realistic maggot/grub imitation tied on a hook, perfect for trout, roach and finesse fly fishing. Its lifelike shape and softness trigger bites even from wary fish. Available in several hook sizes (10 to 20).",
-      es: "Imitación ultrarrealista de gusano/larva montada en anzuelo, perfecta para trucha, gobio y pesca fina con mosca. Su silueta y flexibilidad provocan picadas incluso en peces desconfiados. Disponible en varias tallas de anzuelo (10 a 20)." }
-  },
-  {
     id: 'cj-04', category: 'lures', rating: 4.7, reviews: null, badge: 'best', sku: 'CJYE114859201AZ',
     variants: [
       { label: 'Style A', usd: 2.28, ship: 5.20 },
@@ -197,447 +184,932 @@ const PRODUCTS = [
       es: "Pez nadador articulado en varias secciones (13,3 cm, 19 g) con un nado ondulante ultrarrealista que imita a un pez herido. Diseño ingenioso: una bola de acero móvil se desliza hacia la cola al lanzar para lanzados más largos y estables, mientras que unas bolas internas crean un sonajero que atrae al pez de lejos. Cuerpo de ABS resistente a los golpes, acabado reflectante que capta la luz desde todos los ángulos, anzuelos triples (talla 6). Ideal para depredadores (lucio, lucioperca, perca, black-bass). A elegir: 12 colores por unidad (Style A a L) o en lote «Set» (colores G + F + L)." }
   },
   {
-    id: 'cj-06', category: 'reels', usd: 6.77, ship: 6.92, rating: 4.6, reviews: null, badge: null, sku: 'CJDY110078303CX',
-    photos: ['6-1.jpg','6-2.jpg','6-4.jpg','6-5.jpg','6-6.jpg'],
-    name: { fr: 'Moulinet rond Leiqiang AM2000', en: 'Leiqiang Round Reel AM2000', es: 'Carrete redondo Leiqiang AM2000' },
-    desc: { fr: 'Moulinet rond métal, gaucher/droitier.', en: 'Round metal reel, left/right hand.', es: 'Carrete redondo metálico, zurdo/diestro.' },
+    id: 'cj-201', category: 'lures', usd: 0.63, ship: 5.20, rating: 4.6, reviews: null, badge: null, sku: 'CJDY1768129',
+    photos: ['201-1.jpg','201-2.jpg','201-3.jpg','201-4.jpg','201-5.jpg'],
+    name: { fr: 'Leurre nageur minnow 16,5 cm (21 g)', en: 'Minnow Lure 16.5 cm (21 g)', es: 'Señuelo minnow 16,5 cm (21 g)' },
+    desc: { fr: 'Grand minnow à bavette, nombreux coloris.', en: 'Large diving minnow, many colours.', es: 'Gran minnow con babero, muchos colores.' },
     long: {
-      fr: "Moulinet rond robuste au corps métallique, à la mécanique fluide et au frein progressif. Sa conception ronde offre une grande capacité de fil et une récupération régulière, idéale pour la traîne et la pêche au posé. Disponible en versions gaucher et droitier.",
-      en: "Sturdy round reel with a metal body, smooth mechanics and a progressive drag. Its round design offers high line capacity and a steady retrieve, ideal for trolling and still fishing. Available in left- and right-hand versions.",
-      es: "Carrete redondo robusto con cuerpo metálico, mecánica suave y freno progresivo. Su diseño redondo ofrece gran capacidad de hilo y recogida regular, ideal para curricán y pesca al fondo. Disponible en versiones zurda y diestra." }
+      fr: "Grand leurre nageur minnow de 16,5 cm (21 g) à bavette pour la pêche des carnassiers et en mer. À la récupération, il nage en sub-surface en imitant un poisson fourrage, déclenchant brochet, sandre, bar et silure. Yeux 3D réalistes et hameçons triples. Disponible dans de nombreux coloris pour s'adapter à l'eau et à la luminosité.",
+      en: "Large 16.5 cm (21 g) minnow lure with a diving lip for predator and sea fishing. On the retrieve it swims sub-surface like a baitfish, triggering pike, zander, bass and catfish. Realistic 3D eyes and treble hooks. Available in many colours to match the water and light.",
+      es: "Gran señuelo minnow de 16,5 cm (21 g) con babero para la pesca de depredadores y en mar. En la recogida nada en subsuperficie imitando a un pez forraje, provocando lucio, lucioperca, lubina y siluro. Ojos 3D realistas y anzuelos triples. Disponible en muchos colores para adaptarse al agua y la luz." }
   },
   {
-    id: 'cj-07', category: 'gear', usd: 1.26, ship: 5.25, rating: 4.6, reviews: null, badge: null, sku: 'CJYD271797702BY',
+    id: 'cj-202', category: 'lures', usd: 9.68, ship: 6.54, rating: 4.6, reviews: null, badge: null, sku: 'CJDY1805529',
+    photos: ['202-1.jpg','202-2.jpg','202-3.jpg','202-4.jpg','202-5.jpg'],
+    name: { fr: 'Stickbait coulant mer 18 cm', en: 'Sinking Stickbait 18 cm', es: 'Stickbait hundido 18 cm' },
+    desc: { fr: 'Gros leurre mer, lance loin, nombreux coloris.', en: 'Big sea lure, long casts, many colours.', es: 'Gran señuelo de mar, lanza lejos, muchos colores.' },
+    long: {
+      fr: "Stickbait coulant de 18 cm pour la pêche en mer des prédateurs (bar, bonite, sériole, thon). Dense, il se lance très loin et descend dans la couche d'eau ; animé en dents de scie, il imite un poisson blessé en fuite. Hameçons triples renforcés. Disponible dans de nombreux coloris marins (style NS003).",
+      en: "18 cm sinking stickbait for sea fishing of predators (bass, bonito, amberjack, tuna). Dense, it casts very far and drops through the water column; worked in a zig-zag it mimics a fleeing wounded fish. Reinforced treble hooks. Available in many saltwater colours (NS003 style).",
+      es: "Stickbait hundido de 18 cm para la pesca en mar de depredadores (lubina, bonito, medregal, atún). Denso, se lanza muy lejos y baja por la capa de agua; animado en zigzag imita a un pez herido en fuga. Anzuelos triples reforzados. Disponible en muchos colores marinos (estilo NS003)." }
+  },
+  {
+    id: 'cj-203', category: 'lures', rating: 4.6, reviews: null, badge: null, sku: 'CJDY1805980',
     variants: [
-      { label: '0.4', usd: 1.26 }, { label: '0.6', usd: 1.26 }, { label: '1.0', usd: 1.26 }, { label: '2.0', usd: 1.26 },
-      { label: '3.0', usd: 1.26 }, { label: '4.0', usd: 1.26 }, { label: '5.0', usd: 1.26 }
+      { label: 'À l’unité', usd: 0.63, ship: 5.20 },
+      { label: 'Lot 10 couleurs', usd: 3.51, ship: 5.20 }
     ],
-    photos: ['7-1.jpeg','7-2.jpeg','7-3.jpeg','7-4.jpeg','7-5.jpeg'],
-    name: { fr: 'Tresse PE « Power Strong » (300 m)', en: 'PE Braided Line "Power Strong" (300 m)', es: 'Trenzado PE «Power Strong» (300 m)' },
-    desc: { fr: 'Tresse fine et ultra-résistante, plusieurs diamètres.', en: 'Thin, ultra-strong braid, several diameters.', es: 'Trenzado fino y ultrarresistente, varios diámetros.' },
+    photos: ['203-1.jpg','203-2.jpg','203-3.jpg','203-4.jpg','203-5.jpg'],
+    name: { fr: 'Crankbait 8,5 cm (à l’unité ou lot 10)', en: 'Crankbait 8.5 cm (single or 10-pack)', es: 'Crankbait 8,5 cm (unidad o lote 10)' },
+    desc: { fr: 'Leurre plongeant, à l’unité ou coffret 10 coloris.', en: 'Diving lure, single or 10-colour set.', es: 'Señuelo buceador, unidad o set 10 colores.' },
     long: {
-      fr: "Tresse de pêche en fibres PE, fine et ultra-résistante pour une sensibilité maximale et des lancers longue distance. Quasiment sans élasticité : tu sens la moindre touche et le ferrage est instantané. Disponible en plusieurs diamètres (0,4 à 5,0). Idéale au leurre comme à la carpe.",
-      en: "PE-fibre braided line, thin and ultra-strong for maximum sensitivity and long-distance casts. Almost no stretch: you feel the smallest bite and the hookset is instant. Available in several diameters (0.4 to 5.0). Great for lure and carp fishing.",
-      es: "Trenzado de pesca de fibras PE, fino y ultrarresistente para máxima sensibilidad y lanzados a larga distancia. Casi sin elasticidad: notas la mínima picada y la clavada es instantánea. Disponible en varios diámetros (0,4 a 5,0). Ideal para señuelo y carpa." }
+      fr: "Leurre crankbait plongeant de 8,5 cm à la nage roulante et vibrante qui déclenche perche, brochet et black-bass. Bavette pour explorer la couche d'eau à la récupération. Hameçons triples. Au choix : à l'unité dans le coloris voulu, ou en lot de 10 coloris assortis pour tout avoir sous la main.",
+      en: "8.5 cm diving crankbait with a rolling, vibrating swim that triggers perch, pike and bass. Diving lip to explore the water column on the retrieve. Treble hooks. Choose a single lure in the colour you want, or a 10-colour assorted pack to have everything on hand.",
+      es: "Señuelo crankbait buceador de 8,5 cm con un nado rodante y vibrante que provoca perca, lucio y black-bass. Babero para explorar la capa de agua en la recogida. Anzuelos triples. A elegir: por unidad en el color deseado, o en lote de 10 colores surtidos para tenerlo todo a mano." }
   },
   {
-    id: 'cj-08', category: 'gear', usd: 2.46, ship: 6.62, rating: 4.5, reviews: null, badge: null, sku: 'CJYD191237403CX',
-    photos: ['8-1.jpg','8-2.jpg','8-3.jpg','8-4.jpg','8-5.jpg'],
-    name: { fr: 'Support de canne pliable (pêche sur glace)', en: 'Foldable Rod Bracket (ice fishing)', es: 'Soporte de caña plegable (pesca en hielo)' },
-    desc: { fr: 'Trépied pliable, garde les mains libres.', en: 'Foldable tripod, keeps hands free.', es: 'Trípode plegable, manos libres.' },
+    id: 'cj-204', category: 'gear', usd: 0.75, ship: 5.20, rating: 4.5, reviews: null, badge: null, sku: 'CJDY186971501AZ',
+    photos: ['204-1.jpg','204-2.jpg','204-3.jpg','204-4.jpg','204-5.jpg'],
+    name: { fr: 'Enrouleurs de ligne en mousse (lot)', en: 'Foam Line Winders (set)', es: 'Enrolladores de línea en espuma (lote)' },
+    desc: { fr: 'Range tes bas de ligne sans emmêler.', en: 'Store your rigs tangle-free.', es: 'Guarda tus bajos de línea sin enredos.' },
     long: {
-      fr: "Support de canne pliable à trépied, pensé pour la pêche sur glace et la pêche au posé. Léger et stable, il maintient ta canne prête à ferrer pendant que tu gardes les mains libres. Se replie en un instant pour tenir dans le sac. Plusieurs formats disponibles.",
-      en: "Foldable tripod rod bracket, designed for ice fishing and still fishing. Light and stable, it holds your rod ready to strike while keeping your hands free. Folds away in a second to fit in your bag. Several formats available.",
-      es: "Soporte de caña plegable tipo trípode, pensado para la pesca en hielo y al fondo. Ligero y estable, sujeta tu caña lista para clavar mientras tienes las manos libres. Se pliega en un instante para caber en la bolsa. Varios formatos disponibles." }
+      fr: "Lot de planchettes-enrouleurs en mousse EVA pour ranger proprement tes bas de ligne, montages et hameçons montés sans qu'ils s'emmêlent. Encoches sur les bords pour bloquer le fil, mousse légère qui flotte. Coloris assortis pour repérer tes montages d'un coup d'œil. Pratique dans la boîte ou le gilet de pêche.",
+      en: "Set of EVA foam winder boards to neatly store your rigs, leaders and pre-tied hooks tangle-free. Notched edges to lock the line, light foam that floats. Assorted colours to spot your rigs at a glance. Handy in your tackle box or fishing vest.",
+      es: "Lote de tablillas-enrolladoras de espuma EVA para guardar limpiamente tus bajos de línea, montajes y anzuelos montados sin que se enreden. Bordes con muescas para bloquear el hilo, espuma ligera que flota. Colores surtidos para localizar tus montajes de un vistazo. Práctico en la caja o el chaleco de pesca." }
   },
   {
-    id: 'cj-09', category: 'reels', usd: 12.82, ship: 7.05, rating: 4.7, reviews: null, badge: 'best', sku: 'CJYD189446803CX',
+    id: 'cj-205', category: 'reels', rating: 4.6, reviews: null, badge: null, sku: 'CJYD153761701AZ',
     variants: [
-      { label: 'Gaucher jaune', usd: 12.82 }, { label: 'Droitier gris', usd: 12.82 }, { label: 'Droitier jaune', usd: 12.82 }
+      { label: 'AC2000', usd: 4.56, ship: 7.71 }, { label: 'AC3000', usd: 4.91, ship: 7.71 },
+      { label: 'AC4000', usd: 5.25, ship: 7.71 }, { label: 'AC5000', usd: 5.53, ship: 7.71 },
+      { label: 'AC6000', usd: 5.87, ship: 7.71 }, { label: 'AC7000', usd: 6.21, ship: 7.71 }
     ],
-    photos: ['9-1.jpg','9-2.jpg','9-3.jpg','9-4.jpg','9-5.jpg'],
-    name: { fr: 'Moulinet casting frein magnétique 2000', en: 'Magnetic Brake Baitcasting Reel 2000', es: 'Carrete casting freno magnético 2000' },
-    desc: { fr: 'Casting basse profile, frein magnétique réglable.', en: 'Low-profile baitcaster, adjustable magnetic brake.', es: 'Casting bajo perfil, freno magnético ajustable.' },
+    photos: ['205-1.jpg','205-2.jpg','205-3.jpg','205-4.jpg','205-5.jpg'],
+    name: { fr: 'Moulinet spinning métal (AC2000 à AC7000)', en: 'Metal Spinning Reel (AC2000 to AC7000)', es: 'Carrete spinning metal (AC2000 a AC7000)' },
+    desc: { fr: 'Corps métal, récup douce, 6 tailles.', en: 'Metal body, smooth retrieve, 6 sizes.', es: 'Cuerpo metal, recogida suave, 6 tallas.' },
     long: {
-      fr: "Moulinet casting (baitcasting) basse profile à frein magnétique réglable pour des lancers précis et sans perruque. Mécanique fluide, récupération rapide, idéal pour la pêche du carnassier au leurre dur et en bord de mer. Disponible gaucher ou droitier, coloris jaune ou gris.",
-      en: "Low-profile baitcasting reel with an adjustable magnetic brake for precise, backlash-free casts. Smooth mechanics, fast retrieve, ideal for hard-lure predator fishing and the coast. Available left- or right-hand, in yellow or grey.",
-      es: "Carrete casting (baitcasting) de perfil bajo con freno magnético ajustable para lanzados precisos y sin cabelleras. Mecánica suave, recogida rápida, ideal para la pesca de depredadores a señuelo duro y en la costa. Disponible zurdo o diestro, en amarillo o gris." }
+      fr: "Moulinet spinning à corps métal, robuste et fluide, pour les cannes télescopiques et le lancer. Récupération douce, frein avant progressif et bobine pré-équipée. Disponible en 6 tailles, de l'AC2000 (pêche fine) à l'AC7000 (mer, gros poissons) : choisis la puissance adaptée à ta pêche. Excellent rapport qualité-prix.",
+      en: "Metal-body spinning reel, sturdy and smooth, for telescopic rods and casting. Smooth retrieve, progressive front drag and pre-spooled. Available in 6 sizes, from AC2000 (finesse) to AC7000 (sea, big fish): pick the power that fits your fishing. Great value for money.",
+      es: "Carrete spinning con cuerpo de metal, robusto y suave, para cañas telescópicas y lanzado. Recogida suave, freno delantero progresivo y bobina pre-equipada. Disponible en 6 tallas, del AC2000 (pesca fina) al AC7000 (mar, peces grandes): elige la potencia adecuada a tu pesca. Excelente relación calidad-precio." }
   },
   {
-    id: 'cj-11', category: 'lures', usd: 9.68, ship: 6.54, rating: 4.7, reviews: null, badge: null, sku: 'CJYD180552909IR',
-    photos: ['11-1.jpg','11-2.jpg','11-3.jpg','11-4.jpg','11-5.jpg'],
-    name: { fr: 'Stickbait coulant NBL9062 180 mm', en: 'Sinking Pencil Stickbait NBL9062 180 mm', es: 'Stickbait hundido NBL9062 180 mm' },
-    desc: { fr: 'Lesté, lancer très longue distance, mer.', en: 'Weighted, very long casts, sea.', es: 'Lastrado, lanzados muy largos, mar.' },
+    id: 'cj-206', category: 'gear', usd: 0.78, ship: 6.32, rating: 4.5, reviews: null, badge: null, sku: 'CJDY109223119SH',
+    photos: ['206-1.jpg','206-2.jpg','206-3.jpg','206-4.jpg','206-5.jpg'],
+    name: { fr: 'Fil nylon enduit fluoro (300 / 500 m)', en: 'Fluoro-coated Nylon Line (300 / 500 m)', es: 'Hilo nailon fluoro (300 / 500 m)' },
+    desc: { fr: 'Solide et discret, nombreux diamètres.', en: 'Strong and discreet, many diameters.', es: 'Resistente y discreto, muchos diámetros.' },
     long: {
-      fr: "Stickbait (pencil) coulant de 180 mm au lest interne décentré, conçu pour des lancers à très longue distance face au vent. Sa nage piquée et erratique imite un poisson en fuite et déclenche les chasses en mer (bar, bonite, pélagiques). Hameçons triples renforcés. De nombreux coloris au choix.",
-      en: "180 mm sinking pencil stickbait with an offset internal weight, built for very long casts into the wind. Its darting, erratic action mimics a fleeing baitfish and triggers feeding frenzies at sea (bass, bonito, pelagics). Reinforced treble hooks. Many colours to choose from.",
-      es: "Stickbait (pencil) hundido de 180 mm con lastre interno descentrado, diseñado para lanzados muy largos contra el viento. Su nado errático imita a un pez en fuga y desata las cacerías en el mar (lubina, bonito, pelágicos). Anzuelos triples reforzados. Muchos colores a elegir." }
+      fr: "Fil nylon à revêtement fluorocarbone en grande bobine (300 ou 500 m). Souple pour de bons lancers, résistant et discret dans l'eau pour ne pas alerter le poisson. Bonne tenue au nœud. Disponible dans de nombreux diamètres (0,4 à 8,0) et longueurs. Polyvalent en corps de ligne pour la mer et le gros poisson.",
+      en: "Fluorocarbon-coated nylon line on a large spool (300 or 500 m). Supple for good casts, strong and discreet in the water so it won't spook fish. Good knot strength. Available in many diameters (0.4 to 8.0) and lengths. Versatile as a main line for the sea and big fish.",
+      es: "Hilo de nailon con recubrimiento de fluorocarbono en bobina grande (300 o 500 m). Flexible para buenos lanzados, resistente y discreto en el agua para no alertar al pez. Buena resistencia al nudo. Disponible en muchos diámetros (0,4 a 8,0) y longitudes. Versátil como línea madre para el mar y peces grandes." }
   },
   {
-    id: 'cj-12', category: 'lures', usd: 0.63, ship: 5.20, rating: 4.6, reviews: null, badge: 'new', sku: 'CJYD176812901AZ',
-    photos: ['12-1.jpg','12-2.jpg','12-3.jpg','12-4.jpg','12-5.jpg'],
-    name: { fr: 'Poisson nageur Minnow 165 mm (multi-coloris)', en: 'Minnow Hard Lure 165 mm (multi-colour)', es: 'Pez nadador Minnow 165 mm (multicolor)' },
-    desc: { fr: 'Nage réaliste, nombreux coloris.', en: 'Realistic swim, many colours.', es: 'Nado realista, muchos colores.' },
-    long: {
-      fr: "Poisson nageur (minnow) de 165 mm à la nage roulante très réaliste. Bavette plongeante, finition détaillée et hameçons triples affûtés pour ferrer les carnassiers (brochet, perche, bar). Disponible dans une large gamme de coloris flashy ou naturels.",
-      en: "165 mm minnow hard lure with a very realistic rolling swim. Diving lip, detailed finish and sharp treble hooks to hook predators (pike, perch, bass). Available in a wide range of bright or natural colours.",
-      es: "Pez nadador (minnow) de 165 mm con un nado rodante muy realista. Babero buceador, acabado detallado y anzuelos triples afilados para clavar depredadores (lucio, perca, lubina). Disponible en una amplia gama de colores llamativos o naturales." }
-  },
-  {
-    id: 'cj-13', category: 'gear', usd: 0.75, ship: 5.20, rating: 4.4, reviews: null, badge: null, sku: 'CJDY186971501AZ',
-    photos: ['13-1.jpg','13-2.jpg','13-3.jpg','13-4.jpg','13-5.jpg'],
-    name: { fr: 'Planchettes range-bas-de-ligne (mousse)', en: 'Foam Rig / Line Winding Boards', es: 'Tablillas enrolla-líneas (espuma)' },
-    desc: { fr: 'Range fils et bas de ligne sans nœuds.', en: 'Store rigs and line tangle-free.', es: 'Guarda líneas y bajos sin enredos.' },
-    long: {
-      fr: "Planchettes en mousse EVA crantées pour enrouler et ranger tes bas de ligne, montages et fils sans les emmêler. Légères, flottantes et increvables, elles se glissent dans la boîte ou la poche. Indispensables pour garder des montages prêts à l'emploi. Coloris assortis envoyés au hasard.",
-      en: "Notched EVA-foam boards to wind and store your rigs, leaders and line without tangles. Light, floating and indestructible, they slip into a box or pocket. A must to keep ready-to-use rigs. Assorted colours sent at random.",
-      es: "Tablillas de espuma EVA con muescas para enrollar y guardar tus bajos de línea, montajes e hilos sin enredos. Ligeras, flotantes e indestructibles, caben en una caja o bolsillo. Imprescindibles para tener montajes listos. Colores surtidos al azar." }
-  },
-  {
-    id: 'cj-14', category: 'lures', usd: 3.51, ship: 6.78, rating: 4.6, reviews: null, badge: 'new', sku: 'CJDY180598007GT',
-    photos: ['14-1.jpg','14-2.jpg','14-3.jpg','14-4.jpg','14-5.jpg'],
-    name: { fr: 'Lot de leurres durs 85 mm (assortiment)', en: 'Hard Lure Set 85 mm (assortment)', es: 'Lote de señuelos duros 85 mm (surtido)' },
-    desc: { fr: 'Assortiment de poissons nageurs colorés.', en: 'Assortment of colourful hard lures.', es: 'Surtido de peces nadadores de colores.' },
-    long: {
-      fr: "Lot de poissons nageurs (crankbaits/minnows) de 85 mm dans un assortiment de coloris variés, naturels et flashy. De quoi couvrir toutes les conditions et toutes les humeurs du poisson avec une seule boîte. Hameçons triples montés. Idéal pour débuter ou compléter sa boîte à carnassiers.",
-      en: "Set of 85 mm hard lures (crankbaits/minnows) in an assortment of natural and bright colours. Enough to cover every condition and mood with a single box. Treble hooks fitted. Ideal to start out or round out your predator box.",
-      es: "Lote de peces nadadores (crankbaits/minnows) de 85 mm en un surtido de colores naturales y llamativos. Suficiente para cubrir todas las condiciones con una sola caja. Anzuelos triples montados. Ideal para empezar o completar tu caja de depredadores." }
-  },
-  {
-    id: 'cj-15', category: 'reels', usd: 4.56, ship: 7.71, rating: 4.5, reviews: null, badge: null, sku: 'CJYD153761701AZ',
-    photos: ['15-2.jpg','15-3.jpg','15-4.jpg','15-5.jpg','15-6.jpg'],
-    name: { fr: 'Moulinet spinning métal AC (2000-7000)', en: 'Metal Spinning Reel AC (2000-7000)', es: 'Carrete spinning metal AC (2000-7000)' },
-    desc: { fr: 'Tout métal, fluide, plusieurs tailles.', en: 'All-metal, smooth, several sizes.', es: 'Todo metal, suave, varias tallas.' },
-    long: {
-      fr: "Moulinet spinning au corps et aux engrenages métalliques, robuste et fluide. Bobine métal, anti-retour instantané et frein avant réglable. Polyvalent du coup au leurre, en eau douce comme en mer. Disponible en plusieurs tailles (AC2000 à AC7000) selon la pêche visée.",
-      en: "Spinning reel with a metal body and gears, sturdy and smooth. Metal spool, instant anti-reverse and adjustable front drag. Versatile from float to lure fishing, in fresh or salt water. Available in several sizes (AC2000 to AC7000) to match your target.",
-      es: "Carrete spinning con cuerpo y engranajes metálicos, robusto y suave. Bobina de metal, antirretorno instantáneo y freno frontal ajustable. Versátil del corcho al señuelo, en agua dulce o salada. Disponible en varias tallas (AC2000 a AC7000) según la pesca." }
-  },
-  {
-    id: 'cj-16', category: 'gear', usd: 0.78, ship: 6.32, rating: 4.4, reviews: null, badge: null, sku: 'CJDY109223101AZ',
+    id: 'cj-207', category: 'rods', rating: 4.5, reviews: null, badge: null, sku: 'CJDY165866904DW',
     variants: [
-      { label: '0.4', usd: 0.78 }, { label: '0.6', usd: 0.78 }, { label: '0.8', usd: 0.78 }, { label: '1.0', usd: 0.78 },
-      { label: '1.2', usd: 0.78 }, { label: '1.5', usd: 0.78 }, { label: '2.0', usd: 0.78 }, { label: '2.5', usd: 0.78 },
-      { label: '3.0', usd: 0.78 }, { label: '4.0', usd: 0.78 }, { label: '5.0', usd: 0.78 }, { label: '6.0', usd: 0.78 }
+      { label: '30 cm', usd: 3.10, ship: 6.97 }, { label: '40 cm', usd: 3.43, ship: 6.97 },
+      { label: '50 cm', usd: 3.60, ship: 6.97 }, { label: '60 cm', usd: 3.76, ship: 6.97 }
     ],
-    photos: ['16-1.jpg','16-2.jpg','16-3.jpg','16-4.jpg','16-5.jpg'],
-    name: { fr: 'Fil nylon « Super » (revêtement fluoro)', en: 'Nylon "Super" Line (fluoro-coated)', es: 'Hilo nailon «Super» (recubrimiento fluoro)' },
-    desc: { fr: 'Monofilament résistant, nombreux diamètres.', en: 'Strong mono, many diameters.', es: 'Monofilamento resistente, muchos diámetros.' },
+    photos: ['207-1.jpg','207-2.jpg','207-3.jpg','207-4.jpg','207-5.jpg'],
+    name: { fr: 'Canne à glace courte (bois, 30 à 60 cm)', en: 'Short Ice Fishing Rod (wood, 30 to 60 cm)', es: 'Caña corta de hielo (madera, 30 a 60 cm)' },
+    desc: { fr: 'Mini canne pour la pêche sous la glace.', en: 'Mini rod for under-ice fishing.', es: 'Mini caña para la pesca bajo el hielo.' },
     long: {
-      fr: "Fil monofilament nylon « Super » à revêtement fluorocarbone, résistant et discret dans l'eau. Bonne tenue à l'abrasion et au nœud, élasticité maîtrisée pour amortir les coups de tête. Disponible dans de très nombreux diamètres. Polyvalent en eau douce comme en mer.",
-      en: "'Super' nylon monofilament with a fluorocarbon coating, strong and discreet in the water. Good abrasion and knot strength, controlled stretch to cushion head-shakes. Available in many diameters. Versatile for fresh and salt water.",
-      es: "Hilo monofilamento de nailon «Super» con recubrimiento de fluorocarbono, resistente y discreto en el agua. Buena resistencia a la abrasión y al nudo, elasticidad controlada. Disponible en muchos diámetros. Versátil en agua dulce y salada." }
+      fr: "Petite canne à glace au manche en bois confortable, sensible pour détecter les touches les plus discrètes sous la glace. Légère et maniable au-dessus du trou, anneaux résistants au froid. Disponible en plusieurs longueurs (30 à 60 cm) selon ta technique. Parfaite pour la perche, la truite et le doré l'hiver.",
+      en: "Small ice fishing rod with a comfortable wooden handle, sensitive enough to detect the subtlest bites under the ice. Light and easy to handle over the hole, cold-resistant guides. Available in several lengths (30 to 60 cm) to match your technique. Perfect for perch, trout and walleye in winter.",
+      es: "Pequeña caña de hielo con mango de madera cómodo, sensible para detectar las picadas más discretas bajo el hielo. Ligera y manejable sobre el agujero, anillas resistentes al frío. Disponible en varias longitudes (30 a 60 cm) según tu técnica. Perfecta para perca, trucha y lucioperca en invierno." }
   },
   {
-    id: 'cj-17', category: 'rods', usd: 3.60, ship: 6.02, rating: 4.6, reviews: null, badge: null, sku: 'CJDY165866901AZ',
-    photos: ['17-1.jpg','17-2.jpg','17-3.jpg','17-4.jpg','17-5.jpg'],
-    name: { fr: 'Mini canne à glace bois (30-60 cm)', en: 'Wooden Ice Fishing Rod (30-60 cm)', es: 'Mini caña de hielo de madera (30-60 cm)' },
-    desc: { fr: 'Compacte, poignée bois, plusieurs longueurs.', en: 'Compact, wood handle, several lengths.', es: 'Compacta, mango de madera, varias longitudes.' },
+    id: 'cj-208', category: 'gear', usd: 3.92, ship: 6.99, rating: 4.6, reviews: null, badge: null, sku: 'CJDY176523302BY',
+    photos: ['208-1.jpg','208-2.jpg','208-3.jpg','208-4.jpg','208-5.jpg'],
+    name: { fr: 'Pince de pêche multifonction X45D', en: 'Multi-function Fishing Pliers X45D', es: 'Alicate de pesca multifunción X45D' },
+    desc: { fr: 'Coupe-fil, dégorge, sertit — tout-en-un.', en: 'Cuts line, unhooks, crimps — all-in-one.', es: 'Corta hilo, desanzuela, engarza — todo en uno.' },
     long: {
-      fr: "Petite canne à pêche sur glace à poignée en bois verni, élégante et chaleureuse en main même par grand froid. Légère et sensible pour détecter les touches discrètes sous la glace. Compacte, elle se range partout. Disponible en plusieurs longueurs (30 à 60 cm).",
-      en: "Small ice fishing rod with a varnished wooden handle, elegant and warm to hold even in the cold. Light and sensitive to detect subtle bites under the ice. Compact and easy to store. Available in several lengths (30 to 60 cm).",
-      es: "Pequeña caña de pesca en hielo con mango de madera barnizada, elegante y cálida en la mano incluso con frío. Ligera y sensible para detectar picadas sutiles bajo el hielo. Compacta y fácil de guardar. Disponible en varias longitudes (30 a 60 cm)." }
+      fr: "Pince de pêche multifonction robuste : becs fins pour décrocher l'hameçon, coupe-fil tranchant (tresse et nylon), encoches pour sertir les sleeves et fendre les anneaux brisés. Manches caoutchoutés antidérapants, ressort de rappel. Résistante à la corrosion marine. L'outil à toujours avoir dans le gilet ou la boîte.",
+      en: "Sturdy multi-function fishing pliers: fine jaws to unhook fish, sharp cutter (braid and mono), notches to crimp sleeves and open split rings. Non-slip rubber handles, return spring. Resistant to marine corrosion. The tool to always keep in your vest or tackle box.",
+      es: "Alicate de pesca multifunción resistente: puntas finas para desanzuelar, corta-hilo afilado (trenzado y nailon), muescas para engarzar casquillos y abrir anillas partidas. Mangos de goma antideslizantes, muelle de retorno. Resistente a la corrosión marina. La herramienta que siempre hay que llevar en el chaleco o la caja." }
   },
   {
-    id: 'cj-18', category: 'gear', usd: 3.92, ship: 6.99, rating: 4.6, reviews: null, badge: null, sku: 'CJDY176523302BY',
-    photos: ['18-1.jpg','18-2.jpg','18-3.jpg','18-4.jpg','18-5.jpg'],
-    name: { fr: 'Pince coupe-fil de pêche X45D', en: 'Fishing Cable Cutter Pliers X45D', es: 'Alicate cortahílos de pesca X45D' },
-    desc: { fr: 'Coupe tresse et câble, poignée antidérapante.', en: 'Cuts braid and cable, non-slip grip.', es: 'Corta trenzado y cable, mango antideslizante.' },
+    id: 'cj-209', category: 'reels', rating: 4.6, reviews: null, badge: null, sku: 'CJYD201751601AZ',
+    variants: [
+      { label: '2000', usd: 13.42, ship: 8.37 }, { label: '3000', usd: 13.42, ship: 8.37 },
+      { label: '4000', usd: 13.42, ship: 8.37 }, { label: '5000', usd: 13.42, ship: 8.37 }
+    ],
+    photos: ['209-1.jpg','209-2.jpg','209-3.jpg','209-4.jpg','209-5.jpg'],
+    name: { fr: 'Moulinet spinning tout métal (2000 à 5000)', en: 'All-Metal Spinning Reel (2000 to 5000)', es: 'Carrete spinning todo metal (2000 a 5000)' },
+    desc: { fr: 'Corps métal solide, récupération fluide.', en: 'Solid metal body, smooth retrieve.', es: 'Cuerpo de metal sólido, recogida fluida.' },
     long: {
-      fr: "Pince de pêche robuste qui tranche net la tresse, le nylon et même le câble acier. Mâchoires renforcées, poignée caoutchoutée antidérapante et ressort de rappel pour une prise en main confortable. L'outil costaud à garder dans le gilet pour décrocher, sertir et couper en mer.",
-      en: "Sturdy fishing pliers that cleanly cut braid, nylon and even steel cable. Reinforced jaws, non-slip rubberised grip and a return spring for comfortable handling. The tough tool to keep in your vest to unhook, crimp and cut at sea.",
-      es: "Alicate de pesca robusto que corta limpio el trenzado, el nailon e incluso el cable de acero. Mandíbulas reforzadas, mango engomado antideslizante y muelle de retorno para un manejo cómodo. La herramienta resistente para desanzuelar, engarzar y cortar en el mar." }
+      fr: "Moulinet spinning tout métal, solide et fluide, pour la pêche aux leurres et au posé en eau douce comme en mer. Plusieurs roulements pour une récupération douce, frein avant progressif et puissant, bobine pré-équipée. Disponible en 4 tailles (2000 à 5000) selon la puissance recherchée. Robuste et fiable dans la durée.",
+      en: "All-metal spinning reel, solid and smooth, for lure and bait fishing in fresh or salt water. Several bearings for a smooth retrieve, powerful progressive front drag, pre-spooled. Available in 4 sizes (2000 to 5000) depending on the power you need. Sturdy and reliable over time.",
+      es: "Carrete spinning todo metal, sólido y fluido, para la pesca con señuelos y al fondo en agua dulce o mar. Varios rodamientos para una recogida suave, freno delantero progresivo y potente, bobina pre-equipada. Disponible en 4 tallas (2000 a 5000) según la potencia buscada. Robusto y fiable con el tiempo." }
   },
   {
-    id: 'cj-19', category: 'reels', usd: 13.42, ship: 8.37, rating: 4.6, reviews: null, badge: null, sku: 'CJYD201751601AZ',
-    photos: ['19-1.jpg','19-2.jpg','19-3.jpg','19-4.jpg','19-5.jpg'],
-    name: { fr: 'Moulinet spinning tout métal (2000-5000)', en: 'All-Metal Spinning Reel (2000-5000)', es: 'Carrete spinning todo metal (2000-5000)' },
-    desc: { fr: 'Corps métal, frein puissant, plusieurs tailles.', en: 'Metal body, strong drag, several sizes.', es: 'Cuerpo metálico, freno potente, varias tallas.' },
+    id: 'cj-210', category: 'gear', usd: 0.75, ship: 7.80, rating: 4.4, reviews: null, badge: null, sku: 'CJYD155659501AZ',
+    photos: ['210-1.jpg','210-2.jpg','210-3.jpg','210-4.jpg','210-5.jpg'],
+    name: { fr: 'Spray attractant à poisson (30 ml)', en: 'Fish Attractant Spray (30 ml)', es: 'Spray atrayente de peces (30 ml)' },
+    desc: { fr: 'Booste l’attractivité des leurres et appâts.', en: 'Boosts lure and bait attractiveness.', es: 'Potencia el atractivo de señuelos y cebos.' },
     long: {
-      fr: "Moulinet spinning entièrement métallique, robuste et fluide, à la rotation soyeuse et au frein avant puissant. Grande capacité de fil et anti-retour instantané pour ne rien laisser passer. Polyvalent du leurre à la pêche au posé, en eau douce comme en mer. Plusieurs tailles disponibles (2000 à 5000 Series).",
-      en: "Fully metal spinning reel, sturdy and smooth, with silky rotation and a powerful front drag. Large line capacity and instant anti-reverse so nothing gets away. Versatile from lure to still fishing, fresh or salt water. Available in several sizes (2000 to 5000 Series).",
-      es: "Carrete spinning totalmente metálico, robusto y suave, con rotación sedosa y freno frontal potente. Gran capacidad de hilo y antirretorno instantáneo. Versátil del señuelo a la pesca al fondo, en agua dulce o salada. Disponible en varias tallas (2000 a 5000 Series)." }
+      fr: "Spray attractant à pulvériser sur tes leurres et appâts : il libère un nuage d'odeur qui stimule le poisson et le fait mordre plus longtemps. Efficace sur de nombreuses espèces, en eau douce comme en mer. Flacon pratique de 30 ml. Disponible en plusieurs formules/formats.",
+      en: "Attractant spray to apply on your lures and baits: it releases a scent cloud that stimulates fish and makes them hold on longer. Effective on many species, in fresh or salt water. Handy 30 ml bottle. Available in several formulas/sizes.",
+      es: "Spray atrayente para rociar sobre tus señuelos y cebos: libera una nube de olor que estimula al pez y le hace morder más tiempo. Eficaz en muchas especies, en agua dulce o mar. Práctico frasco de 30 ml. Disponible en varias fórmulas/formatos." }
   },
   {
-    id: 'cj-20', category: 'gear', usd: 0.75, ship: 5.37, rating: 4.4, reviews: null, badge: null, sku: 'CJYD155659501AZ',
-    photos: ['20-2.jpg','20-3.jpg','20-4.jpg','20-5.jpg','20-6.jpg'],
-    name: { fr: 'Attractant à poissons en spray (30 ml)', en: 'Fish Attractant Spray (30 ml)', es: 'Atrayente de peces en spray (30 ml)' },
-    desc: { fr: 'Booster d\'appât pour plus de touches.', en: 'Bait booster for more bites.', es: 'Potenciador de cebo para más picadas.' },
+    id: 'cj-211', category: 'gear', usd: 5.34, ship: 13.46, rating: 4.6, reviews: null, badge: null, sku: 'CJYD1944241',
+    photos: ['211-1.jpg','211-2.jpg','211-3.jpg','211-4.jpg','211-5.jpg'],
+    name: { fr: 'Sac fourreau cylindrique à cannes (bandoulière)', en: 'Cylindrical Rod Bag (shoulder strap)', es: 'Bolsa cilíndrica para cañas (bandolera)' },
+    desc: { fr: 'Transporte cannes montées + matériel.', en: 'Carries rigged rods + gear.', es: 'Transporta cañas montadas + equipo.' },
     long: {
-      fr: "Spray attractant concentré à pulvériser sur tes leurres, appâts ou amorces pour décupler leur pouvoir attractif. Sa formule stimule l'appétit du poisson et déclenche les touches, même les jours difficiles. Flacon pratique de 30 ml à garder dans le gilet. Pour toutes les pêches, eau douce et mer.",
-      en: "Concentrated attractant spray to mist onto your lures, baits or groundbait to boost their pulling power. Its formula stimulates the fish's appetite and triggers bites, even on tough days. Handy 30 ml bottle to keep in your vest. For all kinds of fishing, fresh and salt water.",
-      es: "Spray atrayente concentrado para pulverizar sobre señuelos, cebos o engodo y multiplicar su poder de atracción. Su fórmula estimula el apetito del pez y provoca picadas, incluso en días difíciles. Práctico frasco de 30 ml para llevar en el chaleco. Para todo tipo de pesca, agua dulce y mar." }
+      fr: "Sac-fourreau cylindrique pour transporter tes cannes, même montées avec le moulinet, et ton matériel. Poches latérales pour les accessoires, intérieur rembourré qui protège les blanks et bandoulière réglable. Tissu robuste et déperlant. Idéal pour partir au bord de l'eau avec tout dans un seul sac.",
+      en: "Cylindrical rod bag to carry your rods, even rigged with the reel, and your gear. Side pockets for accessories, padded interior that protects the blanks and an adjustable shoulder strap. Sturdy, water-repellent fabric. Ideal to head to the water with everything in one bag.",
+      es: "Bolsa-funda cilíndrica para transportar tus cañas, incluso montadas con el carrete, y tu equipo. Bolsillos laterales para accesorios, interior acolchado que protege los blanks y bandolera ajustable. Tejido robusto y repelente al agua. Ideal para ir a la orilla con todo en una sola bolsa." }
   },
   {
-    id: 'cj-21', category: 'lures', usd: 5.79, ship: 6.17, rating: 4.7, reviews: null, badge: 'best', sku: 'CJYE121976529CX',
-    photos: ['21-1.jpg','21-2.jpg','21-3.jpg','21-4.jpg','21-5.jpg'],
-    name: { fr: 'Stickbait bois fait main 120 g (mer)', en: 'Handmade Wood Pencil Stickbait 120 g', es: 'Stickbait de madera artesanal 120 g' },
-    desc: { fr: 'Gros leurre de surface en bois, plusieurs poids.', en: 'Big wooden topwater lure, several weights.', es: 'Gran señuelo de superficie de madera, varios pesos.' },
+    id: 'cj-212', category: 'gear', rating: 4.5, reviews: null, badge: null, sku: 'CJDY184328804DW',
+    variants: [
+      { label: '1 pièce', usd: 1.19, ship: 5.20 }, { label: '2 pièces', usd: 2.10, ship: 5.20 },
+      { label: '4 pièces', usd: 4.00, ship: 5.20 }
+    ],
+    photos: ['212-1.jpg','212-2.jpg','212-3.jpg','212-4.jpg','212-5.jpg'],
+    name: { fr: 'Agrafes de largage (release clips)', en: 'Line Release Clips', es: 'Clips de suelta (release)' },
+    desc: { fr: 'Largue la ligne à la touche, traîne/downrigger.', en: 'Releases the line on a bite, trolling/downrigger.', es: 'Suelta la línea en la picada, curricán/downrigger.' },
     long: {
-      fr: "Stickbait (pencil) en bois sculpté à la main, conçu pour la pêche au gros en mer (GT, thon, liche…). Son poids (90 à 140 g) autorise des lancers très longs et une nage glissée « walking the dog » irrésistible en surface. Finition soignée, anneaux et hameçons renforcés pour les combats musclés. Nombreux coloris.",
-      en: "Hand-carved wooden pencil stickbait, built for big-game sea fishing (GT, tuna, leerfish…). Its weight (90 to 140 g) allows very long casts and an irresistible 'walking the dog' surface action. Polished finish, reinforced rings and hooks for tough fights. Many colours.",
-      es: "Stickbait (pencil) de madera tallado a mano, diseñado para la pesca de altura en el mar (GT, atún, pez limón…). Su peso (90 a 140 g) permite lanzados muy largos y un nado «walking the dog» irresistible en superficie. Acabado cuidado, anillas y anzuelos reforzados. Muchos colores." }
+      fr: "Agrafes de largage (release clips) pour la pêche à la traîne et au downrigger : la ligne est pincée pendant la traîne, puis se libère d'un coup à la touche pour ferrer directement avec la canne. Tension réglable, plastique résistant. Vendu par lot (1, 2 ou 4 pièces). Indispensable pour traîner plusieurs lignes proprement.",
+      en: "Line release clips for trolling and downrigger fishing: the line is held while trolling, then snaps free on a bite so you fight directly with the rod. Adjustable tension, tough plastic. Sold in packs (1, 2 or 4 pieces). Essential to troll several lines cleanly.",
+      es: "Clips de suelta (release) para la pesca al curricán y con downrigger: la línea queda sujeta durante el arrastre y se libera de golpe en la picada para clavar directamente con la caña. Tensión ajustable, plástico resistente. Vendido en lotes (1, 2 o 4 piezas). Imprescindible para arrastrar varias líneas limpiamente." }
   },
   {
-    id: 'cj-22', category: 'gear', usd: 1.19, ship: 5.20, rating: 4.5, reviews: null, badge: null, sku: 'CJDY184328802BY',
-    photos: ['22-1.jpg','22-2.jpg','22-3.jpg','22-4.jpg','22-5.jpg'],
-    name: { fr: 'Agrafe de largage (pêche à la traîne)', en: 'Downrigger Release Clip (trolling)', es: 'Pinza de suelta (curricán)' },
-    desc: { fr: 'Libère la ligne net à la touche.', en: 'Releases the line cleanly on the bite.', es: 'Suelta la línea limpia en la picada.' },
+    id: 'cj-213', category: 'lures', rating: 4.6, reviews: null, badge: null, sku: 'CJYE121976528BY',
+    variants: [
+      { label: '90 g', usd: 5.58, ship: 6.17 }, { label: '120 g', usd: 5.79, ship: 6.17 },
+      { label: '140 g', usd: 5.79, ship: 6.17 }
+    ],
+    photos: ['213-1.jpg','213-2.jpg','213-3.jpg','213-4.jpg','213-5.jpg'],
+    name: { fr: 'Stickbait bois fait main (90 à 140 g, mer)', en: 'Handmade Wood Pencil Lure (90 to 140 g)', es: 'Stickbait de madera artesanal (90 a 140 g)' },
+    desc: { fr: 'Gros leurre mer en bois, lance très loin.', en: 'Big wooden sea lure, casts very far.', es: 'Gran señuelo de mar en madera, lanza muy lejos.' },
     long: {
-      fr: "Agrafe de largage à ressort pour la pêche à la traîne et au downrigger : elle tient ta ligne tendue et la libère net dès qu'un poisson frappe, pour un ferrage direct. Tension réglable, corps plastique résistant à l'eau salée. Disponible par lot de 1, 2 ou 4 pièces.",
-      en: "Spring release clip for trolling and downrigger fishing: it holds your line under tension and releases it cleanly the moment a fish strikes, for a direct hookset. Adjustable tension, saltwater-resistant plastic body. Available in packs of 1, 2 or 4.",
-      es: "Pinza de suelta con resorte para curricán y downrigger: mantiene tu línea en tensión y la suelta limpiamente en cuanto un pez golpea, para una clavada directa. Tensión ajustable, cuerpo de plástico resistente al agua salada. Disponible en packs de 1, 2 o 4." }
+      fr: "Gros stickbait en bois fabriqué à la main pour la pêche au gros en mer (thon, sériole, bonite, carangue). Dense et lourd (90 à 140 g), il se lance très loin et nage en surface ou juste dessous selon l'animation. Finition réaliste effet écaille et hameçons triples forts. Disponible en plusieurs poids et coloris.",
+      en: "Big handmade wooden stickbait for big-game sea fishing (tuna, amberjack, bonito, trevally). Dense and heavy (90 to 140 g), it casts very far and swims on or just under the surface depending on the action. Realistic scale finish and strong treble hooks. Available in several weights and colours.",
+      es: "Gran stickbait de madera hecho a mano para la pesca de altura en mar (atún, medregal, bonito, jurel). Denso y pesado (90 a 140 g), se lanza muy lejos y nada en superficie o justo debajo según la animación. Acabado realista efecto escama y anzuelos triples fuertes. Disponible en varios pesos y colores." }
   },
   {
-    id: 'cj-23', category: 'gear', usd: 5.34, ship: 13.46, rating: 4.6, reviews: null, badge: null, sku: 'CJYD194424102BY',
-    photos: ['23-1.jpg','23-2.jpg','23-3.jpg','23-4.jpg','23-5.jpg'],
-    name: { fr: 'Housse / fourreau à cannes (1,16 m)', en: 'Rod Carry Bag / Tube (1.16 m)', es: 'Funda / tubo para cañas (1,16 m)' },
-    desc: { fr: 'Transporte et protège tes cannes montées.', en: 'Carry and protect your rigged rods.', es: 'Transporta y protege tus cañas montadas.' },
-    long: {
-      fr: "Housse cylindrique robuste pour transporter et protéger plusieurs cannes — même montées avec leur moulinet. Tissu épais déperlant, poignées et bandoulière réglable pour l'emporter facilement. Poches pour ranger aussi le petit matériel. Format 1,16 m, coloris vert armée.",
-      en: "Sturdy cylindrical bag to carry and protect several rods — even rigged with their reels. Thick water-repellent fabric, handles and an adjustable shoulder strap for easy carrying. Pockets to store small gear too. 1.16 m size, army-green colour.",
-      es: "Funda cilíndrica robusta para transportar y proteger varias cañas — incluso montadas con su carrete. Tejido grueso repelente al agua, asas y bandolera ajustable para llevarla fácil. Bolsillos para guardar también material pequeño. Tamaño 1,16 m, color verde militar." }
-  },
-  {
-    id: 'cj-25', category: 'gear', usd: 1.36, ship: 6.13, rating: 4.5, reviews: null, badge: null, sku: 'CJYE258236401AZ',
-    photos: ['25-1.jpg'],
+    id: 'cj-215', category: 'gear', usd: 1.36, ship: 6.04, rating: 4.4, reviews: null, badge: null, sku: 'CJYE258236401AZ',
+    photos: ['215-1.jpg'],
     name: { fr: 'Attractant de pêche Kriath (60 ml)', en: 'Kriath Fishing Attractant (60 ml)', es: 'Atrayente de pesca Kriath (60 ml)' },
-    desc: { fr: 'Concentré toutes pêches, plus de touches.', en: 'All-purpose concentrate, more bites.', es: 'Concentrado multiusos, más picadas.' },
+    desc: { fr: 'Liquide concentré, tous poissons.', en: 'Concentrated liquid, all fish.', es: 'Líquido concentrado, todos los peces.' },
     long: {
-      fr: "Attractant de pêche concentré « toutes pêches » à ajouter sur tes leurres, appâts ou amorces. Son arôme puissant stimule l'appétit du poisson et multiplie les touches, en eau douce comme en mer. Flacon de 60 ml économique : quelques gouttes suffisent. Un coup de pouce simple qui fait souvent la différence.",
-      en: "All-purpose concentrated fishing attractant to add to your lures, baits or groundbait. Its powerful scent stimulates the fish's appetite and multiplies bites, in fresh and salt water. Economical 60 ml bottle: a few drops are enough. A simple boost that often makes the difference.",
-      es: "Atrayente de pesca concentrado «multiusos» para añadir a tus señuelos, cebos o engodo. Su potente aroma estimula el apetito del pez y multiplica las picadas, en agua dulce y salada. Frasco económico de 60 ml: bastan unas gotas. Un empujón sencillo que muchas veces marca la diferencia." }
+      fr: "Attractant de pêche liquide concentré « Kriath », à appliquer sur tes leurres, appâts ou amorces. Il diffuse une odeur puissante qui attire le poisson et prolonge les touches. Polyvalent (carpe, carnassiers, poissons de mer). Flacon de 60 ml facile à doser. Un coup de pouce simple pour améliorer tes prises.",
+      en: "Concentrated liquid fishing attractant 'Kriath', to apply on your lures, baits or groundbait. It releases a powerful scent that draws fish and prolongs the bites. Versatile (carp, predators, sea fish). Easy-to-dose 60 ml bottle. A simple boost to improve your catches.",
+      es: "Atrayente de pesca líquido concentrado «Kriath», para aplicar en tus señuelos, cebos o engodos. Difunde un olor potente que atrae al pez y prolonga las picadas. Versátil (carpa, depredadores, peces de mar). Frasco de 60 ml fácil de dosificar. Un empujón simple para mejorar tus capturas." }
   },
   {
-    id: 'cj-26', category: 'gear', usd: 16.02, ship: 0, rating: 4.7, reviews: null, badge: 'best', sku: 'CJYE29492970001',
-    photos: ['26-1.jpg','26-2.jpg','26-3.jpg','26-4.jpg','26-5.jpg'],
-    name: { fr: 'Coffret carpe 328 pièces (expédié USA)', en: 'Carp Tackle Kit 328 pcs (US warehouse)', es: 'Kit de carpa 328 piezas (almacén USA)' },
-    desc: { fr: 'Kit carpe complet, livraison rapide & offerte.', en: 'Complete carp kit, fast free shipping.', es: 'Kit de carpa completo, envío rápido y gratis.' },
+    id: 'cj-217', category: 'gear', usd: 5.34, ship: 7.13, rating: 4.6, reviews: null, badge: null, sku: 'CJYE112273801AZ',
+    photos: ['217-1.jpg','217-2.jpg','217-3.jpg','217-4.jpg','217-5.jpg'],
+    name: { fr: 'Coffret accessoires carpe 277 pièces', en: 'Carp Terminal Tackle Kit (277 pcs)', es: 'Kit accesorios carpa 277 piezas' },
+    desc: { fr: 'Tout le montage carpe dans une boîte.', en: 'All your carp rigging in one box.', es: 'Todo el montaje de carpa en una caja.' },
     long: {
-      fr: "Coffret carpe ultra-complet de 328 pièces : émerillons, perles, stop-floats, plombs, aiguilles à bouillette, hameçons et plus encore, triés dans une boîte à compartiments. Expédié depuis un entrepôt aux États-Unis : livraison rapide et offerte ! Idéal pour monter tous tes montages carpe sans rien acheter d'autre.",
-      en: "Ultra-complete 328-piece carp kit: swivels, beads, float stops, sinkers, boilie needles, hooks and more, sorted in a compartment box. Shipped from a US warehouse: fast and free delivery! Ideal to tie every carp rig without buying anything else.",
-      es: "Kit de carpa ultracompleto de 328 piezas: destorcedores, perlas, topes, plomos, agujas para boilies, anzuelos y más, ordenados en una caja con compartimentos. Enviado desde un almacén en EE. UU.: ¡entrega rápida y gratuita! Ideal para montar todos tus aparejos de carpa sin comprar nada más." }
+      fr: "Coffret complet de 277 pièces pour la pêche de la carpe à l'européenne : émerillons, agrafes, perles, stop-floats, plombs, gaines anti-emmêlement, tubes, aiguilles et plus. Tout est trié dans une boîte compartimentée pour monter tes lignes au bord de l'eau sans rien oublier. Idéal pour débuter ou compléter ton matériel.",
+      en: "Complete 277-piece kit for European-style carp fishing: swivels, clips, beads, float stops, sinkers, anti-tangle sleeves, tubing, needles and more. Everything is sorted in a compartment box so you can rig your lines at the water's edge without forgetting anything. Ideal to start out or round out your gear.",
+      es: "Kit completo de 277 piezas para la pesca de carpa al estilo europeo: emerillones, grapas, perlas, topes, plomos, fundas anti-enredos, tubos, agujas y más. Todo ordenado en una caja con compartimentos para montar tus líneas a la orilla sin olvidar nada. Ideal para empezar o completar tu equipo." }
   },
   {
-    id: 'cj-27', category: 'reels', usd: 26.72, ship: 7.27, rating: 4.7, reviews: null, badge: null, sku: 'CJDY166233704DW',
-    photos: ['27-1.jpg','27-2.jpg','27-3.jpg','27-4.jpg','27-5.jpg'],
-    name: { fr: 'Moulinet spinning longue distance (mer/rocher)', en: 'Long-Throw Spinning Reel (sea/rock)', es: 'Carrete spinning de largo lanzamiento (mar/roca)' },
-    desc: { fr: 'Lancer longue distance, robuste.', en: 'Long-distance casting, sturdy.', es: 'Lanzado a larga distancia, robusto.' },
+    id: 'cj-218', category: 'gear', usd: 2.44, ship: 5.57, rating: 4.5, reviews: null, badge: null, sku: 'CJDY272858112LO',
+    photos: ['218-1.jpg','218-2.jpg','218-3.jpg','218-4.jpg','218-5.jpg'],
+    name: { fr: 'Tresse PE multibrins 300 m', en: 'PE Braided Line 300 m', es: 'Trenzado PE 300 m' },
+    desc: { fr: 'Solide, fine, sans élasticité.', en: 'Strong, thin, no stretch.', es: 'Resistente, fina, sin elasticidad.' },
     long: {
-      fr: "Moulinet spinning conçu pour le lancer longue distance en mer et en pêche aux rochers (rockfishing). Bobine longue à lèvre profilée, mécanique fluide et frein puissant pour brider les poissons combatifs. Construction robuste qui résiste aux embruns. Plusieurs tailles disponibles.",
-      en: "Spinning reel built for long-distance casting at sea and rock fishing. Long, profiled-lip spool, smooth mechanics and a powerful drag to tame hard-fighting fish. Sturdy build that resists sea spray. Several sizes available.",
-      es: "Carrete spinning diseñado para el lanzado a larga distancia en el mar y la pesca a roca (rockfishing). Bobina larga de labio perfilado, mecánica suave y freno potente para frenar peces combativos. Construcción robusta que resiste el salitre. Varias tallas disponibles." }
+      fr: "Tresse PE multibrins de 300 m, très résistante et fine pour des lancers longs et une sensibilité maximale. Aucune élasticité : tu sens la moindre touche et le contact avec le fond ou le leurre. Idéale au lancer de leurres, au jig et pour la carpe. Disponible en plusieurs diamètres (numéros) et coloris.",
+      en: "300 m multi-strand PE braid, very strong and thin for long casts and maximum sensitivity. No stretch: you feel the slightest bite and the contact with the bottom or lure. Ideal for lure casting, jigging and carp. Available in several diameters (numbers) and colours.",
+      es: "Trenzado PE multifilamento de 300 m, muy resistente y fino para lanzados largos y máxima sensibilidad. Sin elasticidad: sientes la mínima picada y el contacto con el fondo o el señuelo. Ideal para lanzar señuelos, jigging y carpa. Disponible en varios diámetros (números) y colores." }
   },
   {
-    id: 'cj-28', category: 'gear', usd: 5.34, ship: 7.13, rating: 4.6, reviews: null, badge: null, sku: 'CJYE112273801AZ',
-    photos: ['28-1.jpg','28-2.jpg','28-3.jpg','28-4.jpg','28-5.jpg'],
-    name: { fr: 'Coffret accessoires carpe 277 pièces', en: 'Carp Accessory Kit 277 pcs', es: 'Kit de accesorios de carpa 277 piezas' },
-    desc: { fr: 'Montages carpe à l\'européenne, tout-en-un.', en: 'European carp rigs, all-in-one.', es: 'Aparejos de carpa europeos, todo en uno.' },
+    id: 'cj-219', category: 'rods', usd: 18.82, ship: 7.64, rating: 4.5, reviews: null, badge: null, sku: 'CJDY161210801AZ',
+    photos: ['219-1.jpg','219-2.jpg','219-3.jpg','219-4.jpg','219-5.jpg'],
+    name: { fr: 'Canne stylo + moulinet (ensemble compact)', en: 'Pen Rod + Reel Combo (compact)', es: 'Caña bolígrafo + carrete (compacto)' },
+    desc: { fr: 'Kit nomade format stylo, prêt à pêcher.', en: 'Pocket-size travel kit, ready to fish.', es: 'Kit de viaje formato bolígrafo, listo para pescar.' },
     long: {
-      fr: "Coffret de 277 pièces pour la pêche de la carpe à l'européenne : émerillons rapides, stop-floats, plombs, manchons anti-emmêlement, hameçons et accessoires de montage. Tout est trié dans une boîte compacte pour monter tes lignes au bord de l'eau. L'essentiel du carpiste dans une seule boîte.",
-      en: "277-piece kit for European-style carp fishing: quick swivels, float stops, sinkers, anti-tangle sleeves, hooks and rigging accessories. Everything sorted in a compact box to tie your rigs at the water's edge. The carp angler's essentials in a single box.",
-      es: "Kit de 277 piezas para la pesca de la carpa al estilo europeo: destorcedores rápidos, topes, plomos, fundas antienredo, anzuelos y accesorios de montaje. Todo ordenado en una caja compacta para montar tus líneas en la orilla. Lo esencial del carpista en una sola caja." }
+      fr: "Ensemble de pêche compact façon « stylo » : canne télescopique, petit moulinet et même un leurre, le tout très court une fois replié pour tenir dans un sac ou une poche. Idéal en voyage, en randonnée, pour la glace ou comme cadeau original. Léger mais suffisant pour taquiner perche, truite et petits carnassiers.",
+      en: "Compact 'pen-style' fishing set: telescopic rod, small reel and even a lure, all very short when folded to fit in a bag or pocket. Ideal for travel, hiking, ice fishing or as an original gift. Light but enough to tease perch, trout and small predators.",
+      es: "Equipo de pesca compacto tipo «bolígrafo»: caña telescópica, pequeño carrete e incluso un señuelo, todo muy corto al plegarse para caber en una bolsa o bolsillo. Ideal para viajar, hacer senderismo, pesca en hielo o como regalo original. Ligero pero suficiente para perca, trucha y pequeños depredadores." }
   },
   {
-    id: 'cj-29', category: 'lures', usd: 0.91, ship: 5.35, rating: 4.4, reviews: null, badge: 'new', sku: 'CJYE124717303CX',
-    photos: ['29-1.jpg','29-2.jpg','29-3.jpg','29-4.jpg','29-5.jpg'],
-    name: { fr: 'Leurre « avion » de surface (multi-coloris)', en: 'Aircraft Surface Lure (multi-colour)', es: 'Señuelo «avión» de superficie (multicolor)' },
-    desc: { fr: 'Leurre original en forme d\'avion, très visible.', en: 'Original aircraft-shaped lure, very visible.', es: 'Señuelo original en forma de avión, muy visible.' },
+    id: 'cj-220', category: 'lures', rating: 4.7, reviews: null, badge: 'new', sku: 'CJYD218783802BY',
+    variants: [
+      { label: 'Coffret 24 pièces', usd: 7.25, ship: 10.95 },
+      { label: 'Modèle 03', usd: 6.38, ship: 10.95 }
+    ],
+    photos: ['220-1.jpg','220-2.jpg','220-3.jpg','220-4.jpg','220-5.jpg'],
+    name: { fr: 'Coffret cadeau de Noël pêche (calendrier 24 leurres)', en: 'Christmas Fishing Gift Box (24-piece advent)', es: 'Caja regalo de Navidad pesca (24 piezas)' },
+    desc: { fr: 'Calendrier de l’avent : 24 surprises pêche.', en: 'Advent calendar: 24 fishing surprises.', es: 'Calendario de adviento: 24 sorpresas de pesca.' },
     long: {
-      fr: "Leurre de surface original en forme d'avion, ultra-coloré et très visible de loin. Sa forme crée des remous et des vibrations qui attirent les chasseurs en mer. Plastique flottant résistant, à monter avec un hameçon. Un leurre amusant et accrocheur qui sort de l'ordinaire.",
-      en: "Original aircraft-shaped surface lure, ultra-colourful and visible from afar. Its shape creates swirls and vibrations that attract hunting fish at sea. Tough floating plastic, to rig with a hook. A fun, eye-catching lure that stands out from the crowd.",
-      es: "Señuelo de superficie original en forma de avión, ultracolorido y muy visible de lejos. Su forma crea remolinos y vibraciones que atraen a los cazadores en el mar. Plástico flotante resistente, para montar con anzuelo. Un señuelo divertido y llamativo que sale de lo común." }
+      fr: "Coffret cadeau type calendrier de l'avent pour les passionnés de pêche : 24 cases à ouvrir une par une contenant leurres, accessoires et petites surprises. Présentation festive « Merry Christmas » prête à offrir, parfaite pour Noël ou un anniversaire. Disponible en coffret 24 pièces ou en version « Modèle 03 ».",
+      en: "Advent-calendar-style gift box for fishing lovers: 24 windows to open one by one with lures, accessories and little surprises. Festive 'Merry Christmas' presentation ready to give, perfect for Christmas or a birthday. Available as a 24-piece set or a 'Model 03' version.",
+      es: "Caja regalo tipo calendario de adviento para los apasionados de la pesca: 24 casillas para abrir una a una con señuelos, accesorios y pequeñas sorpresas. Presentación festiva «Merry Christmas» lista para regalar, perfecta para Navidad o un cumpleaños. Disponible en set de 24 piezas o versión «Modelo 03»." }
   },
   {
-    id: 'cj-30', category: 'gear', usd: 0.66, ship: 5.20, rating: 4.5, reviews: null, badge: null, sku: 'CJDY193119402BY',
-    photos: ['30-1.jpg','30-2.jpg','30-3.jpg','30-4.jpg','30-5.jpg'],
-    name: { fr: 'Cages à amorce ressort (carpe, 21 cm)', en: 'Spring Bait Feeders (carp, 21 cm)', es: 'Cestas de cebo de muelle (carpa, 21 cm)' },
-    desc: { fr: 'Diffusent l\'amorce autour de l\'hameçon.', en: 'Release groundbait around the hook.', es: 'Liberan engodo alrededor del anzuelo.' },
+    id: 'cj-221', category: 'gear', usd: 0.21, ship: 5.20, rating: 4.5, reviews: null, badge: null, sku: 'CJYE174315205EV',
+    photos: ['221-1.jpg','221-2.jpg','221-3.jpg','221-4.jpg','221-5.jpg'],
+    name: { fr: 'Plombs ronds (cheburashka, 2 à 18 g)', en: 'Round Sinkers (cheburashka, 2 to 18 g)', es: 'Plomos redondos (cheburashka, 2 a 18 g)' },
+    desc: { fr: 'Plombs à œillet, montage interchangeable.', en: 'Eyed sinkers, swappable rig.', es: 'Plomos con anilla, montaje intercambiable.' },
     long: {
-      fr: "Cages à amorce à ressort (feeders) de 21 cm pour la pêche de la carpe et de la brème à l'européenne. Le ressort retient l'amorce et la libère doucement au fond, créant un nuage attractif autour de ton hameçon. Lestées et faciles à monter. Parfaites au feeder et au plomb plat.",
-      en: "21 cm spring bait feeders for European-style carp and bream fishing. The spring holds groundbait and releases it gently on the bottom, creating an attractive cloud around your hook. Weighted and easy to rig. Perfect for feeder and flat-lead fishing.",
-      es: "Cestas de cebo de muelle de 21 cm para la pesca de la carpa y la brema al estilo europeo. El muelle retiene el engodo y lo libera suavemente en el fondo, creando una nube atractiva alrededor de tu anzuelo. Lastradas y fáciles de montar. Perfectas para feeder y plomo plano." }
+      fr: "Plombs ronds type « cheburashka » à double œillet : ils se clipsent entre le leurre souple et l'hameçon pour un montage articulé qu'on change en quelques secondes sans recouper la ligne. Forme ronde qui glisse sur le fond et limite les accrocs. Disponibles dans de nombreux grammages (2 à 18 g) selon la profondeur et le courant.",
+      en: "Round 'cheburashka' sinkers with a double eye: they clip between the soft bait and the hook for an articulated rig you can swap in seconds without recutting the line. Round shape that slides over the bottom and limits snags. Available in many weights (2 to 18 g) to match depth and current.",
+      es: "Plomos redondos tipo «cheburashka» con doble anilla: se enganchan entre el vinilo y el anzuelo para un montaje articulado que se cambia en segundos sin recortar la línea. Forma redonda que se desliza por el fondo y limita los enganches. Disponibles en muchos gramajes (2 a 18 g) según la profundidad y la corriente." }
   },
   {
-    id: 'cj-31', category: 'lures', usd: 2.70, ship: 5.20, rating: 4.5, reviews: null, badge: null, sku: 'CJYE134759903CX',
-    photos: ['31-1.jpg','31-2.jpg','31-3.jpg','31-4.jpg','31-5.jpg'],
-    name: { fr: 'Leurres souples bioniques (silicone)', en: 'Bionic Silicone Soft Baits', es: 'Señuelos blandos biónicos (silicona)' },
-    desc: { fr: 'Imitations souples, nage réaliste.', en: 'Soft imitations, realistic swim.', es: 'Imitaciones blandas, nado realista.' },
+    id: 'cj-222', category: 'gear', usd: 16.02, ship: 0, rating: 4.7, reviews: null, badge: 'best', sku: 'CJYE29492970001',
+    photos: ['222-1.jpg','222-2.jpg','222-3.jpg','222-4.jpg','222-5.jpg'],
+    name: { fr: 'Coffret carpe 328 pièces (expédié USA)', en: '328-Piece Carp Tackle Kit (US warehouse)', es: 'Kit carpa 328 piezas (USA)' },
+    desc: { fr: 'Montage carpe complet, port offert (USA).', en: 'Complete carp rigging, free shipping (US).', es: 'Montaje completo de carpa, envío gratis (USA).' },
     long: {
-      fr: "Leurres souples en silicone bionique à la nage et au toucher ultra-réalistes. Leur matière molle et leur forme imitant une proie blessée déclenchent l'attaque des carnassiers, même les plus méfiants. À monter sur tête plombée ou hameçon texan. Plusieurs coloris (blanc, doré, noir).",
-      en: "Bionic silicone soft baits with an ultra-realistic swim and feel. Their soft material and wounded-prey shape trigger strikes from predators, even the wariest. Rig on a jig head or Texas hook. Several colours (white, gold, black).",
-      es: "Señuelos blandos de silicona biónica con un nado y un tacto ultrarrealistas. Su material blando y su forma de presa herida provocan el ataque de los depredadores, incluso los más desconfiados. Para montar en cabeza plomada o anzuelo texano. Varios colores (blanco, dorado, negro)." }
+      fr: "Coffret très complet de 328 pièces pour la pêche moderne de la carpe : émerillons, agrafes, perles, stop-floats, plombs, gaines, tubes anti-emmêlement, aiguilles à bouillette et plus. Tout est trié dans une boîte compartimentée. Expédié depuis un entrepôt aux États-Unis : livraison rapide et offerte ! Idéal pour s'équiper d'un coup.",
+      en: "Very complete 328-piece kit for modern carp fishing: swivels, clips, beads, float stops, sinkers, sleeves, anti-tangle tubing, boilie needles and more. Everything sorted in a compartment box. Shipped from a US warehouse: fast and free delivery! Ideal to gear up in one go.",
+      es: "Kit muy completo de 328 piezas para la pesca moderna de carpa: emerillones, grapas, perlas, topes, plomos, fundas, tubos anti-enredos, agujas para boilies y más. Todo ordenado en una caja con compartimentos. Enviado desde un almacén en EE. UU.: ¡entrega rápida y gratis! Ideal para equiparte de golpe." }
   },
   {
-    id: 'cj-32', category: 'gear', usd: 0.21, ship: 5.20, rating: 4.4, reviews: null, badge: null, sku: 'CJYE174315205EV',
-    photos: ['32-1.jpg','32-2.jpg','32-3.jpg','32-4.jpg','32-5.jpg'],
-    name: { fr: 'Plomb cheburashka à clips (plusieurs poids)', en: 'Cheburashka Clip Sinker (several weights)', es: 'Plomo cheburashka con clips (varios pesos)' },
-    desc: { fr: 'Tête ronde à changement rapide de leurre.', en: 'Round head, quick lure change.', es: 'Cabeza redonda, cambio rápido de señuelo.' },
+    id: 'cj-223', category: 'lures', usd: 0.91, ship: 5.35, rating: 4.5, reviews: null, badge: null, sku: 'CJYE124717303CX',
+    photos: ['223-1.jpg','223-2.jpg','223-3.jpg','223-4.jpg','223-5.jpg'],
+    name: { fr: 'Leurre « avion » pour la traîne', en: 'Aircraft Trolling Lure', es: 'Señuelo «avión» para curricán' },
+    desc: { fr: 'Plonge et nage stable à la traîne.', en: 'Dives and tracks stably when trolled.', es: 'Bucea y nada estable al curricán.' },
     long: {
-      fr: "Plomb « cheburashka » à tête ronde et anneaux à clips pour changer de leurre souple en un instant, sans recouper le fil. Idéal pour la pêche du carnassier en linéaire ou à gratter le fond. Disponible en plusieurs poids (2 à 18 g) selon la profondeur et le courant.",
-      en: "'Cheburashka' round-head sinker with clip rings to swap soft baits in an instant, without re-cutting the line. Ideal for predator fishing on the retrieve or scratching the bottom. Available in several weights (2 to 18 g) to match depth and current.",
-      es: "Plomo «cheburashka» de cabeza redonda con anillas de clip para cambiar de señuelo blando en un instante, sin recortar el hilo. Ideal para la pesca de depredadores al lineal o rascando el fondo. Disponible en varios pesos (2 a 18 g) según la profundidad y la corriente." }
+      fr: "Leurre plongeant en forme d'« avion » (diving planer) pour la pêche à la traîne : tracté derrière le bateau, ses ailes le font descendre en profondeur et garder une nage stable, idéal pour présenter un autre leurre ou une cuiller en aval. Robuste et simple d'emploi. Disponible en plusieurs coloris.",
+      en: "Aircraft-shaped diving lure (diving planer) for trolling: pulled behind the boat, its wings take it down deep and keep a stable track, ideal to present another lure or spoon behind it. Sturdy and simple to use. Available in several colours.",
+      es: "Señuelo buceador en forma de «avión» (diving planer) para la pesca al curricán: remolcado tras el barco, sus alas lo hacen bajar en profundidad y mantener un nado estable, ideal para presentar otro señuelo o cucharilla detrás. Robusto y sencillo de usar. Disponible en varios colores." }
   },
   {
-    id: 'cj-33', category: 'rods', usd: 18.82, ship: 7.64, rating: 4.6, reviews: null, badge: 'new', sku: 'CJDY161210801AZ',
-    photos: ['33-1.jpg','33-2.jpg','33-3.jpg','33-4.jpg','33-5.jpg'],
-    name: { fr: 'Mini canne « stylo » + moulinet (compacte)', en: 'Pocket Pen Rod + Reel (compact)', es: 'Mini caña «bolígrafo» + carrete (compacta)' },
-    desc: { fr: 'Canne télescopique format stylo, kit complet.', en: 'Pen-size telescopic rod, complete kit.', es: 'Caña telescópica tamaño bolígrafo, kit completo.' },
+    id: 'cj-224', category: 'lures', usd: 2.70, ship: 5.20, rating: 4.5, reviews: null, badge: null, sku: 'CJYE134759903CX',
+    photos: ['224-1.jpg','224-2.jpg','224-3.jpg','224-4.jpg','224-5.jpg'],
+    name: { fr: 'Leurre souple silicone bionique', en: 'Bionic Silicone Soft Bait', es: 'Señuelo blando de silicona biónico' },
+    desc: { fr: 'Souple et réaliste, nage naturelle.', en: 'Soft and realistic, natural action.', es: 'Blando y realista, nado natural.' },
     long: {
-      fr: "Étonnante mini canne télescopique format « stylo » livrée avec son moulinet : repliée, elle se glisse dans une poche ou un sac. Déployée, c'est un vrai petit ensemble de pêche pour taquiner truites et perches partout, en voyage ou en sortie improvisée. Kit complet canne + moulinet, idéal aussi en cadeau.",
-      en: "A surprising pen-sized telescopic mini rod that comes with its reel: folded, it slips into a pocket or bag. Extended, it's a real little fishing combo to tempt trout and perch anywhere, travelling or on the spur of the moment. Complete rod + reel kit, a great gift too.",
-      es: "Una sorprendente mini caña telescópica tamaño «bolígrafo» que viene con su carrete: plegada, cabe en un bolsillo o bolsa. Desplegada, es un pequeño equipo de pesca real para tentar truchas y percas en cualquier lugar. Kit completo caña + carrete, ideal también como regalo." }
+      fr: "Leurre souple en silicone au profil bionique très réaliste : sa matière souple et sa nage naturelle imitent une proie vivante et déclenchent les carnassiers méfiants (brochet, sandre, perche, bar). À monter sur tête plombée ou hameçon texan. Résistant aux dents. Disponible en plusieurs coloris.",
+      en: "Soft silicone lure with a very realistic bionic profile: its soft material and natural action imitate live prey and trigger wary predators (pike, zander, perch, bass). Rig it on a jig head or a Texas hook. Tear-resistant. Available in several colours.",
+      es: "Señuelo blando de silicona con perfil biónico muy realista: su material flexible y su nado natural imitan a una presa viva y provocan a los depredadores desconfiados (lucio, lucioperca, perca, lubina). Para montar en cabeza plomada o anzuelo texas. Resistente a los dientes. Disponible en varios colores." }
   },
   {
-    id: 'cj-34', category: 'gear', usd: 2.44, ship: 5.50, rating: 4.6, reviews: null, badge: null, sku: 'CJDY272858111KP',
-    variants: [ { label: '300M 6.0', usd: 2.44 }, { label: '300M 8.0', usd: 2.44 } ],
-    photos: ['34-1.jpg','34-2.jpg','34-3.jpg','34-4.jpg','34-5.jpg'],
-    name: { fr: 'Tresse PE « Power Strong » 300 m (6.0/8.0)', en: 'PE Braid "Power Strong" 300 m (6.0/8.0)', es: 'Trenzado PE «Power Strong» 300 m (6.0/8.0)' },
-    desc: { fr: 'Grosse tresse 300 m, très résistante.', en: 'Heavy 300 m braid, very strong.', es: 'Trenzado grueso 300 m, muy resistente.' },
+    id: 'cj-225', category: 'gear', usd: 0.66, ship: 5.20, rating: 4.5, reviews: null, badge: null, sku: 'CJDY193119402BY',
+    photos: ['225-1.jpg','225-2.jpg','225-3.jpg','225-4.jpg','225-5.jpg'],
+    name: { fr: 'Amorçoir à ressort (feeder carpe)', en: 'Spring Feeder / Method Coil (carp)', es: 'Cebador de muelle (carpa)' },
+    desc: { fr: 'Retient l’amorce près de l’hameçon.', en: 'Holds groundbait near the hook.', es: 'Retiene el cebo cerca del anzuelo.' },
     long: {
-      fr: "Grande bobine de 300 m de tresse PE « Power Strong », fine, ronde et ultra-résistante pour le carnassier et la mer. Quasiment sans élasticité pour une sensibilité maximale et un ferrage instantané. Disponible en fort diamètre (6.0 et 8.0) pour les gros poissons. Plusieurs coloris.",
-      en: "Large 300 m spool of 'Power Strong' PE braid, thin, round and ultra-strong for predators and the sea. Almost no stretch for maximum sensitivity and an instant hookset. Available in heavy diameters (6.0 and 8.0) for big fish. Several colours.",
-      es: "Gran bobina de 300 m de trenzado PE «Power Strong», fino, redondo y ultrarresistente para depredadores y mar. Casi sin elasticidad para máxima sensibilidad y clavada instantánea. Disponible en diámetros gruesos (6.0 y 8.0) para peces grandes. Varios colores." }
+      fr: "Amorçoir à ressort (feeder) pour la pêche de la carpe et des poissons blancs : tu garnis la spirale d'amorce ou de pâte, qui se libère lentement au fond et concentre le poisson autour de ton hameçon. Tige métallique et émerillon anti-vrillage. Léger et facile à recharger. Idéal en method feeder.",
+      en: "Spring feeder for carp and silver fish: pack the coil with groundbait or paste, which releases slowly on the bottom and gathers fish around your hook. Metal stem and anti-twist swivel. Light and easy to refill. Ideal for method feeder fishing.",
+      es: "Cebador de muelle (feeder) para la pesca de carpa y peces blancos: rellenas la espiral con engodo o pasta, que se libera lentamente en el fondo y concentra al pez alrededor de tu anzuelo. Varilla metálica y emerillón anti-torsión. Ligero y fácil de recargar. Ideal en method feeder." }
   },
   {
-    id: 'cj-35', category: 'gear', usd: 5.31, ship: 9.38, rating: 4.6, reviews: null, badge: 'new', sku: 'CJYD218783802BY',
-    photos: ['35-2.jpg','35-3.jpg','35-4.jpg','35-5.jpg','35-6.jpg'],
-    name: { fr: 'Coffret cadeau pêche (24 pièces)', en: 'Fishing Gift Set (24 pieces)', es: 'Set regalo de pesca (24 piezas)' },
-    desc: { fr: 'Accessoires de pêche en boîte cadeau festive.', en: 'Fishing accessories in a festive gift box.', es: 'Accesorios de pesca en caja regalo festiva.' },
+    id: 'cj-226', category: 'lures', usd: 3.70, ship: 5.20, rating: 4.6, reviews: null, badge: null, sku: 'CJYE176445901AZ',
+    photos: ['226-1.jpg','226-2.jpg','226-3.jpg','226-4.jpg','226-5.jpg'],
+    name: { fr: 'Leurre coulant lumineux longue distance', en: 'Luminous Long-Cast Sinking Lure', es: 'Señuelo hundido luminoso largo alcance' },
+    desc: { fr: 'Brille dans le noir, lance loin, 10 motifs.', en: 'Glows in the dark, casts far, 10 patterns.', es: 'Brilla en la oscuridad, lanza lejos, 10 motivos.' },
     long: {
-      fr: "Coffret cadeau idéal pour les passionnés de pêche : un assortiment de 24 accessoires utiles présentés dans une jolie boîte festive. Leurres, outils et petit matériel réunis pour faire plaisir à coup sûr. Le cadeau parfait pour un pêcheur, à Noël ou toute l'année.",
-      en: "The ideal gift box for fishing lovers: an assortment of 24 useful accessories presented in a nice festive box. Lures, tools and small gear together to please for sure. The perfect gift for an angler, at Christmas or all year round.",
-      es: "La caja regalo ideal para los aficionados a la pesca: un surtido de 24 accesorios útiles en una bonita caja festiva. Señuelos, herramientas y material pequeño juntos para acertar seguro. El regalo perfecto para un pescador, en Navidad o todo el año." }
+      fr: "Leurre coulant à effet lumineux (phosphorescent + UV) pour la pêche en mer du bord et la nuit. Dense, il se lance très loin et descend dans la couche d'eau ; son corps brille dans le noir pour attirer le poisson même en eau sombre. Hameçons triples. Disponible en 10 motifs/coloris très pêchants.",
+      en: "Sinking lure with a luminous effect (glow + UV) for shore and night sea fishing. Dense, it casts very far and drops through the water column; its body glows in the dark to draw fish even in dark water. Treble hooks. Available in 10 very effective patterns/colours.",
+      es: "Señuelo hundido con efecto luminoso (fosforescente + UV) para la pesca en mar desde costa y de noche. Denso, se lanza muy lejos y baja por la capa de agua; su cuerpo brilla en la oscuridad para atraer al pez incluso en agua oscura. Anzuelos triples. Disponible en 10 motivos/colores muy efectivos." }
   },
   {
-    id: 'cj-36', category: 'gear', usd: 1.74, ship: 9.89, rating: 4.5, reviews: null, badge: null, sku: 'CJYD247337702BY',
-    photos: ['36-1.jpeg','36-2.jpeg','36-3.jpeg','36-4.jpeg','36-5.jpeg'],
-    name: { fr: 'Étui rigide à cannes (imperméable, 1,25 m)', en: 'Hard-Shell Rod Tube Bag (waterproof, 1.25 m)', es: 'Funda rígida para cañas (impermeable, 1,25 m)' },
-    desc: { fr: 'Coque rigide, protège tes cannes en transport.', en: 'Hard shell, protects rods in transit.', es: 'Carcasa rígida, protege las cañas al transportarlas.' },
+    id: 'cj-228', category: 'reels', rating: 4.6, reviews: null, badge: null, sku: 'CJDY111366801AZ',
+    variants: [
+      { label: '1000', usd: 6.30, ship: 9.15 }, { label: '2000', usd: 6.67, ship: 9.15 },
+      { label: '3000', usd: 7.04, ship: 9.15 }, { label: '4000', usd: 7.41, ship: 9.15 },
+      { label: '5000', usd: 7.78, ship: 9.15 }, { label: '6000', usd: 8.15, ship: 9.15 },
+      { label: '7000', usd: 8.52, ship: 9.15 }
+    ],
+    photos: ['228-1.jpg','228-2.jpg','228-3.jpg','228-4.jpg','228-5.jpg'],
+    name: { fr: 'Moulinet spinning tête métal (1000 à 7000)', en: 'Metal-Head Spinning Reel (1000 to 7000)', es: 'Carrete spinning cabeza metal (1000 a 7000)' },
+    desc: { fr: 'Robuste, fluide, 7 tailles douce/mer.', en: 'Sturdy, smooth, 7 sizes fresh/salt.', es: 'Robusto, fluido, 7 tallas dulce/mar.' },
     long: {
-      fr: "Étui à cannes à coque semi-rigide et imperméable pour transporter et protéger 3 à 4 cannes des chocs et de l'humidité. Bandoulière réglable et fermeture solide. Compact et léger, il accompagne tous tes déplacements. Disponible en 1,2 m et 1,25 m.",
-      en: "Semi-rigid, waterproof rod tube bag to carry and protect 3 to 4 rods from knocks and moisture. Adjustable shoulder strap and sturdy closure. Compact and light, it goes everywhere with you. Available in 1.2 m and 1.25 m.",
-      es: "Funda para cañas con carcasa semirrígida e impermeable para transportar y proteger 3 o 4 cañas de golpes y humedad. Bandolera ajustable y cierre sólido. Compacta y ligera, te acompaña a todas partes. Disponible en 1,2 m y 1,25 m." }
+      fr: "Moulinet spinning à tête et manivelle métal, robuste et fluide, pour la pêche aux leurres et au posé en eau douce comme en mer. Récupération douce sur roulements, frein avant progressif et bobine pré-équipée. Décliné en 7 tailles (1000 à 7000) : choisis la puissance adaptée, de la pêche fine au gros poisson de mer.",
+      en: "Spinning reel with a metal head and handle, sturdy and smooth, for lure and bait fishing in fresh or salt water. Smooth retrieve on bearings, progressive front drag and pre-spooled. Available in 7 sizes (1000 to 7000): pick the power you need, from finesse to big sea fish.",
+      es: "Carrete spinning con cabeza y manivela de metal, robusto y fluido, para la pesca con señuelos y al fondo en agua dulce o mar. Recogida suave sobre rodamientos, freno delantero progresivo y bobina pre-equipada. Disponible en 7 tallas (1000 a 7000): elige la potencia adecuada, de la pesca fina al gran pez de mar." }
   },
   {
-    id: 'cj-37', category: 'reels', usd: 6.30, ship: 6.85, rating: 4.5, reviews: null, badge: null, sku: 'CJDY111366801AZ',
-    photos: ['37-1.jpg','37-2.jpg','37-3.jpg','37-4.jpg','37-5.jpg'],
-    name: { fr: 'Moulinet spinning tête métal DX (1000-7000)', en: 'Metal-Head Spinning Reel DX (1000-7000)', es: 'Carrete spinning cabeza metal DX (1000-7000)' },
-    desc: { fr: 'Tête métal, poignée bois, plusieurs tailles.', en: 'Metal head, wood knob, several sizes.', es: 'Cabeza metálica, pomo de madera, varias tallas.' },
+    id: 'cj-230', category: 'gear', usd: 0.73, ship: 5.28, rating: 4.5, reviews: null, badge: null, sku: 'CJDY107831501AZ',
+    photos: ['230-1.jpg','230-2.jpg','230-3.jpg','230-4.jpg','230-5.jpg'],
+    name: { fr: 'Capuchon caoutchouc de protection (talon de canne)', en: 'Rubber Rod Butt Protective Cap', es: 'Capuchón de goma protector (talón de caña)' },
+    desc: { fr: 'Protège le talon, antidérapant.', en: 'Protects the butt, non-slip.', es: 'Protege el talón, antideslizante.' },
     long: {
-      fr: "Moulinet spinning à tête métallique et poignée en bois élégante. Rotation fluide, bobine alu et frein avant réglable pour une pêche polyvalente, du leurre léger au posé. Construction soignée et fiable à petit prix. Disponible de la taille 1000 (pêche fine) à 7000 (gros poissons et mer).",
-      en: "Spinning reel with a metal head and an elegant wooden knob. Smooth rotation, aluminium spool and adjustable front drag for versatile fishing, from light lures to still fishing. Tidy, reliable build at a low price. Available from size 1000 (finesse) to 7000 (big fish and sea).",
-      es: "Carrete spinning con cabeza metálica y elegante pomo de madera. Rotación suave, bobina de aluminio y freno frontal ajustable para una pesca versátil, del señuelo ligero al fondo. Construcción cuidada y fiable a buen precio. Disponible de la talla 1000 (fina) a 7000 (peces grandes y mar)." }
+      fr: "Capuchon en caoutchouc à enfiler sur le talon (bas) de ta canne pour le protéger des chocs, de l'usure et de la corrosion, et éviter qu'il glisse sur le sol ou dans le porte-canne. Souple et résistant, il s'adapte aux tubes d'environ 50 mm de diamètre. Petit accessoire bien pratique pour préserver ton matériel.",
+      en: "Rubber cap to slip over the butt (bottom) of your rod to protect it from knocks, wear and corrosion, and stop it slipping on the ground or in the rod holder. Flexible and tough, it fits tubes around 50 mm in diameter. A handy little accessory to look after your gear.",
+      es: "Capuchón de goma para colocar en el talón (parte baja) de tu caña y protegerlo de golpes, desgaste y corrosión, y evitar que resbale en el suelo o en el portacañas. Flexible y resistente, se adapta a tubos de unos 50 mm de diámetro. Un pequeño accesorio muy práctico para cuidar tu equipo." }
   },
   {
-    id: 'cj-38', category: 'lures', usd: 3.70, ship: 5.20, rating: 4.6, reviews: null, badge: 'new', sku: 'CJYE176445901AZ',
-    photos: ['38-1.jpg','38-2.jpg','38-3.jpg','38-4.jpg','38-5.jpg'],
-    name: { fr: 'Leurre minnow lumineux longue distance', en: 'Luminous Long-Cast Minnow Lure', es: 'Señuelo minnow luminoso de largo lanzamiento' },
-    desc: { fr: 'Lesté longue distance, phosphorescent.', en: 'Weighted long-cast, glow-in-the-dark.', es: 'Lastrado, fosforescente, largo lanzamiento.' },
+    id: 'cj-231', category: 'reels', rating: 4.7, reviews: null, badge: null, sku: 'CJDY106033001AZ',
+    variants: [
+      { label: 'SG1000', usd: 28.36, ship: 12.07 }, { label: 'SG2000', usd: 29.93, ship: 12.07 },
+      { label: 'SG3000', usd: 31.51, ship: 12.07 }, { label: 'SG4000', usd: 33.08, ship: 12.07 }
+    ],
+    photos: ['231-1.jpg','231-2.jpg','231-3.jpg','231-4.jpg','231-5.jpg'],
+    name: { fr: 'Moulinet spinning mer tout métal (SG1000-4000)', en: 'All-Metal Sea Spinning Reel (SG1000-4000)', es: 'Carrete spinning mar todo metal (SG1000-4000)' },
+    desc: { fr: 'Corps métal, roulements inox, finition colorée.', en: 'Metal body, stainless bearings, colourful finish.', es: 'Cuerpo metal, rodamientos inox, acabado colorido.' },
     long: {
-      fr: "Poisson nageur (minnow) lesté pour le lancer longue distance en mer, avec finition phosphorescente qui brille sous l'eau pour attirer le poisson dans la pénombre. Nage piquée réaliste et hameçons triples affûtés. Idéal au lever du jour, à la tombée de la nuit et en eau profonde. Nombreux coloris.",
-      en: "Weighted minnow lure for long-distance casting at sea, with a phosphorescent finish that glows underwater to draw fish in low light. Realistic darting swim and sharp treble hooks. Ideal at dawn, dusk and in deep water. Many colours.",
-      es: "Señuelo minnow lastrado para el lanzado a larga distancia en el mar, con acabado fosforescente que brilla bajo el agua para atraer al pez con poca luz. Nado errático realista y anzuelos triples afilados. Ideal al amanecer, al anochecer y en aguas profundas. Muchos colores." }
+      fr: "Moulinet spinning de mer entièrement métallique avec roulements en acier inoxydable pour une récupération douce et durable face à l'eau salée. Frein avant puissant, rotor équilibré et finition anodisée colorée du plus bel effet. Disponible en 4 tailles (SG1000 à SG4000) selon la puissance recherchée. Solide pour la pêche aux leurres en mer.",
+      en: "All-metal sea spinning reel with stainless-steel bearings for a smooth, long-lasting retrieve against salt water. Powerful front drag, balanced rotor and a striking colourful anodised finish. Available in 4 sizes (SG1000 to SG4000) depending on the power you need. Solid for lure fishing at sea.",
+      es: "Carrete spinning de mar totalmente metálico con rodamientos de acero inoxidable para una recogida suave y duradera frente al agua salada. Freno delantero potente, rotor equilibrado y un vistoso acabado anodizado de colores. Disponible en 4 tallas (SG1000 a SG4000) según la potencia buscada. Sólido para la pesca con señuelos en mar." }
   },
   {
-    id: 'cj-39', category: 'gear', usd: 0.73, ship: 5.28, rating: 4.4, reviews: null, badge: null, sku: 'CJDY107831501AZ',
-    photos: ['39-1.jpg','39-2.jpg','39-3.jpg','39-4.jpg','39-5.jpg'],
-    name: { fr: 'Capuchon protège-canne (caoutchouc)', en: 'Rubber Rod Protective Cap', es: 'Capuchón protector de caña (goma)' },
-    desc: { fr: 'Protège scion et talon de la canne.', en: 'Protects rod tip and butt.', es: 'Protege la puntera y el talón de la caña.' },
+    id: 'cj-232', category: 'gear', usd: 0.40, ship: 6.02, rating: 4.5, reviews: null, badge: null, sku: 'CJDY111663101AZ',
+    photos: ['232-1.jpg','232-2.jpg','232-3.jpg','232-4.jpg','232-5.jpg'],
+    name: { fr: 'Hameçon automatique « Magic Hook »', en: 'Automatic Fishing Hook (Magic Hook)', es: 'Anzuelo automático «Magic Hook»' },
+    desc: { fr: 'Se referme seul à la touche.', en: 'Snaps shut on the bite.', es: 'Se cierra solo en la picada.' },
     long: {
-      fr: "Capuchon en caoutchouc souple (41 mm) qui protège le scion ou le talon de ta canne des chocs pendant le transport et le rangement. Évite aussi d'abîmer les anneaux et le porte-moulinet. S'enfile et se retire en un geste. Un petit accessoire malin pour faire durer ton matériel.",
-      en: "Soft rubber cap (41 mm) that protects your rod's tip or butt from knocks during transport and storage. Also helps prevent damage to the guides and reel seat. Slips on and off in a second. A clever little accessory to make your gear last.",
-      es: "Capuchón de goma blanda (41 mm) que protege la puntera o el talón de tu caña de los golpes durante el transporte y el almacenaje. Evita también dañar las anillas y el porta-carrete. Se pone y se quita en un gesto. Un accesorio ingenioso para que tu equipo dure más." }
+      fr: "Hameçon automatique « Magic Hook » à ressort : armé, il se referme tout seul dès que le poisson tire sur l'appât, ce qui ferre à ta place. Idéal pour la pêche au posé, quand tu surveilles plusieurs lignes ou que tu débutes. En acier inoxydable, réutilisable. Se monte facilement sur le bas de ligne. Vendu à l'unité.",
+      en: "Spring-loaded 'Magic Hook' automatic hook: once set, it snaps shut as soon as the fish pulls on the bait, setting the hook for you. Ideal for ledgering, when watching several rods or when starting out. Stainless steel and reusable. Easy to rig on the leader. Sold individually.",
+      es: "Anzuelo automático «Magic Hook» con resorte: una vez armado, se cierra solo en cuanto el pez tira del cebo, clavando por ti. Ideal para la pesca al fondo, al vigilar varias cañas o al empezar. En acero inoxidable, reutilizable. Fácil de montar en el bajo de línea. Vendido por unidad." }
   },
   {
-    id: 'cj-40', category: 'reels', usd: 28.36, ship: 12.07, rating: 4.8, reviews: null, badge: 'best', sku: 'CJDY106033001AZ',
-    photos: ['40-1.jpg','40-2.jpg','40-3.jpg','40-4.jpg','40-5.jpg'],
-    name: { fr: 'Moulinet spinning haut de gamme tout métal', en: 'Premium All-Metal Spinning Reel', es: 'Carrete spinning premium todo metal' },
-    desc: { fr: 'Corps métal usiné, roulements inox, design iridescent.', en: 'Machined metal body, steel bearings, iridescent.', es: 'Cuerpo metálico mecanizado, rodamientos inox, iridiscente.' },
+    id: 'cj-233', category: 'lures', usd: 0.59, ship: 5.20, rating: 4.5, reviews: null, badge: null, sku: 'CJYE107522806FU',
+    photos: ['233-1.jpg','233-2.jpg','233-3.jpg','233-4.jpg','233-5.jpg'],
+    name: { fr: 'Mouche imitation larve / asticot (sur hameçon)', en: 'Maggot / Grub Imitation Fly', es: 'Mosca imitación larva / gusano' },
+    desc: { fr: 'Appât artificiel réaliste, pêche fine.', en: 'Realistic artificial bait, finesse.', es: 'Cebo artificial realista, pesca fina.' },
     long: {
-      fr: "Moulinet spinning haut de gamme au corps entièrement métallique usiné et aux roulements en acier inoxydable, pour une rotation d'une fluidité remarquable. Frein avant puissant et progressif, design iridescent du plus bel effet. Conçu pour la pêche exigeante du carnassier et en mer. Plusieurs coloris.",
-      en: "Premium spinning reel with a fully machined metal body and stainless-steel bearings, for remarkably smooth rotation. Powerful, progressive front drag and a stunning iridescent design. Built for demanding predator and sea fishing. Several colours.",
-      es: "Carrete spinning premium con cuerpo totalmente metálico mecanizado y rodamientos de acero inoxidable, para una rotación notablemente suave. Freno frontal potente y progresivo, diseño iridiscente espectacular. Diseñado para la pesca exigente de depredadores y en el mar. Varios colores." }
+      fr: "Imitation ultra-réaliste d'asticot/larve montée sur hameçon, parfaite pour la truite, le gardon et la pêche fine à la mouche ou au toc. Sa forme et sa souplesse déclenchent les touches même chez les poissons méfiants, sans avoir à manipuler d'appâts vivants. Disponible en plusieurs tailles d'hameçon (10 à 20).",
+      en: "Ultra-realistic maggot/grub imitation tied on a hook, perfect for trout, roach and finesse fly or trotting fishing. Its shape and softness trigger bites even from wary fish, with no live bait to handle. Available in several hook sizes (10 to 20).",
+      es: "Imitación ultrarrealista de gusano/larva montada en anzuelo, perfecta para trucha, gobio y pesca fina con mosca o al toque. Su forma y flexibilidad provocan picadas incluso en peces desconfiados, sin manipular cebos vivos. Disponible en varias tallas de anzuelo (10 a 20)." }
   },
   {
-    id: 'cj-41', category: 'rods', usd: 4.18, ship: 7.48, rating: 4.6, reviews: null, badge: 'new', sku: 'CJYD241061505EV',
-    photos: ['41-1.jpeg','41-2.jpeg','41-3.jpeg','41-4.jpeg','41-5.jpeg'],
-    name: { fr: 'Ensemble canne enfant « pistolet » (165 cm)', en: "Kids' Gun-Type Rod Combo (165 cm)", es: 'Conjunto de caña infantil «pistola» (165 cm)' },
-    desc: { fr: 'Canne + moulinet faciles, parfaits pour débuter.', en: 'Easy rod + reel, perfect to start.', es: 'Caña + carrete fáciles, perfectos para empezar.' },
+    id: 'cj-234', category: 'gear', rating: 4.5, reviews: null, badge: null, sku: 'CJDY164363013MN',
+    variants: [
+      { label: 'À l’unité', usd: 1.40, ship: 6.72 },
+      { label: 'Lot 3 pièces', usd: 5.72, ship: 6.72 }
+    ],
+    photos: ['234-1.jpg','234-2.jpg','234-3.jpg','234-4.jpg','234-5.jpg'],
+    name: { fr: 'Ciseau à fil rétractable (zinger)', en: 'Retractable Line Scissors (zinger)', es: 'Tijera de hilo retráctil (zinger)' },
+    desc: { fr: 'Coupe la tresse, revient tout seul.', en: 'Cuts braid, retracts by itself.', es: 'Corta el trenzado, se recoge solo.' },
     long: {
-      fr: "Ensemble de pêche pour enfant à poignée « pistolet » et moulinet à tambour fermé (spincast) très facile à utiliser : on appuie sur le bouton pour lancer, sans perruque. Canne télescopique de 165 cm, légère et colorée. Le cadeau idéal pour initier un enfant à la pêche. Plusieurs coloris.",
-      en: "Children's fishing combo with a gun-type grip and an easy closed-face spincast reel: just press the button to cast, no backlash. 165 cm telescopic rod, light and colourful. The ideal gift to introduce a child to fishing. Several colours.",
-      es: "Conjunto de pesca infantil con empuñadura tipo «pistola» y carrete de tambor cerrado (spincast) muy fácil de usar: basta con pulsar el botón para lanzar, sin cabelleras. Caña telescópica de 165 cm, ligera y colorida. El regalo ideal para iniciar a un niño en la pesca. Varios colores." }
+      fr: "Petit ciseau coupe-fil monté sur un enrouleur rétractable (zinger) à clipser sur ton gilet ou ta musette : tu tires, tu coupes la tresse ou le nylon, et le cordon le ramène tout seul. Lames inox tranchantes et mousqueton. Fini de chercher tes ciseaux au fond de la boîte. À l'unité ou en lot de 3.",
+      en: "Small line-cutting scissors on a retractable reel (zinger) to clip on your vest or bag: pull it out, cut braid or mono, and the cord pulls it back by itself. Sharp stainless blades and a carabiner. No more digging for your scissors in the box. Sold singly or in a 3-pack.",
+      es: "Pequeña tijera corta-hilo montada en un recogedor retráctil (zinger) para enganchar en tu chaleco o bolsa: tiras, cortas el trenzado o nailon, y el cordón la recoge sola. Cuchillas inox afiladas y mosquetón. Se acabó buscar las tijeras en la caja. Por unidad o en lote de 3." }
   },
   {
-    id: 'cj-42', category: 'gear', usd: 0.66, ship: 5.20, rating: 4.5, reviews: null, badge: null, sku: 'CJYD215151704DW',
-    photos: ['42-2.jpg','42-3.jpeg','42-4.jpg','42-5.jpg','42-6.jpg'],
-    name: { fr: 'Flotteur de pêche au coup (européen)', en: 'European Match Fishing Float', es: 'Flotador de pesca al coup (europeo)' },
-    desc: { fr: 'Flotteur sensible, plusieurs grammages.', en: 'Sensitive float, several weights.', es: 'Flotador sensible, varios gramajes.' },
+    id: 'cj-236', category: 'lures', usd: 6.44, ship: 6.10, rating: 4.6, reviews: null, badge: null, sku: 'CJYE1219856',
+    photos: ['236-1.jpg','236-2.jpg','236-3.jpg','236-4.jpg','236-5.jpg'],
+    name: { fr: 'Popper en bois 20,5 cm (mer)', en: 'Wooden Popper 20.5 cm (sea)', es: 'Popper de madera 20,5 cm (mar)' },
+    desc: { fr: 'Gros popper de surface pour le gros poisson.', en: 'Big surface popper for big fish.', es: 'Gran popper de superficie para peces grandes.' },
     long: {
-      fr: "Flotteur (waggler) de pêche au coup à l'européenne, sensible et bien visible avec son antenne colorée. Stable même par petit vent, il détecte les touches les plus fines de la brème, du gardon ou de la carpe. Disponible en plusieurs grammages (3 à 15 g) selon la profondeur et le courant.",
-      en: "European-style match fishing float (waggler), sensitive and clearly visible with its coloured tip. Stable even in a light breeze, it shows the faintest bites from bream, roach or carp. Available in several weights (3 to 15 g) to match depth and current.",
-      es: "Flotador (waggler) de pesca al coup al estilo europeo, sensible y bien visible con su antena de color. Estable incluso con brisa ligera, detecta las picadas más finas de brema, gobio o carpa. Disponible en varios gramajes (3 a 15 g) según la profundidad y la corriente." }
+      fr: "Gros popper en bois de 20,5 cm fabriqué pour la pêche au gros en surface (thon, GT, sériole, gros bar). Sa bouche creuse projette de grandes gerbes d'eau et un « ploc » puissant qui provoque des attaques explosives. Bois dense verni, anneaux traversants et hameçons triples forts pour encaisser les grosses tractions. Disponible en plusieurs coloris.",
+      en: "Big 20.5 cm wooden popper built for big-game topwater fishing (tuna, GT, amberjack, big bass). Its cupped mouth throws large sprays of water and a powerful 'ploc' that triggers explosive strikes. Dense varnished wood, through-wire construction and strong treble hooks to take big pulls. Available in several colours.",
+      es: "Gran popper de madera de 20,5 cm fabricado para la pesca de altura en superficie (atún, GT, medregal, gran lubina). Su boca cóncava proyecta grandes chorros de agua y un «ploc» potente que provoca ataques explosivos. Madera densa barnizada, montaje pasante y anzuelos triples fuertes para aguantar grandes tracciones. Disponible en varios colores." }
   },
   {
-    id: 'cj-43', category: 'gear', usd: 6.52, ship: 10.49, rating: 4.5, reviews: null, badge: null, sku: 'CJDY176908201AZ',
-    photos: ['43-1.jpg','43-2.jpg','43-3.jpg','43-4.jpg','43-5.jpg'],
-    name: { fr: 'Râtelier mural pour cannes (rangement)', en: 'Wall Rod Rack (storage)', es: 'Soporte de pared para cañas' },
-    desc: { fr: 'Range plusieurs cannes au mur, garage/atelier.', en: 'Stores several rods on the wall.', es: 'Guarda varias cañas en la pared.' },
+    id: 'cj-237', category: 'reels', rating: 4.6, reviews: null, badge: null, sku: 'CJDY110078303CX',
+    variants: [
+      { label: 'AM2000', usd: 6.77, ship: 6.92 },
+      { label: 'AM3000', usd: 8.65, ship: 6.92 }
+    ],
+    photos: ['237-1.jpg','237-2.jpg','237-3.jpg','237-4.jpg','237-5.jpg'],
+    name: { fr: 'Moulinet casting rond (AM2000 / AM3000)', en: 'Round Baitcasting Reel (AM2000 / AM3000)', es: 'Carrete casting redondo (AM2000 / AM3000)' },
+    desc: { fr: 'Casting puissant, gaucher ou droitier.', en: 'Powerful baitcaster, left or right hand.', es: 'Casting potente, zurdo o diestro.' },
     long: {
-      fr: "Râtelier mural en plastique robuste pour ranger et exposer plusieurs cannes (jusqu'à 6) bien alignées, à la verticale. Parfait pour le garage, l'atelier ou la maison : tes cannes restent organisées, protégées et hors du sol. Fixation simple au mur, pinces qui maintiennent fermement chaque canne.",
-      en: "Sturdy plastic wall rack to store and display several rods (up to 6) neatly upright. Perfect for the garage, workshop or home: your rods stay organised, protected and off the floor. Easy wall mounting, clips that hold each rod firmly.",
-      es: "Soporte de pared de plástico resistente para guardar y exponer varias cañas (hasta 6) bien alineadas en vertical. Perfecto para el garaje, taller o casa: tus cañas quedan ordenadas, protegidas y lejos del suelo. Fijación sencilla a la pared, pinzas que sujetan firmemente cada caña." }
+      fr: "Moulinet casting (baitcasting) rond et robuste pour le lancer de leurres lourds et le combat avec de beaux poissons. Frein réglable, récupération puissante et boutons confortables. Disponible en plusieurs tailles (AM2000 / AM3000) et en version main gauche ou main droite — à préciser à la commande. Idéal pour le brochet, le silure et la pêche en mer.",
+      en: "Round, sturdy baitcasting reel for casting heavy lures and fighting good fish. Adjustable drag, powerful retrieve and comfortable knobs. Available in several sizes (AM2000 / AM3000) and in left- or right-hand versions — to specify at order. Ideal for pike, catfish and sea fishing.",
+      es: "Carrete casting (baitcasting) redondo y robusto para lanzar señuelos pesados y pelear con buenos peces. Freno ajustable, recogida potente y pomos cómodos. Disponible en varias tallas (AM2000 / AM3000) y en versión zurda o diestra — a especificar al pedir. Ideal para lucio, siluro y pesca en mar." }
   },
   {
-    id: 'cj-44', category: 'lures', usd: 9.68, ship: 5.56, rating: 4.7, reviews: null, badge: 'new', sku: 'CJYE173687401AZ',
-    photos: ['44-1.jpg','44-2.jpg','44-3.jpg','44-4.jpg','44-5.jpg'],
-    name: { fr: 'Popper de surface NOEBY 150 mm (mer)', en: 'NOEBY Topwater Popper 150 mm', es: 'Popper de superficie NOEBY 150 mm' },
-    desc: { fr: 'Popper de marque, mer, nombreux coloris.', en: 'Branded popper, sea, many colours.', es: 'Popper de marca, mar, muchos colores.' },
+    id: 'cj-239', category: 'gear', rating: 4.5, reviews: null, badge: null, sku: 'CJYD191237402BY',
+    variants: [
+      { label: 'Roue à eau (drip)', usd: 2.28, ship: 6.62 },
+      { label: 'Double usage', usd: 2.81, ship: 6.62 }
+    ],
+    photos: ['239-1.jpg','239-2.jpg','239-3.jpg','239-4.jpg','239-5.jpg'],
+    name: { fr: 'Support de canne à glace pliable (trépied)', en: 'Foldable Ice Fishing Rod Holder (tripod)', es: 'Soporte plegable para caña de hielo (trípode)' },
+    desc: { fr: 'Tient ta canne au-dessus du trou, repliable.', en: 'Holds your rod over the hole, folds away.', es: 'Sujeta tu caña sobre el agujero, plegable.' },
     long: {
-      fr: "Popper de surface de la marque NOEBY (150 mm), conçu pour la pêche en mer des prédateurs. Sa tête concave creuse l'eau et projette des éclaboussures sonores qui déclenchent des attaques explosives. Finition réaliste, anneaux et hameçons triples renforcés. Disponible en de nombreux coloris.",
-      en: "NOEBY-brand topwater popper (150 mm), built for sea predator fishing. Its concave mouth digs into the water and throws noisy spray that triggers explosive strikes. Realistic finish, reinforced rings and treble hooks. Available in many colours.",
-      es: "Popper de superficie de la marca NOEBY (150 mm), diseñado para la pesca en el mar de depredadores. Su boca cóncava cava el agua y lanza salpicaduras sonoras que provocan ataques explosivos. Acabado realista, anillas y anzuelos triples reforzados. Disponible en muchos colores." }
+      fr: "Support pliable à trépied pour la pêche sur glace : il tient ta canne stable au-dessus du trou pendant que tu attends la touche, et se replie à plat pour le transport. Pieds antidérapants sur la glace, berceau réglable. Plusieurs versions disponibles (roue à eau, double usage). Pratique pour pêcher plusieurs trous à la fois.",
+      en: "Foldable tripod stand for ice fishing: it holds your rod steady over the hole while you wait for a bite, and folds flat for transport. Non-slip feet on the ice, adjustable cradle. Several versions available (drip wheel, dual use). Handy to fish several holes at once.",
+      es: "Soporte plegable de trípode para la pesca en hielo: mantiene tu caña estable sobre el agujero mientras esperas la picada, y se pliega plano para el transporte. Patas antideslizantes sobre el hielo, cuna ajustable. Varias versiones disponibles (rueda de agua, doble uso). Práctico para pescar varios agujeros a la vez." }
   },
   {
-    id: 'cj-45', category: 'lures', usd: 1.67, ship: 5.87, rating: 4.6, reviews: null, badge: null, sku: 'CJYE121902316PK',
-    photos: ['45-1.jpg','45-2.jpg','45-3.jpg','45-4.jpg','45-5.jpg'],
-    name: { fr: 'Jig métal casting longue distance (40-100 g)', en: 'Metal Casting Jig (40-100 g)', es: 'Jig metálico de casting (40-100 g)' },
-    desc: { fr: 'Lance loin, coule vite, plusieurs poids.', en: 'Casts far, sinks fast, several weights.', es: 'Lanza lejos, se hunde rápido, varios pesos.' },
+    id: 'cj-240', category: 'reels', usd: 12.82, ship: 7.05, rating: 4.6, reviews: null, badge: null, sku: 'CJYD189446803CX',
+    photos: ['240-1.jpg','240-2.jpg','240-3.jpg','240-4.jpg','240-5.jpg'],
+    name: { fr: 'Moulinet casting frein magnétique (gaucher/droitier)', en: 'Baitcasting Reel, Magnetic Brake (left/right)', es: 'Carrete casting freno magnético (zurdo/diestro)' },
+    desc: { fr: 'Frein anti-perruque, lancers maîtrisés.', en: 'Anti-backlash brake, controlled casts.', es: 'Freno anti-cabellera, lanzados controlados.' },
     long: {
-      fr: "Jig métallique profilé pour le lancer longue distance et la pêche verticale en mer. Son corps lesté file loin et coule vite pour atteindre les poissons en chasse ou près du fond. Reflets métalliques irrésistibles, hameçon affûté. Disponible en plusieurs poids (40 à 100 g) selon la profondeur.",
-      en: "Streamlined metal jig for long-distance casting and vertical sea fishing. Its weighted body casts far and sinks fast to reach hunting fish or the bottom. Irresistible metallic flash, sharp hook. Available in several weights (40 to 100 g) to match the depth.",
-      es: "Jig metálico perfilado para el lanzado a larga distancia y la pesca vertical en el mar. Su cuerpo lastrado lanza lejos y se hunde rápido para alcanzar a los peces o el fondo. Destello metálico irresistible, anzuelo afilado. Disponible en varios pesos (40 a 100 g) según la profundidad." }
+      fr: "Moulinet casting (baitcasting) à frein magnétique réglable qui limite les « perruques » et te donne des lancers précis, même avec des leurres légers. Récupération douce, étoile de frein puissante et carter compact. Idéal pour la pêche aux leurres des carnassiers. Disponible en main gauche ou main droite — à préciser à la commande.",
+      en: "Baitcasting reel with an adjustable magnetic brake that limits backlash and gives you accurate casts, even with light lures. Smooth retrieve, powerful star drag and a compact frame. Ideal for lure fishing for predators. Available in left- or right-hand — to specify at order.",
+      es: "Carrete casting (baitcasting) con freno magnético ajustable que limita las «cabelleras» y da lanzados precisos, incluso con señuelos ligeros. Recogida suave, freno de estrella potente y carcasa compacta. Ideal para la pesca con señuelos de depredadores. Disponible en zurdo o diestro — a especificar al pedir." }
   },
   {
-    id: 'cj-46', category: 'lures', usd: 2.82, ship: 7.53, rating: 4.6, reviews: null, badge: 'new', sku: 'CJYE121914020TG',
-    photos: ['46-1.jpg','46-2.jpg','46-3.jpg','46-4.jpg','46-5.jpg'],
-    name: { fr: 'Jig lumineux à plumes (mer, 40-100 g)', en: 'Luminous Jig with Assist Hooks (40-100 g)', es: 'Jig luminoso con plumas (40-100 g)' },
-    desc: { fr: 'Ventre phosphorescent, hameçons assist.', en: 'Glowing belly, assist hooks.', es: 'Vientre fosforescente, anzuelos assist.' },
+    id: 'cj-242', category: 'rods', rating: 4.5, reviews: null, badge: null, sku: 'CJDY138932401AZ',
+    variants: [
+      { label: '2,1 m', usd: 5.06, ship: 11.34 }, { label: '2,4 m', usd: 5.62, ship: 11.34 },
+      { label: '2,7 m', usd: 6.11, ship: 11.34 }
+    ],
+    photos: ['242-1.jpg','242-2.jpg','242-3.jpg','242-4.jpg','242-5.jpg'],
+    name: { fr: 'Canne auto-ferrante télescopique (2,1 à 2,7 m)', en: 'Self-Striking Telescopic Rod (2.1 to 2.7 m)', es: 'Caña de auto-clavado telescópica (2,1 a 2,7 m)' },
+    desc: { fr: 'Ferre toute seule à la touche.', en: 'Sets the hook by itself on a bite.', es: 'Clava sola en la picada.' },
     long: {
-      fr: "Jig métallique à ventre phosphorescent qui brille sous l'eau pour attirer les prédateurs dans la pénombre et les profondeurs. Équipé d'hameçons « assist » montés sur tresse et d'un pompon coloré qui déclenche l'attaque. Idéal en pêche verticale (slow jigging) en mer. Plusieurs poids et coloris.",
-      en: "Metal jig with a phosphorescent belly that glows underwater to attract predators in low light and the depths. Fitted with braid-mounted assist hooks and a coloured tuft that triggers strikes. Ideal for vertical slow-jigging at sea. Several weights and colours.",
-      es: "Jig metálico con vientre fosforescente que brilla bajo el agua para atraer a los depredadores con poca luz y en profundidad. Equipado con anzuelos «assist» montados en trenzado y un pompón de color que provoca el ataque. Ideal para pesca vertical (slow jigging) en el mar. Varios pesos y colores." }
+      fr: "Canne télescopique à système auto-ferrant : armé d'un ressort, le scion se relève tout seul dès que le poisson mord, ce qui ferre à ta place. Idéale pour la pêche au posé quand tu surveilles plusieurs cannes ou que tu débutes. Se replie court pour le transport. Disponible en plusieurs longueurs (2,1 à 2,7 m).",
+      en: "Telescopic rod with a self-striking system: spring-loaded, the tip flips up by itself as soon as a fish bites, setting the hook for you. Ideal for ledgering when watching several rods or when starting out. Collapses short for transport. Available in several lengths (2.1 to 2.7 m).",
+      es: "Caña telescópica con sistema de auto-clavado: con un resorte, la puntera se levanta sola en cuanto el pez muerde, clavando por ti. Ideal para la pesca al fondo al vigilar varias cañas o al empezar. Se pliega corta para el transporte. Disponible en varias longitudes (2,1 a 2,7 m)." }
   },
   {
-    id: 'cj-47', category: 'lures', usd: 0.58, ship: 5.95, rating: 4.5, reviews: null, badge: null, sku: 'CJYE140621901AZ',
-    photos: ['47-1.jpg','47-2.jpg','47-3.jpg','47-4.jpg','47-5.jpg'],
-    name: { fr: 'Petit poisson nageur bionique (multi-coloris)', en: 'Small Bionic Minnow Lure (multi-colour)', es: 'Pequeño minnow biónico (multicolor)' },
-    desc: { fr: 'Minnow plongeant réaliste, nombreux coloris.', en: 'Realistic diving minnow, many colours.', es: 'Minnow buceador realista, muchos colores.' },
+    id: 'cj-244', category: 'gear', usd: 6.52, ship: 10.68, rating: 4.5, reviews: null, badge: null, sku: 'CJDY176908201AZ',
+    photos: ['244-1.jpg','244-2.jpg','244-3.jpg','244-4.jpg','244-5.jpg'],
+    name: { fr: 'Râtelier porte-cannes (plastique)', en: 'Rod Rack Holder (plastic)', es: 'Soporte / perchero para cañas (plástico)' },
+    desc: { fr: 'Range plusieurs cannes, mural ou bateau.', en: 'Holds several rods, wall or boat.', es: 'Guarda varias cañas, pared o barco.' },
     long: {
-      fr: "Petit poisson nageur (minnow) à bavette plongeante et nage roulante réaliste, parfait pour la truite, la perche et le chevesne. Sa taille fine passe inaperçue auprès des poissons méfiants. Hameçons triples affûtés. Disponible dans une douzaine de coloris naturels et flashy. Imbattable à ce prix.",
-      en: "Small minnow with a diving lip and a realistic rolling swim, perfect for trout, perch and chub. Its slim size slips past wary fish. Sharp treble hooks. Available in a dozen natural and bright colours. Unbeatable at this price.",
-      es: "Pequeño minnow con babero buceador y nado rodante realista, perfecto para trucha, perca y cacho. Su tamaño fino pasa desapercibido ante peces desconfiados. Anzuelos triples afilados. Disponible en una docena de colores naturales y llamativos. Imbatible a este precio." }
+      fr: "Râtelier en plastique résistant pour ranger et exposer plusieurs cannes à pêche, à fixer au mur du garage, dans le bateau ou sur le ponton. Encoches qui maintiennent les talons et logements pour les scions, sans abîmer le matériel. Gain de place et cannes toujours prêtes. Plusieurs coloris disponibles.",
+      en: "Sturdy plastic rack to store and display several fishing rods, to mount on the garage wall, in the boat or on the dock. Notches that hold the butts and slots for the tips, without damaging your gear. Saves space and keeps rods ready to go. Several colours available.",
+      es: "Perchero de plástico resistente para guardar y exponer varias cañas de pescar, para fijar en la pared del garaje, en el barco o en el pantalán. Muescas que sujetan los talones y alojamientos para las punteras, sin dañar el equipo. Ahorra espacio y mantiene las cañas listas. Varios colores disponibles." }
   },
   {
-    id: 'cj-48', category: 'rods', usd: 5.06, ship: 11.34, rating: 4.6, reviews: null, badge: 'best', sku: 'CJDY138932401AZ',
-    photos: ['48-1.jpg','48-2.jpg','48-3.jpg','48-4.jpg','48-5.jpg'],
-    name: { fr: 'Canne de mer auto-ferrante (2,1-2,7 m)', en: 'Self-Striking Sea Rod (2.1-2.7 m)', es: 'Caña de mar auto-clavante (2,1-2,7 m)' },
-    desc: { fr: 'Ferre toute seule à la touche, plusieurs longueurs.', en: 'Sets the hook on its own.', es: 'Se clava sola en la picada.' },
+    id: 'cj-245', category: 'gear', rating: 4.5, reviews: null, badge: null, sku: 'CJDY206696505EV',
+    variants: [
+      { label: '1 pièce', usd: 2.59, ship: 5.00 },
+      { label: '2 pièces', usd: 5.17, ship: 5.00 }
+    ],
+    photos: ['245-1.jpg','245-2.jpg','245-3.jpg','245-4.jpg','245-5.jpg'],
+    name: { fr: 'Détecteur de touche lumineux (clip de canne)', en: 'Light-up Bite Indicator (rod clip)', es: 'Avisador de picada luminoso (clip de caña)' },
+    desc: { fr: 'S’allume au mouvement, idéal de nuit.', en: 'Lights up on movement, ideal at night.', es: 'Se ilumina con el movimiento, ideal de noche.' },
     long: {
-      fr: "Canne de mer télescopique équipée d'un mécanisme « auto-ferrant » à ressort : dès qu'un poisson mord, le scion se redresse et ferre tout seul, même si tu ne tiens pas la canne. Idéale pour la pêche posée au surfcasting à plusieurs cannes. Livrée prête à pêcher. Disponible en 2,1 / 2,4 / 2,7 m.",
-      en: "Telescopic sea rod fitted with a spring 'self-striking' mechanism: the moment a fish bites, the tip snaps up and sets the hook on its own, even if you're not holding the rod. Ideal for surfcasting with several rods. Comes ready to fish. Available in 2.1 / 2.4 / 2.7 m.",
-      es: "Caña de mar telescópica con mecanismo «auto-clavante» de resorte: en cuanto un pez muerde, la puntera se endereza y clava sola, aunque no sujetes la caña. Ideal para surfcasting con varias cañas. Lista para pescar. Disponible en 2,1 / 2,4 / 2,7 m." }
+      fr: "Détecteur de touche lumineux à clipser sur le scion de ta canne : dès que la pointe bouge, il s'allume pour signaler la touche, parfait pour la pêche de nuit au posé. Pince souple qui ne marque pas le blank, témoin LED bien visible, pile incluse. Léger et facile à poser. Disponible à l'unité ou en lot de 2.",
+      en: "Light-up bite indicator that clips on your rod tip: as soon as the tip moves, it lights up to signal the bite, perfect for night ledgering. Soft clip that won't mark the blank, bright LED, battery included. Light and easy to fit. Available singly or in a 2-pack.",
+      es: "Avisador de picada luminoso para enganchar en la puntera de tu caña: en cuanto la punta se mueve, se ilumina para señalar la picada, perfecto para la pesca nocturna al fondo. Pinza blanda que no marca el blank, LED bien visible, pila incluida. Ligero y fácil de colocar. Disponible por unidad o en lote de 2." }
   },
   {
-    id: 'cj-49', category: 'reels', usd: 11.11, ship: 7.05, rating: 4.6, reviews: null, badge: null, sku: 'CJDY170334401AZ',
-    photos: ['49-1.jpg','49-2.jpg','49-3.jpg','49-4.jpg','49-5.jpg'],
-    name: { fr: 'Moulinet spinning fin HES1500 (light game)', en: 'Finesse Spinning Reel HES1500', es: 'Carrete spinning fino HES1500' },
-    desc: { fr: 'Léger, pour pêche fine et micro-leurre.', en: 'Light, for finesse and micro-lure.', es: 'Ligero, para pesca fina y micro-señuelo.' },
+    id: 'cj-247', category: 'rods', usd: 6.80, ship: 5.65, rating: 4.5, reviews: null, badge: null, sku: 'CJYD244092701AZ',
+    photos: ['247-1.jpg','247-2.jpg','247-3.jpg','247-4.jpg','247-5.jpg'],
+    name: { fr: 'Canne courte hiver carbone (2 brins, 67 cm)', en: 'Short Winter Carbon Rod (2-piece, 67 cm)', es: 'Caña corta invierno carbono (2 tramos, 67 cm)' },
+    desc: { fr: 'Compacte et sensible, pêche fine hiver.', en: 'Compact and sensitive, winter finesse.', es: 'Compacta y sensible, pesca fina invierno.' },
     long: {
-      fr: "Moulinet spinning léger et fin (taille 1500), pensé pour la pêche fine, le micro-leurre (light game) et la pêche au raft. Rotation soyeuse, frein avant précis et faible poids pour pêcher en finesse toute la journée. Bobine peu profonde idéale pour les tresses fines. Plusieurs coloris.",
-      en: "Light, compact spinning reel (size 1500) made for finesse fishing, micro-lure (light game) and raft fishing. Silky rotation, precise front drag and low weight to fish finesse all day. Shallow spool ideal for thin braids. Several colours.",
-      es: "Carrete spinning ligero y fino (talla 1500), pensado para la pesca fina, el micro-señuelo (light game) y la pesca al raft. Rotación sedosa, freno frontal preciso y poco peso para pescar en finesse todo el día. Bobina poco profunda ideal para trenzados finos. Varios colores." }
+      fr: "Petite canne d'hiver en carbone en deux brins emboîtables (67 cm), sensible et nerveuse pour la pêche fine des petits leurres, sur glace ou en bateau. Très compacte une fois démontée, elle se glisse partout. Anneaux résistants au froid et poignée confortable. Idéale pour la perche, le doré et la truite par temps froid.",
+      en: "Small two-piece carbon winter rod (67 cm), sensitive and lively for finesse fishing with small lures, on the ice or from a boat. Very compact once taken apart, it fits anywhere. Cold-resistant guides and a comfortable grip. Ideal for perch, walleye and trout in cold weather.",
+      es: "Pequeña caña de invierno en carbono de dos tramos encajables (67 cm), sensible y nerviosa para la pesca fina con señuelos pequeños, en hielo o desde barco. Muy compacta una vez desmontada, cabe en cualquier sitio. Anillas resistentes al frío y mango cómodo. Ideal para perca, lucioperca y trucha con frío." }
   },
   {
-    id: 'cj-50', category: 'rods', usd: 3.10, ship: 13.38, rating: 4.6, reviews: null, badge: 'best', sku: 'CJDY245207705EV',
-    photos: ['50-1.jpg','50-2.jpg','50-3.jpg','50-4.jpg','50-5.jpg'],
-    name: { fr: 'Ensemble canne + moulinet télescopique (1,5-1,8 m)', en: 'Telescopic Rod + Reel Combo (1.5-1.8 m)', es: 'Conjunto caña + carrete telescópico (1,5-1,8 m)' },
-    desc: { fr: 'Kit complet prêt à pêcher, plusieurs coloris.', en: 'Complete ready-to-fish kit, several colours.', es: 'Kit completo listo para pescar, varios colores.' },
+    id: 'cj-248', category: 'gear', usd: 0.91, ship: 7.34, rating: 4.5, reviews: null, badge: null, sku: 'CJDY111628614NM',
+    photos: ['248-1.jpg'],
+    name: { fr: 'Fil nylon JUSTRON 500 m (mer)', en: 'JUSTRON Nylon Line 500 m (sea)', es: 'Hilo nailon JUSTRON 500 m (mar)' },
+    desc: { fr: 'Souple et résistant, grande bobine.', en: 'Supple and strong, large spool.', es: 'Flexible y resistente, bobina grande.' },
     long: {
-      fr: "Ensemble de pêche complet : canne télescopique légère + moulinet spinning assorti, prêt à pêcher dès la sortie de la boîte. Compact une fois replié, idéal pour débuter, voyager ou avoir un ensemble de secours. Disponible en 1,5 m et 1,8 m, et en plusieurs coloris (bleu, vert, rouge…). Le combo parfait à petit prix.",
-      en: "Complete fishing combo: a light telescopic rod plus a matching spinning reel, ready to fish out of the box. Compact once folded, ideal to start out, travel or keep as a backup. Available in 1.5 m and 1.8 m, and in several colours (blue, green, red…). The perfect budget combo.",
-      es: "Conjunto de pesca completo: caña telescópica ligera y carrete spinning a juego, listo para pescar nada más sacarlo de la caja. Compacto una vez plegado, ideal para empezar, viajar o tener de repuesto. Disponible en 1,5 m y 1,8 m, y en varios colores (azul, verde, rojo…). El combo perfecto a buen precio." }
+      fr: "Fil nylon « JUSTRON » en grande bobine de 500 m, souple et élastique pour amortir les coups de tête du poisson et bien lancer. Bonne tenue au nœud et résistance à l'abrasion pour la pêche en mer et du gros poisson. Disponible en plusieurs diamètres (0,4 à 6,0) et coloris, dont un jaune fluo bien visible.",
+      en: "'JUSTRON' nylon line on a large 500 m spool, supple and stretchy to cushion the fish's head-shakes and cast well. Good knot strength and abrasion resistance for sea and big-fish fishing. Available in several diameters (0.4 to 6.0) and colours, including a highly visible fluo yellow.",
+      es: "Hilo de nailon «JUSTRON» en bobina grande de 500 m, flexible y elástico para amortiguar los tirones del pez y lanzar bien. Buena resistencia al nudo y a la abrasión para la pesca en mar y de peces grandes. Disponible en varios diámetros (0,4 a 6,0) y colores, incluido un amarillo flúor bien visible." }
+  },
+  {
+    id: 'cj-249', category: 'gear', usd: 4.94, ship: 5.72, rating: 4.5, reviews: null, badge: null, sku: 'CJDY119574401AZ',
+    photos: ['249-1.jpg'],
+    name: { fr: 'Compteur de fil 0-999 m (mesureur)', en: 'Line Counter 0-999 m (depth gauge)', es: 'Cuentametros de hilo 0-999 m' },
+    desc: { fr: 'Mesure la longueur de fil sortie.', en: 'Measures the line let out.', es: 'Mide el hilo soltado.' },
+    long: {
+      fr: "Compteur mécanique de fil (0 à 999 m) à fixer sur la canne : le fil passe sur sa roulette et le cadran affiche la longueur sortie, pour pêcher pile à la bonne profondeur ou distance et reproduire un poste qui marche. Pratique en traîne, à la verticale ou pour bobiner une longueur précise. Remise à zéro rapide.",
+      en: "Mechanical line counter (0 to 999 m) that clamps on the rod: the line runs over its wheel and the dial shows the length let out, so you fish at exactly the right depth or distance and repeat a productive spot. Handy for trolling, vertical fishing or spooling a precise length. Quick reset.",
+      es: "Cuentametros mecánico de hilo (0 a 999 m) para fijar en la caña: el hilo pasa por su rueda y el dial muestra la longitud soltada, para pescar justo a la profundidad o distancia correcta y repetir un puesto que funciona. Práctico en curricán, pesca vertical o para bobinar una longitud precisa. Puesta a cero rápida." }
+  },
+  {
+    id: 'cj-250', category: 'gear', usd: 0.45, ship: 5.20, rating: 4.5, reviews: null, badge: null, sku: 'CJDY1110392',
+    photos: ['250-1.jpg','250-2.jpg','250-3.jpg','250-4.jpg','250-5.jpg'],
+    name: { fr: 'Outil à nœuds rapide (monte-hameçon)', en: 'Quick Knot Tool (hook tyer)', es: 'Herramienta de nudos rápida (ata-anzuelos)' },
+    desc: { fr: 'Monte tes hameçons en quelques secondes.', en: 'Ties your hooks in seconds.', es: 'Ata tus anzuelos en segundos.' },
+    long: {
+      fr: "Petit outil pour réaliser tes nœuds de pêche et monter tes hameçons en quelques secondes, même par temps froid ou avec une vue fatiguée. Il enroule le fil et serre le nœud proprement, et sert aussi à resserrer les nœuds et dégager les hameçons. Compact (41×26×10 mm), il se glisse dans la poche. Indispensable au bord de l'eau.",
+      en: "Small tool to make your fishing knots and tie on hooks in seconds, even in cold weather or with tired eyesight. It wraps the line and tightens the knot neatly, and also helps cinch knots and remove hooks. Compact (41×26×10 mm), it slips into your pocket. A must at the water's edge.",
+      es: "Pequeña herramienta para hacer tus nudos de pesca y atar anzuelos en segundos, incluso con frío o vista cansada. Enrolla el hilo y aprieta el nudo limpiamente, y también sirve para apretar nudos y soltar anzuelos. Compacta (41×26×10 mm), cabe en el bolsillo. Imprescindible a la orilla del agua." }
+  },
+  {
+    id: 'cj-252', category: 'lures', rating: 4.6, reviews: null, badge: null, sku: 'CJYE176167203CX',
+    variants: [
+      { label: 'À l’unité', usd: 1.18, ship: 5.20 },
+      { label: 'Lot', usd: 4.70, ship: 5.20 }
+    ],
+    photos: ['252-1.jpg','252-2.jpg','252-3.jpg','252-4.jpg','252-5.jpg'],
+    name: { fr: 'Leurre nageur minnow flottant (unité ou lot)', en: 'Floating Minnow Lure (single or set)', es: 'Señuelo minnow flotante (unidad o lote)' },
+    desc: { fr: 'Nage en surface/sub-surface, réaliste.', en: 'Surface/sub-surface swim, realistic.', es: 'Nado superficie/subsuperficie, realista.' },
+    long: {
+      fr: "Leurre nageur minnow flottant au profil réaliste pour la pêche des carnassiers en surface et juste dessous (black-bass, perche, brochet, bar). Bavette pour une nage roulante à la récupération, yeux 3D et hameçons triples piquants. Au choix : à l'unité dans le coloris voulu, ou en lot pour varier les présentations.",
+      en: "Floating minnow lure with a realistic profile for predator fishing on and just under the surface (bass, perch, pike, seabass). Diving lip for a rolling swim on the retrieve, 3D eyes and sharp treble hooks. Choose a single lure in the colour you want, or a set to vary your presentations.",
+      es: "Señuelo minnow flotante con perfil realista para la pesca de depredadores en superficie y justo debajo (black-bass, perca, lucio, lubina). Babero para un nado rodante en la recogida, ojos 3D y anzuelos triples afilados. A elegir: por unidad en el color deseado, o en lote para variar las presentaciones." }
+  },
+  {
+    id: 'cj-253', category: 'gear', usd: 1.36, ship: 5.35, rating: 4.4, reviews: null, badge: null, sku: 'CJYE210332801AZ',
+    photos: ['253-1.jpg'],
+    name: { fr: 'Attractant à poisson HozoneX (28 g)', en: 'HozoneX Fish Attractant (28 g)', es: 'Atrayente de peces HozoneX (28 g)' },
+    desc: { fr: 'Booste l’attractivité de tes appâts.', en: 'Boosts your baits’ attractiveness.', es: 'Potencia el atractivo de tus cebos.' },
+    long: {
+      fr: "Attractant à poisson « HozoneX » à mélanger ou appliquer sur tes appâts, amorces et leurres : il diffuse une odeur qui stimule l'appétit du poisson et prolonge les touches. Polyvalent (carpe, carnassiers, poissons de mer). Pot pratique de 28 g. Un petit plus pour transformer une journée difficile.",
+      en: "'HozoneX' fish attractant to mix into or apply on your baits, groundbait and lures: it releases a scent that stimulates the fish's appetite and prolongs the bites. Versatile (carp, predators, sea fish). Handy 28 g pot. A little extra to turn around a tough day.",
+      es: "Atrayente de peces «HozoneX» para mezclar o aplicar en tus cebos, engodos y señuelos: difunde un olor que estimula el apetito del pez y prolonga las picadas. Versátil (carpa, depredadores, peces de mar). Práctico bote de 28 g. Un plus para darle la vuelta a un día difícil." }
+  },
+  {
+    id: 'cj-255', category: 'gear', usd: 2.19, ship: 6.77, rating: 4.6, reviews: null, badge: null, sku: 'CJDY202091107GT',
+    photos: ['255-1.jpg','255-2.jpg','255-3.jpg','255-4.jpg','255-5.jpg'],
+    name: { fr: 'Boîte à leurres étanche (2 tailles)', en: 'Waterproof Lure Tackle Box (2 sizes)', es: 'Caja de señuelos estanca (2 tallas)' },
+    desc: { fr: 'Joint étanche, compartiments réglables.', en: 'Waterproof seal, adjustable dividers.', es: 'Junta estanca, divisores ajustables.' },
+    long: {
+      fr: "Boîte de rangement à leurres multifonction avec joint d'étanchéité : tes leurres, hameçons et accessoires restent au sec même sous la pluie ou les embruns. Compartiments réglables par cloisons amovibles, clips de fermeture solides et coque résistante. Disponible en deux tailles (225 ou 275 mm). Indispensable dans le sac de pêche.",
+      en: "Multi-function lure box with a waterproof seal: your lures, hooks and accessories stay dry even in rain or sea spray. Adjustable compartments with removable dividers, strong closure clips and a tough shell. Available in two sizes (225 or 275 mm). A must in the tackle bag.",
+      es: "Caja de señuelos multifunción con junta estanca: tus señuelos, anzuelos y accesorios quedan secos incluso bajo la lluvia o el salitre. Compartimentos ajustables con divisores extraíbles, clips de cierre resistentes y carcasa robusta. Disponible en dos tallas (225 o 275 mm). Imprescindible en la bolsa de pesca." }
+  },
+  {
+    id: 'cj-256', category: 'gear', usd: 0.22, ship: 6.02, rating: 4.5, reviews: null, badge: null, sku: 'CJYD193077101AZ',
+    photos: ['256-1.jpg','256-2.jpg','256-3.jpg','256-4.jpg','256-5.jpg'],
+    name: { fr: 'Ruban de plomb auto-adhésif (lestage)', en: 'Adhesive Lead Tape Roll (weighting)', es: 'Cinta de plomo adhesiva (lastrado)' },
+    desc: { fr: 'Se découpe et se colle pour lester.', en: 'Cut and stick to add weight.', es: 'Se corta y pega para lastrar.' },
+    long: {
+      fr: "Rouleau de ruban de plomb fin (0,4 mm) à découper et coller pour ajuster le poids et l'équilibre de tes leurres, plombs ou montages. Pratique pour faire couler un peu plus un leurre, régler l'assiette ou ajouter du lest sans recouper la ligne. Plomb souple, facile à enrouler. Plusieurs formats au choix.",
+      en: "Roll of thin lead tape (0.4 mm) to cut and stick on to adjust the weight and balance of your lures, sinkers or rigs. Handy to make a lure sink a little more, trim its attitude or add weight without recutting the line. Soft, easy-to-wrap lead. Several formats to choose from.",
+      es: "Rollo de cinta de plomo fina (0,4 mm) para cortar y pegar y ajustar el peso y el equilibrio de tus señuelos, plomos o montajes. Práctico para hacer hundir un poco más un señuelo, ajustar su postura o añadir lastre sin recortar la línea. Plomo blando, fácil de enrollar. Varios formatos a elegir." }
+  },
+  {
+    id: 'cj-257', category: 'rods', usd: 3.89, ship: 6.17, rating: 4.5, reviews: null, badge: null, sku: 'CJYD1961509',
+    photos: ['257-1.jpg','257-2.jpg','257-3.jpg','257-4.jpg','257-5.jpg'],
+    name: { fr: 'Kit canne stylo de poche (canne + moulinet + leurres)', en: 'Pocket Pen Rod Kit (rod + reel + lures)', es: 'Kit caña bolígrafo (caña + carrete + señuelos)' },
+    desc: { fr: 'Format stylo, ensemble nomade complet.', en: 'Pen format, complete travel set.', es: 'Formato bolígrafo, set de viaje completo.' },
+    long: {
+      fr: "Kit de pêche complet format « stylo » : mini canne télescopique, petit moulinet, fil et boîte de leurres, le tout très compact une fois replié pour tenir dans une poche ou un sac à dos. Parfait en voyage, en randonnée, pour la glace ou comme cadeau. Suffisant pour taquiner perche, truite et petits carnassiers.",
+      en: "Complete 'pen-style' fishing kit: mini telescopic rod, small reel, line and a lure box, all very compact when folded to fit in a pocket or backpack. Perfect for travel, hiking, ice fishing or as a gift. Enough to tease perch, trout and small predators.",
+      es: "Kit de pesca completo formato «bolígrafo»: mini caña telescópica, pequeño carrete, hilo y caja de señuelos, todo muy compacto al plegarse para caber en un bolsillo o mochila. Perfecto para viajar, hacer senderismo, pesca en hielo o como regalo. Suficiente para perca, trucha y pequeños depredadores." }
+  },
+  {
+    id: 'cj-259', category: 'rods', usd: 6.11, ship: 14.47, rating: 4.5, reviews: null, badge: null, sku: 'CJDY116534801AZ',
+    photos: ['259-1.jpg','259-2.jpg','259-3.jpg','259-4.jpg','259-5.jpg'],
+    name: { fr: 'Combo canne-pistolet télescopique (4 pièces)', en: 'Pistol-Grip Telescopic Rod Combo (4-piece)', es: 'Combo caña pistola telescópica (4 piezas)' },
+    desc: { fr: 'Canne + moulinet + leurres + sac.', en: 'Rod + reel + lures + bag.', es: 'Caña + carrete + señuelos + bolsa.' },
+    long: {
+      fr: "Ensemble de pêche aux leurres prêt à pêcher : canne télescopique à poignée pistolet, moulinet à tambour avec gâchette, jeu de leurres souples et durs, et sac de transport. Idéal pour débuter ou comme kit d'appoint à garder dans la voiture. La poignée pistolet rend le lancer très intuitif. Disponible en plusieurs coloris.",
+      en: "Ready-to-fish lure combo: pistol-grip telescopic rod, trigger drum reel, a set of soft and hard lures, and a carry bag. Ideal to start out or as a backup kit to keep in the car. The pistol grip makes casting very intuitive. Available in several colours.",
+      es: "Equipo de pesca con señuelos listo para pescar: caña telescópica con empuñadura de pistola, carrete de tambor con gatillo, juego de señuelos blandos y duros, y bolsa de transporte. Ideal para empezar o como kit de repuesto para el coche. La empuñadura de pistola hace el lanzado muy intuitivo. Disponible en varios colores." }
+  },
+  {
+    id: 'cj-260', category: 'lures', usd: 37.37, ship: 10.75, rating: 4.7, reviews: null, badge: 'best', sku: 'CJYE163735301AZ',
+    photos: ['260-1.jpg','260-2.jpg','260-3.jpg','260-4.jpg','260-5.jpg'],
+    name: { fr: 'Coffret 84 leurres durs (minnows / crankbaits)', en: '84-Piece Hard Lure Set', es: 'Set de 84 señuelos duros' },
+    desc: { fr: 'Énorme assortiment, toutes situations.', en: 'Huge assortment, every situation.', es: 'Enorme surtido, todas las situaciones.' },
+    long: {
+      fr: "Énorme coffret de 84 leurres durs (minnows, crankbaits, poppers) de tailles, coloris et profondeurs de nage variés. De quoi t'adapter à toutes les eaux, toutes les espèces et toutes les conditions, et remplacer un leurre perdu sans souci. Hameçons triples montés. Le pack idéal pour bien démarrer la pêche aux leurres.",
+      en: "Huge 84-piece hard lure set (minnows, crankbaits, poppers) in varied sizes, colours and diving depths. Enough to adapt to every water, species and condition, and replace a lost lure with no worries. Treble hooks fitted. The ideal pack to get started with lure fishing.",
+      es: "Enorme set de 84 señuelos duros (minnows, crankbaits, poppers) en tamaños, colores y profundidades de nado variados. Suficiente para adaptarte a todas las aguas, especies y condiciones, y reemplazar un señuelo perdido sin problema. Anzuelos triples montados. El pack ideal para empezar con la pesca con señuelos." }
+  },
+  {
+    id: 'cj-261', category: 'lures', rating: 4.6, reviews: null, badge: null, sku: 'CJYD193600101AZ',
+    variants: [
+      { label: '85 g', usd: 5.64, ship: 5.65 }, { label: '100 g', usd: 5.97, ship: 5.65 },
+      { label: '120 g', usd: 6.30, ship: 5.65 }, { label: '150 g', usd: 6.63, ship: 5.65 }
+    ],
+    photos: ['261-1.jpg','261-2.jpg','261-3.jpg','261-4.jpg','261-5.jpg'],
+    name: { fr: 'Turlutte calmar lumineuse UV (85 à 150 g)', en: 'UV Luminous Squid Jig (85 to 150 g)', es: 'Potera de calamar luminosa UV (85 a 150 g)' },
+    desc: { fr: 'Brille sous UV, plombée, pour le calmar.', en: 'Glows under UV, weighted, for squid.', es: 'Brilla bajo UV, lastrada, para calamar.' },
+    long: {
+      fr: "Turlutte (egi) en forme de calmar à corps lumineux UV pour la pêche du calmar et de la seiche en bateau, de jour comme de nuit. Lestée pour descendre vite et tenir le fond, elle est équipée d'une couronne de piques inversées et d'un plomb d'insertion. Le corps phosphorescent attire les céphalopodes en eau profonde. Disponible en plusieurs poids (85 à 150 g).",
+      en: "Squid-shaped jig (egi) with a UV-luminous body for squid and cuttlefish fishing from a boat, day or night. Weighted to sink fast and hold the bottom, it has a crown of inverted spikes and an insert sinker. The glow body draws cephalopods in deep water. Available in several weights (85 to 150 g).",
+      es: "Potera (egi) en forma de calamar con cuerpo luminoso UV para la pesca de calamar y sepia desde barco, de día y de noche. Lastrada para bajar rápido y mantener el fondo, lleva una corona de púas invertidas y un plomo de inserción. El cuerpo fosforescente atrae a los cefalópodos en agua profunda. Disponible en varios pesos (85 a 150 g)." }
+  },
+  {
+    id: 'cj-263', category: 'gear', rating: 4.5, reviews: null, badge: null, sku: 'CJDY179246602BY',
+    variants: [
+      { label: 'À l’unité', usd: 0.08, ship: 5.20 },
+      { label: 'Lot', usd: 2.18, ship: 5.20 }
+    ],
+    photos: ['263-1.jpg','263-2.jpg','263-3.jpg','263-4.jpg','263-5.jpg'],
+    name: { fr: 'Tube silicone anti-emmêlement (carpe / silure)', en: 'Silicone Anti-Tangle Tubing (carp / catfish)', es: 'Tubo de silicona anti-enredos (carpa / siluro)' },
+    desc: { fr: 'Protège le bas de ligne des emmêlements.', en: 'Protects the leader from tangles.', es: 'Protege el bajo de línea de enredos.' },
+    long: {
+      fr: "Tube (gaine) en silicone souple à enfiler sur le bas de ligne pour les montages carpe et silure : il évite que le fil s'emmêle au lancer et plaque le bas de ligne au fond pour ne pas effrayer le poisson. Discret et résistant. Vendu à l'unité ou en lot. Un petit accessoire qui fait gagner beaucoup de touches.",
+      en: "Soft silicone tubing to slide over the leader for carp and catfish rigs: it stops the line tangling on the cast and pins the leader to the bottom so it won't spook fish. Discreet and tough. Sold singly or in a pack. A small accessory that wins you a lot of bites.",
+      es: "Tubo (funda) de silicona blanda para pasar por el bajo de línea en montajes de carpa y siluro: evita que el hilo se enrede al lanzar y pega el bajo de línea al fondo para no asustar al pez. Discreto y resistente. Vendido por unidad o en lote. Un pequeño accesorio que gana muchas picadas." }
+  },
+  {
+    id: 'cj-264', category: 'lures', usd: 12.35, ship: 5.62, rating: 4.6, reviews: null, badge: null, sku: 'CJDY180215901AZ',
+    photos: ['264-1.jpg','264-2.jpg','264-3.jpg','264-4.jpg','264-5.jpg'],
+    name: { fr: 'Coffret de mouches Anmuka (assortiment)', en: 'Anmuka Fly Assortment Box', es: 'Set de moscas Anmuka (surtido)' },
+    desc: { fr: 'Mouches sèches/noyées dans un étui.', en: 'Dry/wet flies in a case.', es: 'Moscas secas/ahogadas en estuche.' },
+    long: {
+      fr: "Grand coffret de mouches de pêche « Anmuka » : un large assortiment de mouches sèches, noyées et nymphes aux coloris vifs, rangées dans une boîte à mousse qui les protège et les présente bien. De quoi t'adapter à toutes les éclosions et toutes les truites. Idéal pour débuter la pêche à la mouche ou compléter ta collection.",
+      en: "Large 'Anmuka' fishing fly box: a wide assortment of dry flies, wet flies and nymphs in bright colours, stored in a foam box that protects and displays them. Enough to match every hatch and every trout. Ideal to start fly fishing or round out your collection.",
+      es: "Gran set de moscas de pesca «Anmuka»: un amplio surtido de moscas secas, ahogadas y ninfas en colores vivos, guardadas en una caja de espuma que las protege y las presenta bien. Suficiente para adaptarte a toda eclosión y toda trucha. Ideal para empezar la pesca con mosca o completar tu colección." }
+  },
+  {
+    id: 'cj-265', category: 'gear', usd: 4.24, ship: 11.07, rating: 4.5, reviews: null, badge: null, sku: 'CJYJ105275601AZ',
+    photos: ['265-1.jpg','265-2.jpg','265-3.jpg','265-4.jpg','265-5.jpg'],
+    name: { fr: 'Étui rigide pour cannes (54 cm)', en: 'Hard Rod Case (54 cm)', es: 'Estuche rígido para cañas (54 cm)' },
+    desc: { fr: 'Protège cannes démontées et moulinets.', en: 'Protects taken-down rods and reels.', es: 'Protege cañas desmontadas y carretes.' },
+    long: {
+      fr: "Étui rigide en mousse EVA (54 cm) pour transporter et protéger tes cannes démontées, moulinets et accessoires des chocs et de l'humidité. Intérieur matelassé, fermeture zippée solide et poignée. Coque semi-rigide qui garde sa forme dans le coffre ou en voyage. Idéal pour les cannes télescopiques et les ensembles compacts.",
+      en: "Hard EVA foam case (54 cm) to carry and protect your taken-down rods, reels and accessories from knocks and moisture. Padded interior, sturdy zip closure and a handle. Semi-rigid shell that keeps its shape in the trunk or while travelling. Ideal for telescopic rods and compact combos.",
+      es: "Estuche rígido de espuma EVA (54 cm) para transportar y proteger tus cañas desmontadas, carretes y accesorios de golpes y humedad. Interior acolchado, cierre de cremallera resistente y asa. Carcasa semirrígida que mantiene su forma en el maletero o de viaje. Ideal para cañas telescópicas y combos compactos." }
+  },
+  {
+    id: 'cj-266', category: 'lures', usd: 4.90, ship: 5.44, rating: 4.6, reviews: null, badge: null, sku: 'CJYE1736571',
+    photos: ['266-1.jpg','266-2.jpg','266-3.jpg','266-4.jpg','266-5.jpg'],
+    name: { fr: 'Stickbait coulant longue distance 11 cm', en: 'Long-Cast Sinking Pencil 11 cm', es: 'Pencil hundido largo alcance 11 cm' },
+    desc: { fr: 'Lance loin, coule, mer & carnassiers.', en: 'Casts far, sinks, sea & predators.', es: 'Lanza lejos, se hunde, mar y depredadores.' },
+    long: {
+      fr: "Leurre coulant type stickbait/pencil de 11 cm pour la pêche en mer du bord et des carnassiers. Dense et profilé, il se lance très loin et descend dans la couche d'eau ; animé en dents de scie, il imite un poisson blessé. Tête rouge et flancs réfléchissants. Hameçons triples. Disponible en de nombreux coloris (style NHH016).",
+      en: "11 cm sinking stickbait/pencil for shore sea fishing and predators. Dense and streamlined, it casts very far and drops through the water column; worked in a zig-zag it mimics a wounded fish. Red head and reflective flanks. Treble hooks. Available in many colours (NHH016 style).",
+      es: "Señuelo hundido tipo stickbait/pencil de 11 cm para la pesca en mar desde costa y depredadores. Denso y perfilado, se lanza muy lejos y baja por la capa de agua; animado en zigzag imita a un pez herido. Cabeza roja y flancos reflectantes. Anzuelos triples. Disponible en muchos colores (estilo NHH016)." }
+  },
+  {
+    id: 'cj-268', category: 'rods', rating: 4.5, reviews: null, badge: null, sku: 'CJDY136972802BY',
+    variants: [
+      { label: '1 ensemble', usd: 7.70, ship: 12.34 },
+      { label: '2 ensembles', usd: 15.59, ship: 12.34 }
+    ],
+    photos: ['268-1.jpg','268-2.jpg','268-3.jpg','268-4.jpg','268-5.jpg'],
+    name: { fr: 'Combo canne-pistolet + moulinet fermé (LEO)', en: 'Pistol-Grip Rod + Spincast Reel Combo', es: 'Combo caña pistola + carrete cerrado' },
+    desc: { fr: 'Prêt à pêcher, avec sac de transport.', en: 'Ready to fish, with carry bag.', es: 'Listo para pescar, con bolsa.' },
+    long: {
+      fr: "Ensemble de pêche compact à poignée pistolet avec moulinet fermé (spincast) intégré : facile à lancer même pour les débutants et les enfants, sans risque de perruque. Canne télescopique, sac de transport et accessoires inclus. Idéal en voyage, pour la glace ou comme kit d'initiation. Disponible en lot de 1 ou 2 ensembles.",
+      en: "Compact pistol-grip fishing combo with a built-in closed (spincast) reel: easy to cast even for beginners and kids, with no risk of backlash. Telescopic rod, carry bag and accessories included. Ideal for travel, ice fishing or as a starter kit. Available in a 1- or 2-combo pack.",
+      es: "Equipo de pesca compacto con empuñadura de pistola y carrete cerrado (spincast) integrado: fácil de lanzar incluso para principiantes y niños, sin riesgo de cabellera. Caña telescópica, bolsa de transporte y accesorios incluidos. Ideal para viajar, pesca en hielo o como kit de iniciación. Disponible en lote de 1 o 2 equipos." }
+  },
+  {
+    id: 'cj-270', category: 'gear', rating: 4.5, reviews: null, badge: null, sku: 'CJDY116860602BY',
+    variants: [
+      { label: 'Standard', usd: 3.08, ship: 10.87 },
+      { label: 'Double renforcé', usd: 5.93, ship: 10.87 }
+    ],
+    photos: ['270-1.jpg','270-2.jpg','270-3.jpg','270-4.jpg','270-5.jpg'],
+    name: { fr: 'Support de canne sur pique 360° (berge)', en: 'Adjustable 360° Bank Rod Holder', es: 'Soporte de caña 360° (orilla)' },
+    desc: { fr: 'Se plante au sol, tête orientable 360°.', en: 'Sticks in the ground, 360° head.', es: 'Se clava en el suelo, cabeza 360°.' },
+    long: {
+      fr: "Support de canne à planter dans la berge, à fourche double pour bien caler ta canne et tête orientable à 360° : tu positionnes le scion exactement à l'angle voulu pendant l'attente. Pointe double qui s'enfonce bien dans la terre ou le sable, construction pliable et résistante. Disponible en version standard ou double renforcée. Indispensable pour la pêche au posé.",
+      en: "Bank stick rod holder with a double fork to cradle your rod and a 360° swivelling head: set the tip at exactly the angle you want while waiting. Double point that sinks well into soil or sand, foldable and sturdy build. Available in standard or reinforced-double version. A must for ledgering.",
+      es: "Soporte de caña para clavar en la orilla, con horquilla doble para asentar bien tu caña y cabeza orientable 360°: colocas la puntera en el ángulo exacto deseado durante la espera. Punta doble que se hunde bien en tierra o arena, construcción plegable y resistente. Disponible en versión estándar o doble reforzada. Imprescindible para la pesca al fondo." }
+  },
+  {
+    id: 'cj-271', category: 'rods', rating: 4.6, reviews: null, badge: null, sku: 'CJDY125106401AZ',
+    variants: [
+      { label: 'Canne nue 2,4-3,6 m', usd: 4.24, ship: 7.08 },
+      { label: '4,5-5,4 m', usd: 8.24, ship: 7.08 },
+      { label: '6,3-7,2 m', usd: 18.41, ship: 7.08 }
+    ],
+    photos: ['271-1.jpg','271-2.jpg','271-3.jpg','271-4.jpg','271-5.jpg'],
+    name: { fr: 'Canne télescopique carbone au coup / rockfishing (2,4 à 7,2 m)', en: 'Telescopic Carbon Coarse / Rock Pole (2.4 to 7.2 m)', es: 'Caña telescópica carbono coup / rock (2,4 a 7,2 m)' },
+    desc: { fr: 'Légère et rigide, eau douce & mer.', en: 'Light and stiff, fresh & salt.', es: 'Ligera y rígida, dulce y mar.' },
+    long: {
+      fr: "Longue canne télescopique en carbone dur, polyvalente eau douce et mer (pêche au coup, pêche sur les rochers). Légère et rigide pour bien ferrer et brider le poisson malgré la longueur, elle se replie très court pour le transport. Disponible dans de nombreuses longueurs (2,4 à 7,2 m) : le tarif augmente avec la longueur et la finition (canne nue ou montée).",
+      en: "Long hard-carbon telescopic pole, versatile for fresh and salt water (coarse and rock fishing). Light and stiff to set and control fish despite the length, it collapses very short for transport. Available in many lengths (2.4 to 7.2 m): the price rises with length and finish (bare or fitted pole).",
+      es: "Larga caña telescópica de carbono duro, versátil para agua dulce y mar (pesca al coup, pesca en rocas). Ligera y rígida para clavar y dominar el pez pese a la longitud, se pliega muy corta para el transporte. Disponible en muchas longitudes (2,4 a 7,2 m): el precio sube con la longitud y el acabado (caña desnuda o montada)." }
+  },
+  {
+    id: 'cj-272', category: 'lures', usd: 0.88, ship: 4.81, rating: 4.6, reviews: null, badge: null, sku: 'CJYE121511701AZ',
+    photos: ['272-1.jpg','272-2.jpg','272-3.jpg','272-4.jpg','272-5.jpg'],
+    name: { fr: 'Leurres crevette articulés (lot 4 coloris)', en: 'Jointed Shrimp Lures (4-colour set)', es: 'Señuelos camarón articulados (4 colores)' },
+    desc: { fr: 'Imitation crevette réaliste, 4 coloris.', en: 'Realistic shrimp imitation, 4 colours.', es: 'Imitación de camarón realista, 4 colores.' },
+    long: {
+      fr: "Lot de 4 leurres durs imitant une crevette, au corps translucide articulé et aux longues antennes très réalistes. À la récupération par petites tirées, ils sautillent comme une vraie crevette en fuite et déclenchent bar, dorade, truite et perche. Hameçons fins. Coloris variés (clair, rose, vert, orange) pour s'adapter à l'eau.",
+      en: "Set of 4 hard lures imitating a shrimp, with a translucent jointed body and long, very realistic antennae. Worked in short hops, they dart like a real fleeing shrimp and trigger bass, bream, trout and perch. Fine hooks. Varied colours (clear, pink, green, orange) to match the water.",
+      es: "Lote de 4 señuelos duros que imitan a un camarón, con cuerpo translúcido articulado y largas antenas muy realistas. Animados a pequeños tirones, saltan como un camarón real en fuga y provocan lubina, dorada, trucha y perca. Anzuelos finos. Colores variados (claro, rosa, verde, naranja) para adaptarse al agua." }
+  },
+  {
+    id: 'cj-273', category: 'lures', usd: 2.69, ship: 5.95, rating: 4.6, reviews: null, badge: null, sku: 'CJYE126716801AZ',
+    photos: ['273-1.jpg','273-2.jpg','273-3.jpg','273-4.jpg','273-5.jpg'],
+    name: { fr: 'Leurre nageur articulé multi-sections (longue distance)', en: 'Multi-Jointed Swimbait (long-cast)', es: 'Señuelo articulado multisección (largo alcance)' },
+    desc: { fr: 'Nage ultra-réaliste, nombreux coloris.', en: 'Ultra-realistic swim, many colours.', es: 'Nado ultrarrealista, muchos colores.' },
+    long: {
+      fr: "Leurre nageur articulé en plusieurs sections : à la récupération, son corps ondule comme un vrai poisson et déclenche les gros carnassiers (brochet, sandre, bar, silure). Profil élancé qui se lance loin. Hameçons triples piquants et yeux 3D réalistes. Disponible dans un très grand choix de coloris (styles A à R).",
+      en: "Multi-section jointed swimbait: on the retrieve its body waves like a real fish and triggers big predators (pike, zander, bass, catfish). Slim profile that casts far. Sharp treble hooks and realistic 3D eyes. Available in a huge choice of colours (styles A to R).",
+      es: "Señuelo articulado de varias secciones: en la recogida su cuerpo ondula como un pez real y provoca a los grandes depredadores (lucio, lucioperca, lubina, siluro). Perfil esbelto que se lanza lejos. Anzuelos triples afilados y ojos 3D realistas. Disponible en una enorme variedad de colores (estilos A a R)." }
+  },
+  {
+    id: 'cj-274', category: 'lures', usd: 2.34, ship: 5.95, rating: 4.6, reviews: null, badge: null, sku: 'CJYE125107803CX',
+    photos: ['274-1.jpg','274-2.jpg','274-3.jpg','274-4.jpg','274-5.jpg'],
+    name: { fr: 'Tai rubber / jig à jupe (madai)', en: 'Tai Rubber Skirt Jig (madai)', es: 'Tai rubber / jig con falda (madai)' },
+    desc: { fr: 'Tête plombée + jupe ondulante, mer.', en: 'Jig head + waving skirt, sea.', es: 'Cabeza plomada + falda ondulante, mar.' },
+    long: {
+      fr: "Tai rubber (jig madai) : une tête plombée colorée suivie d'une jupe souple et de filaments qui ondulent à la moindre tension, imitant un calmar ou une crevette. Pêché en dérive lente près du fond, il déclenche dorades, pagres, bars et autres poissons de roche. Hameçons assist montés sur cordage. Disponible en plusieurs coloris.",
+      en: "Tai rubber (madai jig): a coloured jig head followed by a soft skirt and tentacle filaments that wave at the slightest tension, imitating a squid or shrimp. Fished on a slow drift near the bottom, it triggers bream, snapper, bass and other rock fish. Assist hooks on cord. Available in several colours.",
+      es: "Tai rubber (jig madai): una cabeza plomada de color seguida de una falda blanda y filamentos que ondulan a la mínima tensión, imitando un calamar o un camarón. Pescado a la deriva lenta cerca del fondo, provoca doradas, pargos, lubinas y otros peces de roca. Anzuelos assist en cordón. Disponible en varios colores." }
+  },
+  {
+    id: 'cj-275', category: 'reels', usd: 1.64, ship: 5.20, rating: 4.5, reviews: null, badge: null, sku: 'CJDY117292201AZ',
+    photos: ['275-1.jpg','275-2.jpg','275-3.jpg','275-4.jpg','275-5.jpg'],
+    name: { fr: 'Moulinet à glace (tambour, frein)', en: 'Ice Fishing Reel (drum, drag)', es: 'Carrete de hielo (tambor, freno)' },
+    desc: { fr: 'Léger, simple, pour la pêche sous glace.', en: 'Light, simple, for under-ice fishing.', es: 'Ligero, simple, para pesca bajo hielo.' },
+    long: {
+      fr: "Petit moulinet à tambour pour la pêche sur glace : léger et simple, avec un frein doux pour amortir les départs et laisser filer le poisson sous la glace. Plastique résistant au froid, montage rapide sur la canne. Disponible en plusieurs versions (petit/gros tambour, avec ou sans roulements) selon ta pêche. Idéal pour la perche et la truite l'hiver.",
+      en: "Small drum reel for ice fishing: light and simple, with a smooth drag to cushion runs and let the fish take line under the ice. Cold-resistant plastic, quick mounting on the rod. Available in several versions (small/large drum, with or without bearings) to match your fishing. Ideal for perch and trout in winter.",
+      es: "Pequeño carrete de tambor para la pesca en hielo: ligero y simple, con un freno suave para amortiguar las salidas y dejar correr al pez bajo el hielo. Plástico resistente al frío, montaje rápido en la caña. Disponible en varias versiones (tambor pequeño/grande, con o sin rodamientos) según tu pesca. Ideal para perca y trucha en invierno." }
+  },
+  {
+    id: 'cj-276', category: 'gear', usd: 1.01, ship: 14.52, rating: 4.5, reviews: null, badge: null, sku: 'CJDY102495501AZ',
+    photos: ['276-1.jpg','276-2.jpg','276-3.jpg','276-4.jpg','276-5.jpg'],
+    name: { fr: 'Tip-up à drapeau pour pêche sur glace (lot 6)', en: 'Ice Fishing Tip-Up with Flag (6-pack)', es: 'Tip-up con bandera para hielo (6)' },
+    desc: { fr: 'Drapeau qui se lève à la touche.', en: 'Flag pops up on a bite.', es: 'Bandera que se levanta en la picada.' },
+    long: {
+      fr: "Lot de 6 tip-ups en ABS pour la pêche sur glace : posé sur le trou (avec couvercle), chaque appareil tient ta ligne sous la glace et son drapeau orange se lève dès qu'un poisson mord, même à distance. Tu peux ainsi surveiller plusieurs trous d'un coup d'œil. Robuste et résistant au froid. ⚠️ Colis volumineux (port plus élevé).",
+      en: "Set of 6 ABS tip-ups for ice fishing: set over the hole (with a cover), each unit holds your line under the ice and its orange flag pops up as soon as a fish bites, even from a distance. You can watch several holes at a glance. Sturdy and cold-resistant. ⚠️ Bulky parcel (higher shipping).",
+      es: "Lote de 6 tip-ups de ABS para la pesca en hielo: colocado sobre el agujero (con tapa), cada aparato sujeta tu línea bajo el hielo y su bandera naranja se levanta en cuanto un pez muerde, incluso a distancia. Así puedes vigilar varios agujeros de un vistazo. Robusto y resistente al frío. ⚠️ Paquete voluminoso (envío más alto)." }
+  },
+  {
+    id: 'cj-277', category: 'lures', usd: 20.99, ship: 0, rating: 4.7, reviews: null, badge: 'best', sku: 'CJYE275892701AZ',
+    photos: ['277-1.jpg','277-2.jpg','277-3.jpg','277-4.jpg','277-5.jpg'],
+    name: { fr: 'Coffret 383 leurres complet (expédié USA)', en: '383-Piece Complete Lure Kit (US warehouse)', es: 'Kit completo 383 señuelos (USA)' },
+    desc: { fr: 'Énorme kit tout-en-un, port offert (USA).', en: 'Huge all-in-one kit, free shipping (US).', es: 'Enorme kit todo en uno, envío gratis (USA).' },
+    long: {
+      fr: "Énorme coffret de 383 pièces pour la pêche aux leurres : crankbaits, spinnerbaits, leurres souples (worms), jig heads, hameçons, émerillons, plombs et accessoires, le tout rangé dans une grande boîte. De quoi pêcher tous les carnassiers en eau douce comme en mer et t'adapter à chaque situation. Expédié depuis un entrepôt aux États-Unis : livraison rapide et offerte !",
+      en: "Huge 383-piece lure fishing kit: crankbaits, spinnerbaits, soft worms, jig heads, hooks, swivels, sinkers and accessories, all in a large box. Enough to fish every predator in fresh or salt water and adapt to any situation. Shipped from a US warehouse: fast and free delivery!",
+      es: "Enorme kit de 383 piezas para la pesca con señuelos: crankbaits, spinnerbaits, vinilos (worms), cabezas plomadas, anzuelos, emerillones, plomos y accesorios, todo en una caja grande. Suficiente para pescar todos los depredadores en agua dulce o mar y adaptarte a cada situación. Enviado desde un almacén en EE. UU.: ¡entrega rápida y gratis!" }
+  },
+  {
+    id: 'cj-278', category: 'gear', usd: 1.95, ship: 6.47, rating: 4.5, reviews: null, badge: null, sku: 'CJDY115031404DW',
+    photos: ['278-1.jpg','278-2.jpg','278-3.jpg','278-4.jpg','278-5.jpg'],
+    name: { fr: 'Bas de ligne acier anti-morsure (lot de 20)', en: 'Steel Wire Leaders, Anti-Bite (20-pack)', es: 'Bajos de línea de acero anti-mordida (20)' },
+    desc: { fr: 'Empêche les dents de couper le fil.', en: 'Stops teeth cutting the line.', es: 'Evita que los dientes corten el hilo.' },
+    long: {
+      fr: "Lot de 20 bas de ligne en acier gainé avec émerillon et agrafe, indispensables face aux poissons à dents (brochet, silure, barracuda, requin-bord). Le fil d'acier résiste aux coupures là où le nylon casse. Montage rapide grâce à l'agrafe. Disponible en plusieurs longueurs (15 à 50 cm). Tu sécurises tes leurres et tu perds moins de poissons.",
+      en: "Set of 20 coated steel wire leaders with a swivel and snap, essential against toothy fish (pike, catfish, barracuda, shark). The steel wire resists cuts where mono would break. Quick to clip on. Available in several lengths (15 to 50 cm). You protect your lures and lose fewer fish.",
+      es: "Lote de 20 bajos de línea de acero recubierto con emerillón y grapa, imprescindibles frente a peces con dientes (lucio, siluro, barracuda, tiburón). El hilo de acero resiste los cortes donde el nailon se rompe. Montaje rápido con la grapa. Disponible en varias longitudes (15 a 50 cm). Proteges tus señuelos y pierdes menos peces." }
+  },
+  {
+    id: 'cj-279', category: 'rods', usd: 4.34, ship: 6.32, rating: 4.5, reviews: null, badge: null, sku: 'CJDY105229905EV',
+    photos: ['279-1.jpg','279-2.jpg','279-3.jpg','279-4.jpg'],
+    name: { fr: 'Mini canne stylo de poche (cadeau)', en: 'Mini Pocket Pen Rod (gift)', es: 'Mini caña bolígrafo de bolsillo (regalo)' },
+    desc: { fr: 'Format stylo, idée cadeau originale.', en: 'Pen format, original gift idea.', es: 'Formato bolígrafo, idea de regalo original.' },
+    long: {
+      fr: "Mini canne télescopique au format « stylo » avec son petit moulinet : repliée, elle ressemble à un gros stylo et tient dans une poche ; déployée, c'est une vraie petite canne d'appoint. Finition soignée noir et or, idéale comme cadeau original pour un pêcheur, ou comme kit de secours à garder partout. Parfaite en voyage ou pour la glace.",
+      en: "Pen-sized telescopic mini rod with its small reel: folded, it looks like a fat pen and fits in a pocket; extended, it's a real little backup rod. Smart black-and-gold finish, ideal as an original gift for an angler, or as a backup kit to keep anywhere. Perfect for travel or ice fishing.",
+      es: "Mini caña telescópica en formato «bolígrafo» con su pequeño carrete: plegada parece un bolígrafo grueso y cabe en un bolsillo; desplegada es una pequeña caña de repuesto de verdad. Acabado cuidado negro y oro, ideal como regalo original para un pescador, o como kit de repuesto para llevar a cualquier sitio. Perfecta para viajar o la pesca en hielo." }
+  },
+  {
+    id: 'cj-280', category: 'gear', usd: 1.74, ship: 5.35, rating: 4.5, reviews: null, badge: null, sku: 'CJDY2158687',
+    photos: ['280-1.jpg','280-2.jpg','280-3.jpg','280-4.jpg','280-5.jpg'],
+    name: { fr: 'Indicateur de touche carpe (swinger)', en: 'Carp Bite Indicator (swinger)', es: 'Indicador de picada carpa (swinger)' },
+    desc: { fr: 'Tend la ligne et signale la touche.', en: 'Keeps the line tight and shows the bite.', es: 'Mantiene la línea tensa y señala la picada.' },
+    long: {
+      fr: "Indicateur de touche type « swinger » pour la pêche de la carpe au posé. Suspendu sous la canne par sa chaînette, il garde la ligne tendue et signale aussitôt départs et touches en avalée, de jour comme de nuit (corps translucide bien visible). Bras et chaîne réglables. Disponible en plusieurs coloris. Idéal sur rod pod avec détecteur.",
+      en: "'Swinger' bite indicator for ledgering carp. Hung under the rod by its chain, it keeps the line tight and instantly shows runs and drop-back bites, day or night (clearly visible translucent body). Adjustable arm and chain. Available in several colours. Ideal on a rod pod with an alarm.",
+      es: "Indicador de picada tipo «swinger» para la pesca de carpa al fondo. Colgado bajo la caña por su cadena, mantiene la línea tensa y señala al instante salidas y picadas en caída, de día y de noche (cuerpo translúcido bien visible). Brazo y cadena ajustables. Disponible en varios colores. Ideal en rod pod con avisador." }
+  },
+  {
+    id: 'cj-281', category: 'lures', usd: 0.60, ship: 5.20, rating: 4.5, reviews: null, badge: null, sku: 'CJDY1911313',
+    photos: ['281-1.jpg','281-2.jpg','281-3.jpg','281-4.jpg','281-5.jpg'],
+    name: { fr: 'Cuiller tournante à plumes (6,5 cm)', en: 'Spinner with Feather Tail (6.5 cm)', es: 'Cucharilla giratoria con plumas (6,5 cm)' },
+    desc: { fr: 'Palette brillante + plumes, nombreux modèles.', en: 'Shiny blade + feathers, many models.', es: 'Pala brillante + plumas, muchos modelos.' },
+    long: {
+      fr: "Cuiller tournante de 6,5 cm (5,3 g) : sa palette brillante vibre et accroche la lumière, tandis que le panache de plumes déclenche l'attaque des carnassiers (truite, perche, brochet, chevesne). Hameçon triple garni rouge. Vibration forte qui se sent dans la canne. Disponible dans de très nombreux modèles et coloris.",
+      en: "6.5 cm (5.3 g) spinner: its shiny blade flashes and vibrates while the feather tail triggers strikes from predators (trout, perch, pike, chub). Dressed red treble hook. Strong vibration you feel in the rod. Available in many models and colours.",
+      es: "Cucharilla giratoria de 6,5 cm (5,3 g): su pala brillante destella y vibra mientras el penacho de plumas provoca el ataque de los depredadores (trucha, perca, lucio, cacho). Anzuelo triple vestido rojo. Vibración fuerte que se siente en la caña. Disponible en muchos modelos y colores." }
+  },
+  {
+    id: 'cj-282', category: 'gear', usd: 0.51, ship: 5.20, rating: 4.5, reviews: null, badge: null, sku: 'CJYD202241706FU',
+    photos: ['282-1.jpg','282-2.jpg','282-3.jpg','282-4.jpg'],
+    name: { fr: 'Fil nylon Red Wolf 100 m', en: 'Red Wolf Nylon Line 100 m', es: 'Hilo nailon Red Wolf 100 m' },
+    desc: { fr: 'Monofilament résistant, plusieurs diamètres.', en: 'Strong mono, several diameters.', es: 'Monofilamento resistente, varios diámetros.' },
+    long: {
+      fr: "Fil monofilament nylon « Red Wolf » de 100 m, résistant et élastique pour amortir les coups de tête du poisson. Bonne tenue au nœud et discrétion dans l'eau. Disponible en plusieurs diamètres (numéros 3.0 à 8.0). Idéal en corps de ligne pour la mer et le gros poisson, ou en bas de ligne.",
+      en: "100 m 'Red Wolf' nylon monofilament, strong and stretchy to cushion the fish's head-shakes. Good knot strength and discretion in the water. Available in several diameters (numbers 3.0 to 8.0). Ideal as a main line for the sea and big fish, or as a leader.",
+      es: "Hilo monofilamento de nailon «Red Wolf» de 100 m, resistente y elástico para amortiguar los tirones del pez. Buena resistencia al nudo y discreción en el agua. Disponible en varios diámetros (números 3.0 a 8.0). Ideal como línea madre para el mar y peces grandes, o como bajo de línea." }
+  },
+  {
+    id: 'cj-283', category: 'gear', usd: 0.74, ship: 5.65, rating: 4.5, reviews: null, badge: null, sku: 'CJDY174365130DW',
+    photos: ['283-1.jpg','283-2.jpg','283-3.jpg','283-4.jpg','283-5.jpg'],
+    name: { fr: 'Fil nylon enduit fluoro 120 m (anti-vrille)', en: 'Fluoro-coated Nylon Line 120 m (anti-roll)', es: 'Hilo nailon fluoro 120 m (anti-torsión)' },
+    desc: { fr: 'Souple, discret, traité anti-vrille.', en: 'Supple, discreet, anti-roll treated.', es: 'Flexible, discreto, tratado anti-torsión.' },
+    long: {
+      fr: "Fil nylon à revêtement fluorocarbone de 120 m, traité « anti-roll » pour limiter le vrillage et les emmêlements. Souple pour de bons lancers, résistant et discret dans l'eau pour ne pas alerter le poisson. Disponible en de nombreux diamètres (0,4 à 8,0). Polyvalent en corps de ligne pour la mer comme l'eau douce.",
+      en: "120 m fluorocarbon-coated nylon line, 'anti-roll' treated to limit twist and tangles. Supple for good casts, strong and discreet in the water so it won't spook fish. Available in many diameters (0.4 to 8.0). Versatile as a main line for salt or fresh water.",
+      es: "Hilo de nailon con recubrimiento de fluorocarbono de 120 m, tratado «anti-roll» para limitar la torsión y los enredos. Flexible para buenos lanzados, resistente y discreto en el agua para no alertar al pez. Disponible en muchos diámetros (0,4 a 8,0). Versátil como línea madre para mar o agua dulce." }
+  },
+  {
+    id: 'cj-284', category: 'gear', usd: 17.48, ship: 0, rating: 4.7, reviews: null, badge: 'best', sku: 'CJDY26015070001',
+    photos: ['284-1.jpg','284-2.jpg','284-3.jpg','284-4.jpg','284-5.jpg'],
+    name: { fr: 'Nasse pliable à appâts (crevettes, vairons, crabes)', en: 'Folding Bait Trap Net (shrimp, minnow, crab)', es: 'Nasa plegable para cebos (gambas, alevines, cangrejos)' },
+    desc: { fr: 'Se replie à plat, port offert (USA).', en: 'Folds flat, free shipping (US).', es: 'Se pliega plana, envío gratis (USA).' },
+    long: {
+      fr: "Nasse-piège pliable type parapluie pour capturer facilement tes appâts vivants : crevettes, vairons, écrevisses, petits crabes. Plusieurs entrées en entonnoir, se déploie en un geste et se replie à plat pour le transport. Expédiée depuis un entrepôt aux États-Unis : livraison rapide et offerte !",
+      en: "Folding umbrella-style trap net to easily catch your live bait: shrimp, minnows, crayfish, small crabs. Several funnel entrances, opens in one move and folds flat for transport. Shipped from a US warehouse: fast and free delivery!",
+      es: "Nasa-trampa plegable tipo paraguas para capturar fácilmente tus cebos vivos: gambas, alevines, cangrejos de río, cangrejos pequeños. Varias entradas en embudo, se despliega en un gesto y se pliega plana para el transporte. Enviada desde un almacén en EE. UU.: ¡entrega rápida y gratis!" }
+  },
+  {
+    id: 'cj-285', category: 'lures', rating: 4.5, reviews: null, badge: null, sku: 'CJYD212943005EV',
+    variants: [
+      { label: 'À l’unité', usd: 0.64, ship: 5.59 },
+      { label: 'Lot', usd: 3.52, ship: 5.59 }
+    ],
+    photos: ['285-1.jpg','285-2.jpg','285-3.jpg','285-4.jpg','285-5.jpg'],
+    name: { fr: 'Cuiller tournante à grelot (unité ou lot)', en: 'Spinner with Bell (single or set)', es: 'Cucharilla con cascabel (unidad o lote)' },
+    desc: { fr: 'Palette + grelot sonore + plumes.', en: 'Blade + sound bell + feathers.', es: 'Pala + cascabel sonoro + plumas.' },
+    long: {
+      fr: "Cuiller tournante équipée d'un grelot en cuivre : en plus de la vibration et des reflets de la palette, le grelot émet un cliquetis qui attire les carnassiers de plus loin, même en eau trouble. Hameçon triple garni de plumes. Disponible à l'unité dans le coloris voulu ou en lot assorti pour tout avoir sous la main.",
+      en: "Spinner fitted with a copper bell: on top of the blade's flash and vibration, the bell makes a tinkling sound that draws predators from further away, even in murky water. Feather-dressed treble hook. Available singly in the colour you want, or in an assorted set to have everything on hand.",
+      es: "Cucharilla giratoria equipada con un cascabel de cobre: además del destello y la vibración de la pala, el cascabel emite un tintineo que atrae a los depredadores desde más lejos, incluso en agua turbia. Anzuelo triple vestido con plumas. Disponible por unidad en el color deseado o en lote surtido para tenerlo todo a mano." }
+  },
+  {
+    id: 'cj-286', category: 'reels', usd: 13.31, ship: 11.37, rating: 4.6, reviews: null, badge: null, sku: 'CJDY122208401AZ',
+    photos: ['286-1.jpg','286-2.jpg','286-3.jpg','286-4.jpg','286-5.jpg'],
+    name: { fr: 'Moulinet de traîne mer (conventionnel, droitier)', en: 'Trolling Conventional Reel (right hand)', es: 'Carrete de curricán mar (convencional, diestro)' },
+    desc: { fr: 'Tambour puissant pour la traîne et le fond.', en: 'Powerful drum for trolling and bottom.', es: 'Tambor potente para curricán y fondo.' },
+    long: {
+      fr: "Moulinet de traîne (conventionnel) à tambour pour la pêche en mer : traîne, pêche au gros et pêche profonde. Roulements inox, frein puissant et carter renforcé pour encaisser les gros poissons et l'eau salée. Récupération directe et solide. Disponible en plusieurs tailles (TSSD3000 / 4000). Version main droite.",
+      en: "Conventional trolling drum reel for sea fishing: trolling, big-game and deep dropping. Stainless bearings, powerful drag and a reinforced frame to take big fish and salt water. Direct, sturdy retrieve. Available in several sizes (TSSD3000 / 4000). Right-hand version.",
+      es: "Carrete de curricán (convencional) de tambor para la pesca en mar: curricán, pesca de altura y pesca profunda. Rodamientos inox, freno potente y carcasa reforzada para aguantar grandes peces y el agua salada. Recogida directa y sólida. Disponible en varias tallas (TSSD3000 / 4000). Versión mano derecha." }
+  },
+  {
+    id: 'cj-287', category: 'gear', usd: 0.67, ship: 5.35, rating: 4.5, reviews: null, badge: null, sku: 'CJDY125401555CX',
+    photos: ['287-1.jpg','287-2.jpg','287-3.jpg','287-4.jpg','287-5.jpg'],
+    name: { fr: 'Fil nylon FTK enduit fluoro 120 m', en: 'FTK Fluoro-coated Nylon Line 120 m', es: 'Hilo nailon FTK fluoro 120 m' },
+    desc: { fr: 'Bon lancer, discret, nombreux diamètres.', en: 'Good casting, discreet, many diameters.', es: 'Buen lanzado, discreto, muchos diámetros.' },
+    long: {
+      fr: "Fil nylon FTK à revêtement fluorocarbone, en bobine de 120 m. Souple pour de bons lancers, résistant et discret dans l'eau pour ne pas alerter le poisson. Disponible dans de nombreux diamètres (0,8 à 8,0) et plusieurs teintes mouchetées (bleu, vert, café) qui se fondent dans l'eau. Polyvalent en corps ou en bas de ligne.",
+      en: "FTK fluorocarbon-coated nylon line on a 120 m spool. Supple for good casts, strong and discreet in the water so it won't spook fish. Available in many diameters (0.8 to 8.0) and several speckled shades (blue, green, coffee) that blend into the water. Versatile as a main line or leader.",
+      es: "Hilo de nailon FTK con recubrimiento de fluorocarbono, en bobina de 120 m. Flexible para buenos lanzados, resistente y discreto en el agua para no alertar al pez. Disponible en muchos diámetros (0,8 a 8,0) y varios tonos moteados (azul, verde, café) que se funden con el agua. Versátil como línea madre o bajo de línea." }
+  },
+  {
+    id: 'cj-289', category: 'gear', usd: 5.51, ship: 12.07, rating: 4.5, reviews: null, badge: null, sku: 'CJDY125189201AZ',
+    photos: ['289-1.jpg','289-2.jpg','289-3.jpg','289-4.jpg','289-5.jpg'],
+    name: { fr: 'Support de canne à pince (rail de bateau)', en: 'Clamp Rod Holder (boat rail)', es: 'Soporte de caña con pinza (barco)' },
+    desc: { fr: 'Se serre sur le bord, berceau orientable.', en: 'Clamps to the edge, swivelling cradle.', es: 'Se aprieta al borde, cuna orientable.' },
+    long: {
+      fr: "Support de canne en nylon renforcé à fixer par pince (étau) sur le rail, le plat-bord ou le ponton. Berceau orientable et inclinable pour positionner ta canne à l'angle voulu pendant la traîne ou l'attente. Vis de serrage solide, matière résistante à l'eau salée. Pratique pour pêcher plusieurs cannes depuis le bateau.",
+      en: "Reinforced nylon rod holder that clamps onto the rail, gunwale or dock. Swivelling, tilting cradle to set your rod at the angle you want while trolling or waiting. Strong clamp screw, saltwater-resistant material. Handy to fish several rods from the boat.",
+      es: "Soporte de caña en nailon reforzado que se fija con pinza (mordaza) al riel, la borda o el pantalán. Cuna orientable e inclinable para colocar tu caña en el ángulo deseado durante el curricán o la espera. Tornillo de apriete sólido, material resistente al agua salada. Práctico para pescar varias cañas desde el barco." }
+  },
+  {
+    id: 'cj-290', category: 'rods', usd: 5.24, ship: 12.00, rating: 4.5, reviews: null, badge: null, sku: 'CJDY139744801AZ',
+    photos: ['290-1.jpg','290-2.jpg','290-3.jpg','290-4.jpg','290-5.jpg'],
+    name: { fr: 'Canne à glace 2 scions (hiver)', en: 'Double-Tip Ice Fishing Rod', es: 'Caña de hielo 2 punteras (invierno)' },
+    desc: { fr: 'Deux scions de sensibilité différente.', en: 'Two tips of different sensitivity.', es: 'Dos punteras de distinta sensibilidad.' },
+    long: {
+      fr: "Canne à glace livrée avec deux scions interchangeables de sensibilité différente : un fin pour détecter les touches les plus discrètes, un plus puissant pour les poissons plus combatifs. Manche liège confortable, scions colorés bien visibles sur la glace. Compacte et légère. Idéale pour la perche, le doré et la truite l'hiver.",
+      en: "Ice fishing rod supplied with two interchangeable tips of different sensitivity: a fine one to detect the subtlest bites, a stronger one for harder-fighting fish. Comfortable cork handle, brightly coloured tips easy to see on the ice. Compact and light. Ideal for perch, walleye and trout in winter.",
+      es: "Caña de hielo con dos punteras intercambiables de distinta sensibilidad: una fina para detectar las picadas más discretas, otra más potente para peces más combativos. Mango de corcho cómodo, punteras de colores bien visibles sobre el hielo. Compacta y ligera. Ideal para perca, lucioperca y trucha en invierno." }
+  },
+  {
+    id: 'cj-291', category: 'rods', rating: 4.6, reviews: null, badge: null, sku: 'CJDY165791301AZ',
+    variants: [
+      { label: '2,7-3,6 m', usd: 10.25, ship: 5.72 }, { label: '4,5-5,4 m', usd: 16.17, ship: 5.72 },
+      { label: '6,3-7,2 m', usd: 23.60, ship: 5.72 }, { label: '8,1-9,0 m', usd: 31.02, ship: 5.72 }
+    ],
+    photos: ['291-1.jpg','291-2.jpg','291-3.jpg','291-4.jpg','291-5.jpg'],
+    name: { fr: 'Canne télescopique carbone super-rigide 28T (au coup)', en: 'Super-Hard Carbon Telescopic Pole 28T', es: 'Caña telescópica carbono super rígida 28T' },
+    desc: { fr: 'Très rigide et légère, plusieurs longueurs.', en: 'Very stiff and light, several lengths.', es: 'Muy rígida y ligera, varias longitudes.' },
+    long: {
+      fr: "Canne télescopique en carbone super-rigide (action 28 brins) pour la pêche au coup des poissons puissants. Très légère et nerveuse, elle bride vite le poisson malgré la longueur et se replie très court pour le transport. Disponible dans de nombreuses longueurs (2,7 à 9,0 m) : le tarif augmente avec la longueur.",
+      en: "Super-hard carbon telescopic pole (28-section action) for coarse fishing of powerful fish. Very light and crisp, it quickly turns the fish despite the length and collapses very short for transport. Available in many lengths (2.7 to 9.0 m): the price rises with length.",
+      es: "Caña telescópica de carbono super rígido (acción 28 tramos) para la pesca al coup de peces potentes. Muy ligera y nerviosa, domina rápido al pez pese a la longitud y se pliega muy corta para el transporte. Disponible en muchas longitudes (2,7 a 9,0 m): el precio sube con la longitud." }
+  },
+  {
+    id: 'cj-292', category: 'lures', usd: 9.99, ship: 7.24, rating: 4.6, reviews: null, badge: null, sku: 'CJYE130014202BY',
+    photos: ['292-1.jpg','292-2.jpg','292-3.jpg','292-4.jpg','292-5.jpg'],
+    name: { fr: 'Coffret 100 mouches (20 coloris)', en: '100-Fly Box (20 colours)', es: 'Set de 100 moscas (20 colores)' },
+    desc: { fr: '100 mouches assorties dans une boîte.', en: '100 assorted flies in a box.', es: '100 moscas surtidas en una caja.' },
+    long: {
+      fr: "Grand coffret de 100 mouches de pêche en 20 coloris : mouches sèches, noyées et imitations papillon aux teintes vives, rangées dans une boîte aimantée qui les protège et les présente bien. De quoi t'adapter à toutes les éclosions et toutes les truites. Idéal pour débuter la pêche à la mouche ou enrichir ta collection à petit prix.",
+      en: "Large box of 100 fishing flies in 20 colours: dry flies, wet flies and butterfly imitations in bright shades, stored in a magnetic box that protects and displays them. Enough to match every hatch and every trout. Ideal to start fly fishing or grow your collection cheaply.",
+      es: "Gran set de 100 moscas de pesca en 20 colores: moscas secas, ahogadas e imitaciones de mariposa en tonos vivos, guardadas en una caja magnética que las protege y las presenta bien. Suficiente para adaptarte a toda eclosión y toda trucha. Ideal para empezar la pesca con mosca o ampliar tu colección a bajo precio." }
+  },
+  {
+    id: 'cj-294', category: 'reels', usd: 23.55, ship: 8.18, rating: 4.7, reviews: null, badge: null, sku: 'CJDY173109601AZ',
+    photos: ['294-1.jpg','294-2.jpg','294-3.jpg','294-4.jpg','294-5.jpg'],
+    name: { fr: 'Moulinet casting bas profil carbone (gaucher/droitier)', en: 'Low-Profile Carbon Baitcasting Reel (left/right)', es: 'Carrete casting bajo perfil carbono (zurdo/diestro)' },
+    desc: { fr: 'Léger, puissant, frein anti-perruque.', en: 'Light, powerful, anti-backlash brake.', es: 'Ligero, potente, freno anti-cabellera.' },
+    long: {
+      fr: "Moulinet casting (baitcasting) bas profil à carter carbone, léger et confortable en main pour pêcher aux leurres toute la journée. Frein double (magnétique + centrifuge) qui limite les « perruques » et donne des lancers précis. Récupération rapide et puissante, parfait pour le brochet, le black-bass et le silure. Disponible en main gauche ou main droite.",
+      en: "Low-profile baitcasting reel with a carbon frame, light and comfortable in hand for all-day lure fishing. Dual brake (magnetic + centrifugal) that limits backlash and gives accurate casts. Fast, powerful retrieve, perfect for pike, bass and catfish. Available in left- or right-hand.",
+      es: "Carrete casting (baitcasting) de bajo perfil con carcasa de carbono, ligero y cómodo en mano para pescar con señuelos todo el día. Freno doble (magnético + centrífugo) que limita las «cabelleras» y da lanzados precisos. Recogida rápida y potente, perfecto para lucio, black-bass y siluro. Disponible en zurdo o diestro." }
+  },
+  {
+    id: 'cj-295', category: 'gear', usd: 1.65, ship: 5.20, rating: 4.5, reviews: null, badge: null, sku: 'CJDY1932181',
+    photos: ['295-1.jpg','295-2.jpg','295-3.jpg','295-4.jpg','295-5.jpg'],
+    name: { fr: 'Outil carpe multifonction (perçoir + aiguille)', en: 'Carp Bait Drill & Needle Tool', es: 'Herramienta carpa (taladro + aguja)' },
+    desc: { fr: 'Perce les bouillettes et passe le fil.', en: 'Drills boilies and threads the line.', es: 'Perfora boilies y pasa el hilo.' },
+    long: {
+      fr: "Petit outil multifonction pour la pêche de la carpe : une pointe pour percer les bouillettes et appâts durs, un crochet/aiguille pour enfiler le cheveu, le tout sur une poignée ergonomique antidérapante. Compact et léger, il se glisse dans la boîte à accessoires. Indispensable pour préparer tes montages au cheveu.",
+      en: "Small multi-tool for carp fishing: a point to drill boilies and hard baits, a hook/needle to thread the hair rig, all on an ergonomic non-slip handle. Compact and light, it slips into your tackle box. A must to prepare your hair rigs.",
+      es: "Pequeña herramienta multifunción para la pesca de carpa: una punta para perforar boilies y cebos duros, un gancho/aguja para pasar el pelo del montaje, todo en un mango ergonómico antideslizante. Compacta y ligera, cabe en tu caja de accesorios. Imprescindible para preparar tus montajes al pelo." }
+  },
+  {
+    id: 'cj-296', category: 'rods', usd: 5.95, ship: 6.78, rating: 4.6, reviews: null, badge: 'best', sku: 'CJYD193150201AZ',
+    photos: ['296-1.jpg','296-2.jpg','296-3.jpg','296-4.jpg','296-5.jpg'],
+    name: { fr: 'Ensemble pêche au radeau (canne + moulinet + leurres + sac)', en: 'Raft Fishing Combo (rod + reel + lures + bag)', es: 'Combo pesca en balsa (caña + carrete + señuelos + bolsa)' },
+    desc: { fr: 'Kit complet prêt à pêcher, avec housse.', en: 'Complete ready-to-fish kit, with bag.', es: 'Kit completo listo para pescar, con bolsa.' },
+    long: {
+      fr: "Ensemble complet de pêche au radeau / au coup léger : canne courte, petit moulinet à tambour frontal, jeu de leurres souples et housse de transport. Idéal pour la pêche fine des petits carnassiers et poissons blancs depuis un ponton, une barque ou la berge. Parfait pour débuter avec tout en main.",
+      en: "Complete raft / light fishing set: short rod, small front-wheel drum reel, a set of soft lures and a carry bag. Ideal for finesse fishing of small predators and silver fish from a dock, a dinghy or the bank. Perfect to start out with everything in one kit.",
+      es: "Equipo completo de pesca en balsa / pesca ligera: caña corta, pequeño carrete de tambor frontal, juego de vinilos y bolsa de transporte. Ideal para la pesca fina de pequeños depredadores y peces blancos desde un pantalán, una barca o la orilla. Perfecto para empezar con todo a mano." }
+  },
+  {
+    id: 'cj-297', category: 'lures', usd: 0.52, ship: 5.95, rating: 4.6, reviews: null, badge: null, sku: 'CJYE121946211KP',
+    photos: ['297-1.jpg','297-2.jpg','297-3.jpg','297-4.jpg','297-5.jpg'],
+    name: { fr: 'Jig casting métal lamé (7-30 g)', en: 'Metal Casting Jig (7-30 g)', es: 'Jig metálico casting (7-30 g)' },
+    desc: { fr: 'Lance loin, descend vite, coloris flashy.', en: 'Casts far, sinks fast, flashy colours.', es: 'Lanza lejos, baja rápido, colores flashy.' },
+    long: {
+      fr: "Jig métallique lamé pour la pêche en mer du bord ou en bateau. Compact et dense, il se lance très loin et coule vite vers les poissons actifs (maquereau, bar, lieu). Reflets brillants façon poisson fourrage qui déclenchent l'attaque. Disponible en plusieurs poids (7 à 30 g) et coloris, monté ou à équiper.",
+      en: "Lamé metal jig for sea fishing from shore or boat. Compact and dense, it casts very far and sinks fast to active fish (mackerel, bass, pollock). Bright baitfish-style flash that triggers strikes. Available in several weights (7 to 30 g) and colours, rigged or to set up.",
+      es: "Jig metálico para la pesca en mar desde costa o barco. Compacto y denso, se lanza muy lejos y baja rápido hacia los peces activos (caballa, lubina, abadejo). Destellos brillantes tipo pez forraje que provocan el ataque. Disponible en varios pesos (7 a 30 g) y colores, montado o por equipar." }
+  },
+  {
+    id: 'cj-298', category: 'gear', usd: 4.00, ship: 6.32, rating: 4.5, reviews: null, badge: null, sku: 'CJDY154898601AZ',
+    photos: ['298-1.jpg','298-2.jpg','298-3.jpg','298-4.jpg','298-5.jpg'],
+    name: { fr: 'Coffret 80 anneaux de canne (réparation)', en: 'Rod Guide Ring Repair Kit (80 pcs)', es: 'Kit 80 anillas de caña (reparación)' },
+    desc: { fr: 'Anneaux de rechange toutes tailles, en boîte.', en: 'Spare guides, all sizes, boxed.', es: 'Anillas de repuesto, todas las tallas, en caja.' },
+    long: {
+      fr: "Coffret de 80 anneaux (guides) de canne de différentes tailles (Ø 1,5 à 3,5) pour réparer ou monter tes cannes à pêche. Cadre inox et insert qui préserve le fil. Rangés dans une boîte compartimentée bien pratique. De quoi dépanner toutes tes cannes en mer comme en eau douce.",
+      en: "Boxed set of 80 rod guides in various sizes (Ø 1.5 to 3.5) to repair or build your fishing rods. Stainless frame and insert that protects the line. Stored in a handy compartment box. Everything to fix all your rods, in salt or fresh water.",
+      es: "Estuche de 80 anillas (guías) de caña de diferentes tallas (Ø 1,5 a 3,5) para reparar o montar tus cañas de pescar. Marco inox e inserto que protege el hilo. Guardadas en una práctica caja con compartimentos. Para arreglar todas tus cañas en mar y agua dulce." }
+  },
+  {
+    id: 'cj-299', category: 'reels', rating: 4.5, reviews: null, badge: null, sku: 'CJYD177930501AZ',
+    variants: [
+      { label: 'GX1000', usd: 6.52, ship: 10.40 }, { label: 'GX2000', usd: 6.80, ship: 10.40 },
+      { label: 'GX3000', usd: 7.09, ship: 10.40 }, { label: 'GX4000', usd: 7.38, ship: 10.40 },
+      { label: 'GX5000', usd: 7.67, ship: 10.40 }, { label: 'GX6000', usd: 7.96, ship: 10.40 },
+      { label: 'GX7000', usd: 8.25, ship: 10.40 }
+    ],
+    photos: ['299-1.jpg','299-2.jpg','299-3.jpg','299-4.jpg','299-5.jpg'],
+    name: { fr: 'Moulinet spinning métal GX (1000 à 7000)', en: 'Metal Spinning Reel GX (1000 to 7000)', es: 'Carrete spinning metal GX (1000 a 7000)' },
+    desc: { fr: 'Corps métal + carbone, double roulement.', en: 'Metal + carbon body, double bearing.', es: 'Cuerpo metal + carbono, doble rodamiento.' },
+    long: {
+      fr: "Moulinet spinning à corps métal et pièces carbone, double roulement pour une récupération douce. Frein avant progressif et bobine de rechange. Polyvalent, il se décline du GX1000 (pêche fine) au GX7000 (mer, gros poissons). Solide et fiable, un excellent choix pour t'équiper sans te ruiner.",
+      en: "Spinning reel with a metal body and carbon parts, double bearing for a smooth retrieve. Progressive front drag and spare spool. Versatile, it ranges from GX1000 (finesse) to GX7000 (sea, big fish). Solid and reliable, a great choice to gear up without breaking the bank.",
+      es: "Carrete spinning con cuerpo de metal y piezas de carbono, doble rodamiento para una recogida suave. Freno delantero progresivo y bobina de repuesto. Versátil, va del GX1000 (pesca fina) al GX7000 (mar, peces grandes). Sólido y fiable, una excelente opción para equiparte sin arruinarte." }
+  },
+  {
+    id: 'cj-300', category: 'lures', usd: 1.89, ship: 6.30, rating: 4.5, reviews: null, badge: null, sku: 'CJYE140827701AZ',
+    photos: ['300-1.jpg','300-2.jpg','300-3.jpg','300-4.jpg','300-5.jpg'],
+    name: { fr: 'Lot de 5 leurres de surface (poppers/stickbaits)', en: 'Set of 5 Topwater Lures', es: 'Lote de 5 señuelos de superficie' },
+    desc: { fr: '5 leurres flottants prêts à pêcher.', en: '5 floating lures, ready to fish.', es: '5 señuelos flotantes listos para pescar.' },
+    long: {
+      fr: "Lot de 5 leurres de surface durs (poppers / stickbaits) aux coloris variés. Flottants, ils créent des éclaboussures et un bruit qui attirent les carnassiers en chasse près de la surface (perche, brochet, bar). Équipés d'hameçons triples. Un assortiment complet pour varier les animations.",
+      en: "Set of 5 hard topwater lures (poppers / stickbaits) in assorted colours. Floating, they create splashes and noise that draw predators hunting near the surface (perch, pike, bass). Fitted with treble hooks. A complete assortment to vary your retrieves.",
+      es: "Lote de 5 señuelos de superficie duros (poppers / stickbaits) en colores variados. Flotantes, crean salpicaduras y ruido que atraen a los depredadores que cazan cerca de la superficie (perca, lucio, lubina). Equipados con anzuelos triples. Un surtido completo para variar las animaciones." }
   },
 ];
 
@@ -650,7 +1122,7 @@ PRODUCTS.forEach(p => { p.image = photo(p.photos[0], p.name.fr); });
    - usd  = coût du produit en USD (obligatoire)
    - ship = frais de port en USD (optionnel, 0 si absent) */
 function salePrice(p, variant) {
-  if (typeof p === 'number') return Math.round(p * MARKUP * 100) / 100; // rétrocompat
+  if (typeof p === 'number') return Math.round(p * markupFor(p) * 100) / 100; // rétrocompat
   let prodUSD, shipUSD;
   if (p.variants && p.variants.length) {
     const v = (variant != null && p.variants.find(x => x.label === variant)) || p.variants[0];
@@ -660,11 +1132,17 @@ function salePrice(p, variant) {
     prodUSD = (p.usd != null) ? p.usd : (p.cost / USD_TO_CAD);
     shipUSD = p.ship || 0;
   }
-  return Math.round((prodUSD * MARKUP + shipUSD) * USD_TO_CAD * 100) / 100;
+  return Math.round((prodUSD * markupFor(prodUSD) + shipUSD) * USD_TO_CAD * 100) / 100;
 }
 
 /* Prix le plus bas parmi les variantes (pour l'affichage « dès … » sur les cartes). */
 function minSalePrice(p) {
   if (!p.variants || !p.variants.length) return salePrice(p);
   return p.variants.reduce(function(m, v){ var s = salePrice(p, v.label); return s < m ? s : m; }, Infinity);
+}
+
+/* Rend ces données/fonctions disponibles côté serveur (Netlify Functions) pour
+   recalculer les prix de façon sûre. Sans effet côté navigateur (pas de `module`). */
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { PRODUCTS, salePrice, minSalePrice, markupFor, MARKUP, USD_TO_CAD };
 }

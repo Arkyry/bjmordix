@@ -225,6 +225,9 @@ h1,h2,h3{line-height:1.15;letter-spacing:-.02em}
 .sum-row{display:flex;justify-content:space-between;font-size:14.5px;margin-bottom:8px;color:var(--muted)}
 .sum-row.total{font-size:19px;font-weight:800;color:var(--navy);margin:12px 0}
 .drawer-note{font-size:12px;color:var(--muted);text-align:center;margin-top:10px}
+.pay-area{margin-top:14px;min-height:48px}
+.pay-area .btn[disabled]{opacity:.55;cursor:not-allowed}
+.pay-hint{font-size:12px;color:var(--muted);text-align:center;margin-top:8px;line-height:1.45}
 
 /* ---------- Modale (auth) ---------- */
 .modal{position:fixed;inset:0;z-index:110;display:flex;align-items:center;justify-content:center;padding:20px;

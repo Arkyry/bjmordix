@@ -1,0 +1,9 @@
+{
+  "name": "bjmordix",
+  "version": "1.0.0",
+  "private": true,
+  "description": "BJMordix — boutique de peche. Fonctions serveur Netlify (paiement Stripe).",
+  "dependencies": {
+    "stripe": "^16.12.0"
+  }
+}

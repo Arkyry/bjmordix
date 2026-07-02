@@ -3,6 +3,19 @@
    ============================================================ */
 'use strict';
 
+/* ============================================================
+   💳 PAIEMENT — Stripe (via Netlify)
+   ------------------------------------------------------------
+   Le paiement carte passe par une petite fonction serveur Netlify
+   (netlify/functions/create-checkout-session.js) qui utilise ta clé
+   SECRÈTE Stripe — stockée dans les variables d'environnement Netlify,
+   JAMAIS dans ce code ni sur GitHub.
+   Côté client, on n'a besoin d'AUCUNE clé : on appelle la fonction, elle
+   nous renvoie l'adresse de la page de paiement Stripe, et on y redirige.
+   Devise : CAD. Marche une fois le site déployé sur Netlify.
+   ============================================================ */
+const CHECKOUT_ENDPOINT = '/.netlify/functions/create-checkout-session';
+
 /* ---------------- État ---------------- */
 const STORE = {
   get lang(){ return localStorage.getItem('linex_lang') || 'fr'; },
@@ -401,12 +414,72 @@ function renderCart(){
     <div class="sum-row"><span>${t('cart.subtotal')}</span><span>${fmt(sub)}</span></div>
     <div class="sum-row"><span>${t('cart.shipping')}</span><span>${t('cart.free')}</span></div>
     <div class="sum-row total"><span>${t('cart.total')}</span><span>${fmt(sub)}</span></div>
-    <button class="btn btn-primary btn-block btn-lg" id="checkout">${t('cart.checkout')}</button>
+    <div id="pay-area" class="pay-area"></div>
     <p class="drawer-note">${t('cart.note')}</p>`;
-  const co = document.getElementById('checkout');
-  if(co) co.addEventListener('click', () => {
-    STORE.cart = []; updateCartCount(); renderCart(); closeCart(); toast(t('order.ok'),'ok');
+  mountPayArea(sub);
+}
+
+/* ---------------- Paiement Stripe (via fonction Netlify) ---------------- */
+function mountPayArea(total){
+  const area = document.getElementById('pay-area');
+  if(!area || !(total > 0)) return;
+  area.innerHTML = '<button class="btn btn-primary btn-block btn-lg" id="stripe-pay">' + t('pay.card') + '</button>';
+  const b = document.getElementById('stripe-pay');
+  if(b) b.addEventListener('click', startCheckout);
+}
+
+function resetPayButton(){
+  const btn = document.getElementById('stripe-pay');
+  if(btn){ btn.disabled = false; btn.textContent = t('pay.card'); }
+}
+
+function startCheckout(){
+  if(!STORE.cart.length) return;
+  const btn = document.getElementById('stripe-pay');
+  if(btn){ btn.disabled = true; btn.textContent = t('pay.redirect'); }
+  const items = STORE.cart.map(function(c){ return { id: c.id, variant: c.variant || null, qty: c.qty }; });
+  fetch(CHECKOUT_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ items: items })
+  }).then(function(r){
+    return r.json().then(function(d){ return { ok: r.ok, data: d }; }).catch(function(){ return { ok: false, data: null }; });
+  }).then(function(res){
+    if(res.ok && res.data && res.data.url){ window.location.href = res.data.url; return; }
+    resetPayButton(); toast(t('pay.error'), 'err');
+  }).catch(function(){
+    resetPayButton(); toast(t('pay.error'), 'err');
   });
+}
+
+/* Retour depuis la page de paiement Stripe : URL ?checkout=success | cancel */
+function handleCheckoutReturn(){
+  const params = new URLSearchParams(location.search);
+  const st = params.get('checkout');
+  if(!st) return;
+  if(st === 'success'){
+    saveOrder();
+    STORE.cart = []; updateCartCount(); renderCart();
+    toast(t('pay.thanks') + ' 🎣', 'ok');
+  } else if(st === 'cancel'){
+    toast(t('pay.cancel'), 'err');
+  }
+  history.replaceState({}, '', location.pathname + (location.hash || '#/'));
+}
+
+function saveOrder(){
+  try{
+    const orders = JSON.parse(localStorage.getItem('linex_orders')) || [];
+    orders.push({
+      id: 'CMD-' + (orders.length + 1),
+      total: cartTotal(),
+      currency: 'CAD',
+      items: STORE.cart.map(function(c){ return { id: c.id, variant: c.variant || null, qty: c.qty }; }),
+      user: (STORE.user && STORE.user.email) || null,
+      date: new Date().toISOString()
+    });
+    localStorage.setItem('linex_orders', JSON.stringify(orders));
+  }catch(e){ /* stockage indisponible, on ignore */ }
 }
 function openCart(){ document.getElementById('cart-drawer').classList.add('show'); document.getElementById('overlay').classList.add('show'); }
 function closeCart(){ document.getElementById('cart-drawer').classList.remove('show'); document.getElementById('overlay').classList.remove('show'); }
@@ -590,6 +663,7 @@ function init(){
   bindGlobalClicks();
   window.addEventListener('hashchange', router);
   router();
+  handleCheckoutReturn();
 }
 
 function openMobileNav(){ document.getElementById('mobile-nav').classList.add('show'); }

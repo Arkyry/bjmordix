@@ -10,9 +10,20 @@ desktop.ini
 # Divers
 *.log
 
+# Dépendances Node (installées par Netlify au déploiement, pas sur GitHub)
+node_modules/
+.netlify/
+
 # Captures de référence CJ (gardées en local pour les corrections, pas publiées)
 photos/*-prix.jpg
 photos/*-description.jpg
 photos/*-prix.png
 photos/*-description.png
 photos/probleme*
+
+# Fichiers de travail de l'import produits (non utilisés par le site en ligne)
+photos/*-options.txt
+photos/*-done.txt
+photos/*-opt-*.jpg
+photos/* (1).jpg
+photos/* (2).jpg
