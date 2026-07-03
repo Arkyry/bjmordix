@@ -254,6 +254,11 @@ h1,h2,h3{line-height:1.15;letter-spacing:-.02em}
 .account-row .av{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--aqua));color:#fff;
   display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px}
 .account-row b{display:block}.account-row span{font-size:13.5px;color:var(--muted)}
+.loyalty-box{display:flex;align-items:center;gap:12px;padding:14px;border-radius:14px;margin-bottom:16px;
+  background:linear-gradient(135deg,rgba(24,180,196,.12),rgba(14,124,134,.12));border:1px solid rgba(24,180,196,.25)}
+.loyalty-ico{font-size:26px;line-height:1}
+.loyalty-txt b{display:block;font-size:14px}
+.loyalty-txt span{font-size:13.5px;color:var(--muted)}
 
 /* ---------- Vue produit ---------- */
 .pd-back{margin:24px 0 6px;color:var(--teal);font-weight:700;display:inline-flex;align-items:center;gap:4px}

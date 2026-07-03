@@ -16,6 +16,20 @@
    ============================================================ */
 const CHECKOUT_ENDPOINT = '/.netlify/functions/create-checkout-session';
 
+/* ============================================================
+   👤 COMPTES + FIDÉLITÉ — Supabase
+   ------------------------------------------------------------
+   URL du projet + clé "publishable" (PUBLIQUE, OK dans le code).
+   La clé "service_role" (SECRÈTE) ne va JAMAIS ici : elle sera
+   dans Netlify pour créditer les points côté serveur.
+   Barème : 1 $ payé = 1 point ; 125 points = 1 $ de réduction.
+   ============================================================ */
+const SUPABASE_URL      = 'https://tebiftnvbkpzzwqxcsvz.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_TTMWz_KUWjVjAXJ-GbKSeA_y814ZEGA';
+const POINTS_PER_DOLLAR = 1;    // 1 $ payé  -> 1 point
+const POINTS_FOR_ONE_$  = 125;  // 125 points -> 1 $
+let   sb = null;                // client Supabase (initialisé au démarrage)
+
 /* ---------------- État ---------------- */
 const STORE = {
   get lang(){ return localStorage.getItem('linex_lang') || 'fr'; },
@@ -501,10 +515,13 @@ function renderAuth(mode){
         <div class="av">${(u.name||u.email)[0].toUpperCase()}</div>
         <div><b>${t('auth.hello')}, ${escapeHtml(u.name||'')}</b><span>${escapeHtml(u.email)}</span></div>
       </div>
+      <div class="loyalty-box">
+        <div class="loyalty-ico">🎣</div>
+        <div class="loyalty-txt"><b>${t('loyalty.title')}</b><span id="loyalty-val">${t('loyalty.loading')}</span></div>
+      </div>
       <button class="btn btn-ghost btn-block" id="logout-btn">${t('auth.logout')}</button>`;
-    document.getElementById('logout-btn').addEventListener('click', () => {
-      STORE.user = null; updateAuthUI(); renderAuth('login');
-    });
+    document.getElementById('logout-btn').addEventListener('click', doLogout);
+    refreshLoyaltyBox();
     return;
   }
   const isLogin = mode === 'login';
@@ -538,32 +555,101 @@ function renderAuth(mode){
 }
 function showAuthErr(msg){ const e = document.getElementById('auth-err'); e.textContent = msg; e.classList.remove('hidden'); }
 
-function doSignup(){
+function setAuthBusy(b){
+  const form = document.getElementById('auth-form');
+  const btn = form && form.querySelector('button[type="submit"]');
+  if(btn){ btn.disabled = b; btn.style.opacity = b ? '0.6' : ''; }
+}
+function mapAuthError(error){
+  const m = (error && error.message ? error.message : '').toLowerCase();
+  if(m.indexOf('already') !== -1 || m.indexOf('registered') !== -1) return t('auth.err.exists');
+  if(m.indexOf('password') !== -1) return t('auth.err.pass');
+  if(m.indexOf('email') !== -1) return t('auth.err.email');
+  return (error && error.message) || t('auth.err.fields');
+}
+
+async function doSignup(){
   const name = document.getElementById('f-name').value.trim();
   const email = document.getElementById('f-email').value.trim().toLowerCase();
   const pass = document.getElementById('f-pass').value;
   if(!name || !email || !pass) return showAuthErr(t('auth.err.fields'));
   if(!validEmail(email)) return showAuthErr(t('auth.err.email'));
   if(pass.length < 6) return showAuthErr(t('auth.err.pass'));
-  const users = STORE.users;
-  if(users.some(u => u.email === email)) return showAuthErr(t('auth.err.exists'));
-  users.push({ name, email, pass }); STORE.users = users; // démo : mot de passe local seulement
-  STORE.user = { name, email };
-  updateAuthUI(); closeAuth(); toast(t('auth.created'),'ok');
+  if(!sb) return showAuthErr(t('auth.err.offline'));
+  setAuthBusy(true);
+  try{
+    const { data, error } = await sb.auth.signUp({ email: email, password: pass, options: { data: { name: name } } });
+    if(error){ setAuthBusy(false); return showAuthErr(mapAuthError(error)); }
+    if(data && data.session){ closeAuth(); toast(t('auth.created'), 'ok'); }
+    else { setAuthBusy(false); showAuthErr(t('auth.confirm')); }  // confirmation email activée
+  }catch(e){ setAuthBusy(false); showAuthErr(t('auth.err.offline')); }
 }
-function doLogin(){
+
+async function doLogin(){
   const email = document.getElementById('f-email').value.trim().toLowerCase();
   const pass = document.getElementById('f-pass').value;
   if(!email || !pass) return showAuthErr(t('auth.err.fields'));
-  const u = STORE.users.find(x => x.email === email && x.pass === pass);
-  if(!u) return showAuthErr(t('auth.err.nouser'));
-  STORE.user = { name: u.name, email: u.email };
-  updateAuthUI(); closeAuth(); toast(t('auth.logged'),'ok');
+  if(!sb) return showAuthErr(t('auth.err.offline'));
+  setAuthBusy(true);
+  try{
+    const { error } = await sb.auth.signInWithPassword({ email: email, password: pass });
+    if(error){ setAuthBusy(false); return showAuthErr(t('auth.err.nouser')); }
+    closeAuth(); toast(t('auth.logged'), 'ok');
+  }catch(e){ setAuthBusy(false); showAuthErr(t('auth.err.offline')); }
 }
+
+async function doLogout(){
+  try{ if(sb) await sb.auth.signOut(); }catch(e){}
+  STORE.user = null; updateAuthUI(); renderAuth('login');
+}
+
 function updateAuthUI(){
   const u = STORE.user;
   const label = document.getElementById('account-label');
-  label.textContent = u ? (u.name ? u.name.split(' ')[0] : t('auth.account')) : t('auth.login');
+  if(label) label.textContent = u ? (u.name ? u.name.split(' ')[0] : t('auth.account')) : t('auth.login');
+}
+
+/* ---------------- Session Supabase + points ---------------- */
+function syncUser(session){
+  if(session && session.user){
+    const m = session.user.user_metadata || {};
+    STORE.user = { id: session.user.id, email: session.user.email, name: m.name || '' };
+  } else {
+    STORE.user = null;
+  }
+  updateAuthUI();
+}
+
+function bootstrapAuth(){
+  if(!window.supabase || !SUPABASE_URL || !SUPABASE_ANON_KEY) return;
+  try{
+    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    sb.auth.getSession().then(function(res){ syncUser(res && res.data ? res.data.session : null); });
+    sb.auth.onAuthStateChange(function(_ev, session){
+      syncUser(session);
+      const modal = document.getElementById('auth-modal');
+      if(modal && modal.classList.contains('show')) renderAuth('login');
+    });
+  }catch(e){ sb = null; }
+}
+
+async function fetchPoints(){
+  if(!sb || !STORE.user || !STORE.user.id) return null;
+  try{
+    const { data, error } = await sb.from('loyalty').select('points').eq('id', STORE.user.id).maybeSingle();
+    if(error) return null;
+    return data ? data.points : 0;
+  }catch(e){ return null; }
+}
+
+async function refreshLoyaltyBox(){
+  const el = document.getElementById('loyalty-val');
+  if(!el) return;
+  const pts = await fetchPoints();
+  if(!document.getElementById('loyalty-val')) return; // modale fermée entre-temps
+  if(pts == null){ el.textContent = t('loyalty.none'); return; }
+  const value = pts / POINTS_FOR_ONE_$;
+  el.textContent = t('loyalty.have').replace('{pts}', pts).replace('{val}', fmt(value));
 }
 
 /* ---------------- Toasts ---------------- */
@@ -635,6 +721,7 @@ function init(){
   sel.value = STORE.lang;
   sel.addEventListener('change', () => setLang(sel.value));
   applyStaticI18n();
+  bootstrapAuth();   // vrais comptes Supabase (session + points)
   updateAuthUI();
   updateCartCount();
   renderCart();
