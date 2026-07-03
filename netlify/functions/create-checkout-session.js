@@ -1,11 +1,13 @@
 /* ============================================================
    Fonction serveur Netlify — crée un paiement Stripe (Checkout)
    ------------------------------------------------------------
-   - Reçoit le panier + (si connecté) le jeton du client
-   - RECALCULE les prix côté serveur avec salePrice() (impossible à truquer)
-   - Identifie le client via Supabase (pour créditer ses points après paiement)
-   - Crée une session Stripe et renvoie l'URL de la page de paiement
-   Clés : STRIPE_SECRET_KEY (Netlify). URL + clé publique Supabase = publiques.
+   - Reçoit le panier + (si connecté) le jeton du client + option "redeem"
+   - RECALCULE les prix côté serveur (impossible à truquer)
+   - Identifie le client via Supabase (pour créditer/débiter ses points)
+   - Si demandé, applique une réduction "points fidélité" APRÈS avoir
+     vérifié le vrai solde côté serveur (125 points = 1 $), puis met
+     points_redeemed en metadata (le webhook débitera ces points).
+   Clés (Netlify) : STRIPE_SECRET_KEY, SUPABASE_SERVICE_ROLE_KEY
    ============================================================ */
 const Stripe = require('stripe');
 const { createClient } = require('@supabase/supabase-js');
@@ -13,6 +15,7 @@ const { PRODUCTS, salePrice } = require('../../data.js');
 
 const SUPABASE_URL = 'https://tebiftnvbkpzzwqxcsvz.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_TTMWz_KUWjVjAXJ-GbKSeA_y814ZEGA';
+const POINTS_FOR_ONE = 125;   // 125 points = 1 $
 
 exports.handler = async function (event) {
   if (event.httpMethod !== 'POST') {
@@ -28,14 +31,14 @@ exports.handler = async function (event) {
     const payload = JSON.parse(event.body || '{}');
     const items = Array.isArray(payload.items) ? payload.items : [];
 
-    // Identifier le client connecté (facultatif) pour lui créditer les points
+    // Identifier le client connecté (facultatif) pour ses points
     let userId = null;
     if (payload.accessToken) {
       try {
         const supa = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         const { data } = await supa.auth.getUser(payload.accessToken);
         if (data && data.user) userId = data.user.id;
-      } catch (e) { /* jeton invalide : on continue en invité (sans points) */ }
+      } catch (e) { /* jeton invalide : on continue en invité */ }
     }
 
     const line_items = [];
@@ -49,31 +52,49 @@ exports.handler = async function (event) {
       const name = (p.name && p.name.fr ? p.name.fr : 'Article') + (it.variant ? ' - ' + it.variant : '');
       line_items.push({
         quantity: qty,
-        price_data: {
-          currency: 'cad',
-          unit_amount: unit_amount,
-          product_data: { name: name }
-        }
+        price_data: { currency: 'cad', unit_amount: unit_amount, product_data: { name: name } }
       });
     }
-
     if (!line_items.length) {
       return { statusCode: 400, body: 'Panier vide ou articles invalides.' };
+    }
+
+    // Réduction par points (validée avec le VRAI solde, côté serveur)
+    let discountCents = 0, pointsRedeemed = 0;
+    if (userId && payload.redeem) {
+      try {
+        const admin = createClient(SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+        const { data: bal } = await admin.from('loyalty').select('points').eq('id', userId).maybeSingle();
+        const balance = bal ? bal.points : 0;
+        const totalCents = line_items.reduce(function (s, li) { return s + li.price_data.unit_amount * li.quantity; }, 0);
+        const availDollars = Math.floor(balance / POINTS_FOR_ONE);        // $ finançables en points
+        const maxDollars = Math.floor((totalCents - 50) / 100);           // laisser >= 0,50 $ (min Stripe)
+        const d = Math.max(0, Math.min(availDollars, maxDollars));
+        if (d > 0) { discountCents = d * 100; pointsRedeemed = d * POINTS_FOR_ONE; }
+      } catch (e) { /* si erreur : pas de réduction, le paiement continue */ }
     }
 
     const proto = event.headers['x-forwarded-proto'] || 'https';
     const host = event.headers['host'];
     const origin = proto + '://' + host;
 
-    const session = await stripe.checkout.sessions.create({
+    const params = {
       mode: 'payment',
       line_items: line_items,
       locale: 'fr',
       shipping_address_collection: { allowed_countries: ['CA', 'US'] },
-      metadata: userId ? { user_id: userId } : {},
+      metadata: userId ? { user_id: userId, points_redeemed: String(pointsRedeemed) } : {},
       success_url: origin + '/?checkout=success',
       cancel_url: origin + '/?checkout=cancel'
-    });
+    };
+    if (discountCents > 0) {
+      const coupon = await stripe.coupons.create({
+        amount_off: discountCents, currency: 'cad', duration: 'once', name: 'Points fidelite'
+      });
+      params.discounts = [{ coupon: coupon.id }];
+    }
+
+    const session = await stripe.checkout.sessions.create(params);
 
     return {
       statusCode: 200,

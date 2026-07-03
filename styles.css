@@ -224,6 +224,11 @@ h1,h2,h3{line-height:1.15;letter-spacing:-.02em}
 .drawer-foot{border-top:1px solid var(--line);padding:18px 22px;background:#fff}
 .sum-row{display:flex;justify-content:space-between;font-size:14.5px;margin-bottom:8px;color:var(--muted)}
 .sum-row.total{font-size:19px;font-weight:800;color:var(--navy);margin:12px 0}
+.sum-row.discount{color:var(--teal);font-weight:600}
+.redeem-row{display:flex;align-items:center;gap:10px;padding:10px 12px;margin:6px 0 10px;border-radius:12px;cursor:pointer;
+  background:linear-gradient(135deg,rgba(24,180,196,.10),rgba(14,124,134,.10));border:1px solid rgba(24,180,196,.25);
+  font-size:14px;color:var(--navy)}
+.redeem-row input{width:18px;height:18px;accent-color:var(--teal);cursor:pointer;flex:0 0 auto}
 .drawer-note{font-size:12px;color:var(--muted);text-align:center;margin-top:10px}
 .pay-area{margin-top:14px;min-height:48px}
 .pay-area .btn[disabled]{opacity:.55;cursor:not-allowed}

@@ -29,6 +29,8 @@ const SUPABASE_ANON_KEY = 'sb_publishable_TTMWz_KUWjVjAXJ-GbKSeA_y814ZEGA';
 const POINTS_PER_DOLLAR = 1;    // 1 $ payé  -> 1 point
 const POINTS_FOR_ONE_$  = 125;  // 125 points -> 1 $
 let   sb = null;                // client Supabase (initialisé au démarrage)
+let   USER_POINTS = null;       // solde de points du client connecté (null = inconnu)
+let   REDEEM_ON   = false;      // le client a coché « utiliser mes points »
 
 /* ---------------- État ---------------- */
 const STORE = {
@@ -423,14 +425,27 @@ function renderCart(){
     </div>`;
   }).join('');
   const sub = cartTotal();
+  const subCents = Math.round(sub * 100);
+  const red = redeemInfo(subCents);                       // réduction max possible (points x panier)
+  const showRedeem = !!(STORE.user && red.dollars > 0);
+  const applied = (REDEEM_ON && showRedeem) ? red : { dollars: 0, points: 0, discountCents: 0 };
+  const totalCents = subCents - applied.discountCents;
   foot.classList.remove('hidden');
   foot.innerHTML = `
     <div class="sum-row"><span>${t('cart.subtotal')}</span><span>${fmt(sub)}</span></div>
     <div class="sum-row"><span>${t('cart.shipping')}</span><span>${t('cart.free')}</span></div>
-    <div class="sum-row total"><span>${t('cart.total')}</span><span>${fmt(sub)}</span></div>
+    ${showRedeem ? `<label class="redeem-row">
+      <input type="checkbox" id="redeem-cb" ${REDEEM_ON ? 'checked' : ''}>
+      <span>${t('pay.redeem').replace('{pts}', red.points).replace('{max}', fmt(red.dollars))}</span>
+    </label>` : ''}
+    ${applied.discountCents > 0 ? `<div class="sum-row discount"><span>${t('pay.redeem.line').replace('{pts}', applied.points)}</span><span>− ${fmt(applied.discountCents / 100)}</span></div>` : ''}
+    <div class="sum-row total"><span>${t('cart.total')}</span><span>${fmt(totalCents / 100)}</span></div>
     <div id="pay-area" class="pay-area"></div>
     <p class="drawer-note">${t('cart.note')}</p>`;
-  mountPayArea(sub);
+  const cb = document.getElementById('redeem-cb');
+  if(cb) cb.addEventListener('change', function(){ REDEEM_ON = cb.checked; renderCart(); });
+  mountPayArea(totalCents / 100);
+  if(STORE.user && USER_POINTS === null) refreshUserPoints();  // charge le solde puis re-render
 }
 
 /* ---------------- Paiement Stripe (via fonction Netlify) ---------------- */
@@ -457,7 +472,7 @@ async function startCheckout(){
   fetch(CHECKOUT_ENDPOINT, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ items: items, accessToken: accessToken })
+    body: JSON.stringify({ items: items, accessToken: accessToken, redeem: !!REDEEM_ON })
   }).then(function(r){
     return r.json().then(function(d){ return { ok: r.ok, data: d }; }).catch(function(){ return { ok: false, data: null }; });
   }).then(function(res){
@@ -475,8 +490,10 @@ function handleCheckoutReturn(){
   if(!st) return;
   if(st === 'success'){
     saveOrder();
-    STORE.cart = []; updateCartCount(); renderCart();
+    STORE.cart = []; REDEEM_ON = false; USER_POINTS = null;
+    updateCartCount(); renderCart();
     toast(t('pay.thanks') + ' 🎣', 'ok');
+    setTimeout(function(){ if(STORE.user) refreshUserPoints(); }, 2000); // laisser le webhook créditer
   } else if(st === 'cancel'){
     toast(t('pay.cancel'), 'err');
   }
@@ -619,6 +636,7 @@ function syncUser(session){
   } else {
     STORE.user = null;
   }
+  USER_POINTS = null; REDEEM_ON = false;   // recharger le solde pour ce compte
   updateAuthUI();
 }
 
@@ -648,10 +666,27 @@ async function refreshLoyaltyBox(){
   const el = document.getElementById('loyalty-val');
   if(!el) return;
   const pts = await fetchPoints();
-  if(!document.getElementById('loyalty-val')) return; // modale fermée entre-temps
+  USER_POINTS = (pts == null) ? 0 : pts;               // met à jour le cache pour le panier
+  if(!document.getElementById('loyalty-val')) return;  // modale fermée entre-temps
   if(pts == null){ el.textContent = t('loyalty.none'); return; }
   const value = pts / POINTS_FOR_ONE_$;
   el.textContent = t('loyalty.have').replace('{pts}', pts).replace('{val}', fmt(value));
+}
+
+/* Réduction maximale possible avec les points (tout ou rien, par $ entier) */
+function redeemInfo(subCents){
+  const balance = USER_POINTS || 0;
+  const availDollars = Math.floor(balance / POINTS_FOR_ONE_$);        // $ finançables en points
+  const maxDollars   = Math.floor((subCents - 50) / 100);             // laisser >= 0,50 $
+  const d = Math.max(0, Math.min(availDollars, maxDollars));
+  return { dollars: d, points: d * POINTS_FOR_ONE_$, discountCents: d * 100 };
+}
+
+/* Charge le solde de points en cache puis rafraîchit le panier */
+async function refreshUserPoints(){
+  const pts = await fetchPoints();
+  USER_POINTS = (pts == null) ? 0 : pts;
+  renderCart();
 }
 
 /* ---------------- Toasts ---------------- */
