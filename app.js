@@ -447,15 +447,17 @@ function resetPayButton(){
   if(btn){ btn.disabled = false; btn.textContent = t('pay.card'); }
 }
 
-function startCheckout(){
+async function startCheckout(){
   if(!STORE.cart.length) return;
   const btn = document.getElementById('stripe-pay');
   if(btn){ btn.disabled = true; btn.textContent = t('pay.redirect'); }
   const items = STORE.cart.map(function(c){ return { id: c.id, variant: c.variant || null, qty: c.qty }; });
+  let accessToken = null;
+  try{ if(sb){ const s = await sb.auth.getSession(); accessToken = s && s.data && s.data.session ? s.data.session.access_token : null; } }catch(e){}
   fetch(CHECKOUT_ENDPOINT, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ items: items })
+    body: JSON.stringify({ items: items, accessToken: accessToken })
   }).then(function(r){
     return r.json().then(function(d){ return { ok: r.ok, data: d }; }).catch(function(){ return { ok: false, data: null }; });
   }).then(function(res){

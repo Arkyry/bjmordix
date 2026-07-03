@@ -4,6 +4,7 @@
   "private": true,
   "description": "BJMordix — boutique de peche. Fonctions serveur Netlify (paiement Stripe).",
   "dependencies": {
-    "stripe": "^16.12.0"
+    "stripe": "^16.12.0",
+    "@supabase/supabase-js": "^2.45.0"
   }
 }
