@@ -202,7 +202,13 @@ h1,h2,h3{line-height:1.15;letter-spacing:-.02em}
 .footer .logo{color:#fff;margin-bottom:14px}
 .footer .logo b{color:var(--aqua)}
 .footer-col h4{color:#fff;font-size:15px;margin-bottom:14px}
-.footer-col a{display:block;padding:6px 0;font-size:14.5px;transition:color .15s}
+.footer-col a{display:block;padding:6px 0;font-size:14.5px;transition:color .15s;cursor:pointer}
+.legal{max-width:760px;margin:6px auto 0;line-height:1.7;color:var(--navy)}
+.legal h1{font-size:30px;font-weight:800;margin:6px 0 22px}
+.legal h2{font-size:18px;font-weight:700;margin:26px 0 8px}
+.legal p{font-size:15.5px;color:#3a4b57;margin-bottom:10px}
+.legal a{color:var(--teal);font-weight:600;text-decoration:underline}
+.legal-updated{margin-top:30px;font-size:13px;color:#8496a0;font-style:italic}
 .footer-col a:hover{color:var(--aqua)}
 .footer-tag{max-width:300px;font-size:14.5px;line-height:1.6}
 .socials{display:flex;gap:10px;margin-top:16px}

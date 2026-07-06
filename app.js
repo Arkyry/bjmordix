@@ -356,7 +356,25 @@ function router(){
   if(name === 'category' && param) return renderCategory(param);
   if(name === 'product' && param) return renderProduct(param);
   if(name === 'search') return renderSearch(decodeURIComponent(param||''));
+  if(name === 'page' && param) return renderPage(param);
   return renderHome();
+}
+
+function renderPage(slug){
+  const pg = (typeof PAGES !== 'undefined') && PAGES[slug];
+  if(!pg){ location.hash = '#/'; return; }
+  const lang = STORE.lang;
+  view().innerHTML = `
+  <div class="container">
+    <a class="pd-back" data-nav="home">${t('product.back')}</a>
+    <article class="legal">
+      <h1>${pg.title[lang] || pg.title.fr}</h1>
+      ${pg.body[lang] || pg.body.fr}
+      <p class="legal-updated">${t('legal.updated')}</p>
+    </article>
+  </div>
+  <div style="height:60px"></div>`;
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 function navTo(target){
   // target = "home" | "category:rods" | "product:rod-x"

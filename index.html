@@ -99,15 +99,15 @@
         <div class="footer-col">
           <h4 data-i18n="footer.help">Aide</h4>
           <a href="#" data-i18n="footer.faq">FAQ</a>
-          <a href="#" data-i18n="footer.shipping">Livraison</a>
-          <a href="#" data-i18n="footer.returns">Retours</a>
+          <a data-nav="page:shipping" data-i18n="footer.shipping">Livraison</a>
+          <a data-nav="page:returns" data-i18n="footer.returns">Retours</a>
           <a href="#" data-i18n="footer.contact">Contact</a>
         </div>
         <div class="footer-col">
           <h4 data-i18n="footer.about">À propos</h4>
           <a href="#" data-i18n="footer.story">Notre histoire</a>
-          <a href="#" data-i18n="footer.cgv">CGV</a>
-          <a href="#" data-i18n="footer.privacy">Confidentialité</a>
+          <a data-nav="page:cgv" data-i18n="footer.cgv">CGV</a>
+          <a data-nav="page:privacy" data-i18n="footer.privacy">Confidentialité</a>
         </div>
       </div>
       <div class="footer-bottom">
@@ -158,6 +158,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="data.js"></script>
   <script src="i18n.js"></script>
+  <script src="pages.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
