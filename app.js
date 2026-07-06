@@ -487,7 +487,8 @@ async function startCheckout(){
 function handleCheckoutReturn(){
   const params = new URLSearchParams(location.search);
   const st = params.get('checkout');
-  if(!st) return;
+  const don = params.get('don');
+  if(!st && !don) return;
   if(st === 'success'){
     saveOrder();
     STORE.cart = []; REDEEM_ON = false; USER_POINTS = null;
@@ -497,7 +498,53 @@ function handleCheckoutReturn(){
   } else if(st === 'cancel'){
     toast(t('pay.cancel'), 'err');
   }
+  if(don === 'success'){
+    toast(t('donate.thanks') + ' 🎣', 'ok');   // merci ! (le don ne touche pas au panier)
+  } else if(don === 'cancel'){
+    toast(t('donate.cancel'), 'err');
+  }
   history.replaceState({}, '', location.pathname + (location.hash || '#/'));
+}
+
+/* ---- Don libre (au bas du site) ------------------------------------- */
+function resetDonateBtn(){
+  const b = document.getElementById('donate-btn');
+  if(b){ b.disabled = false; b.textContent = t('donate.cta'); }
+}
+function startDonation(amountDollars){
+  let cents = Math.round(amountDollars * 100);
+  if(!(cents >= 100)){ toast(t('donate.min'), 'err'); return; }   // minimum 1 $
+  if(cents > 1000000) cents = 1000000;                            // plafond 10 000 $
+  const btn = document.getElementById('donate-btn');
+  if(btn){ btn.disabled = true; btn.textContent = t('pay.redirect'); }
+  fetch(CHECKOUT_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ donation: cents })
+  })
+  .then(function(r){ return r.json().then(function(d){ return { ok: r.ok, data: d }; }).catch(function(){ return { ok: false, data: null }; }); })
+  .then(function(res){
+    if(res.ok && res.data && res.data.url){ window.location.href = res.data.url; return; }
+    resetDonateBtn(); toast(t('pay.error'), 'err');
+  })
+  .catch(function(){ resetDonateBtn(); toast(t('pay.error'), 'err'); });
+}
+function bindDonate(){
+  const form = document.getElementById('donate-form');
+  if(!form) return;
+  form.querySelectorAll('.donate-preset').forEach(function(b){
+    b.addEventListener('click', function(){
+      const inp = document.getElementById('donate-amount');
+      if(inp) inp.value = b.dataset.amt;
+    });
+  });
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    const inp = document.getElementById('donate-amount');
+    const v = inp ? parseFloat(inp.value) : NaN;
+    if(!(v >= 1)){ toast(t('donate.min'), 'err'); return; }
+    startDonation(v);
+  });
 }
 
 function saveOrder(){
@@ -785,6 +832,7 @@ function init(){
   document.addEventListener('keydown', e => { if(e.key==='Escape'){ closeCart(); closeAuth(); closeMobileNav(); } });
 
   bindGlobalClicks();
+  bindDonate();      // formulaire de don au bas du site
   window.addEventListener('hashchange', router);
   router();
   handleCheckoutReturn();

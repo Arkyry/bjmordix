@@ -182,6 +182,22 @@ h1,h2,h3{line-height:1.15;letter-spacing:-.02em}
 
 /* ---------- Footer ---------- */
 .footer{background:var(--navy);color:#a9c2cb;padding:56px 0 26px}
+.donate{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:22px;
+  background:linear-gradient(135deg,rgba(14,124,134,.22),rgba(24,180,196,.14));
+  border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:24px 26px;margin-bottom:38px}
+.donate-txt{flex:1 1 260px;min-width:240px}
+.donate-txt h3{color:#fff;font-size:20px;font-weight:800;margin-bottom:6px}
+.donate-txt p{font-size:14.5px;line-height:1.55;color:#bcd4dc;max-width:420px}
+.donate-form{flex:0 1 340px;min-width:260px}
+.donate-presets{display:flex;gap:8px;margin-bottom:10px}
+.donate-preset{flex:1;background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.16);
+  border-radius:10px;padding:9px 0;font-weight:700;font-size:14.5px;cursor:pointer;transition:background .15s,border-color .15s}
+.donate-preset:hover{background:var(--teal);border-color:var(--teal)}
+.donate-input{display:flex;align-items:center;gap:8px;background:#fff;border-radius:12px;padding:5px 6px 5px 14px}
+.donate-cur{font-weight:800;color:var(--navy);font-size:16px}
+.donate-input input{flex:1;border:none;outline:none;font-size:16px;font-weight:600;color:var(--navy);background:none;min-width:0}
+.donate-input .btn{flex:0 0 auto;padding:11px 18px;font-size:14px;white-space:nowrap}
+.donate-note{margin-top:10px;font-size:12.5px;color:#8fb0ba}
 .footer-top{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:30px;padding-bottom:34px;border-bottom:1px solid rgba(255,255,255,.1)}
 .footer .logo{color:#fff;margin-bottom:14px}
 .footer .logo b{color:var(--aqua)}

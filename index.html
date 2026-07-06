@@ -60,6 +60,25 @@
   <!-- Pied de page -->
   <footer class="footer">
     <div class="container">
+      <div class="donate">
+        <div class="donate-txt">
+          <h3 data-i18n="donate.title">🎣 Soutenir BJMordix</h3>
+          <p data-i18n="donate.sub">Un petit coup de pouce ? Choisis ton montant — chaque don aide la boutique.</p>
+        </div>
+        <form class="donate-form" id="donate-form">
+          <div class="donate-presets">
+            <button type="button" class="donate-preset" data-amt="5">5 $</button>
+            <button type="button" class="donate-preset" data-amt="10">10 $</button>
+            <button type="button" class="donate-preset" data-amt="20">20 $</button>
+          </div>
+          <div class="donate-input">
+            <span class="donate-cur">$</span>
+            <input type="number" id="donate-amount" min="1" max="10000" step="1" inputmode="decimal" placeholder="Montant" aria-label="Montant du don">
+            <button type="submit" class="btn btn-primary" id="donate-btn" data-i18n="donate.cta">Faire un don</button>
+          </div>
+          <p class="donate-note" data-i18n="donate.note">🔒 Paiement sécurisé par Stripe.</p>
+        </form>
+      </div>
       <div class="footer-top">
         <div>
           <a class="logo" data-logo style="color:#fff"> <span>BJMor<b>dix</b></span></a>

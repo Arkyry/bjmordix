@@ -29,6 +29,36 @@ exports.handler = async function (event) {
 
   try {
     const payload = JSON.parse(event.body || '{}');
+
+    const proto0 = event.headers['x-forwarded-proto'] || 'https';
+    const origin0 = proto0 + '://' + event.headers['host'];
+
+    // --- DON LIBRE : le donateur choisit son montant ------------------
+    // Pas de livraison, pas de points fidélité : simple contribution.
+    if (payload.donation != null) {
+      let cents = parseInt(payload.donation, 10);
+      if (!(cents >= 100)) {
+        return { statusCode: 400, body: 'Montant de don invalide (minimum 1 $).' };
+      }
+      if (cents > 1000000) cents = 1000000;   // plafond de sécurité : 10 000 $
+      const donSession = await stripe.checkout.sessions.create({
+        mode: 'payment',
+        locale: 'fr',
+        line_items: [{
+          quantity: 1,
+          price_data: { currency: 'cad', unit_amount: cents, product_data: { name: 'Don a BJMordix' } }
+        }],
+        metadata: { donation: 'true' },
+        success_url: origin0 + '/?don=success',
+        cancel_url: origin0 + '/?don=cancel'
+      });
+      return {
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: donSession.url })
+      };
+    }
+
     const items = Array.isArray(payload.items) ? payload.items : [];
 
     // Identifier le client connecté (facultatif) pour ses points
