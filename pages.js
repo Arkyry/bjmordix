@@ -7,7 +7,7 @@
    ============================================================ */
 
 /* Une seule adresse à changer pour tout le site : */
-const CONTACT_EMAIL = 'info@bjmordix.com';
+const CONTACT_EMAIL = 'arkyry100@gmail.com';
 
 const PAGES = {
 
@@ -195,6 +195,92 @@ const PAGES = {
         <p>Usamos el almacenamiento local de tu navegador para recordar tu carrito y tu idioma. Ningún dato se vende a terceros.</p>
         <h2>Tus derechos</h2>
         <p>Puedes solicitar el acceso, la corrección o la eliminación de tus datos personales escribiendo a <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>.</p>`
+    }
+  },
+
+  /* -------------------- FAQ -------------------- */
+  faq: {
+    title: { fr: 'Foire aux questions', en: 'FAQ', es: 'Preguntas frecuentes' },
+    body: {
+      fr: `
+        <h2>Combien de temps prend la livraison ?</h2>
+        <p>La commande est préparée en 1 à 3 jours ouvrables, puis livrée en 10 à 25 jours ouvrables selon votre région. Voir la page <a data-nav="page:shipping">Livraison</a>.</p>
+        <h2>D'où sont expédiés les produits ?</h2>
+        <p>Nos articles proviennent de fournisseurs partenaires et sont expédiés directement vers vous, ce qui nous permet d'offrir de bons prix.</p>
+        <h2>Comment suivre ma commande ?</h2>
+        <p>Un numéro de suivi vous est envoyé par courriel dès l'expédition de votre colis.</p>
+        <h2>Le paiement est-il sécurisé ?</h2>
+        <p>Oui. Les paiements sont traités par Stripe. Aucune donnée de carte n'est conservée par BJMordix.</p>
+        <h2>Comment fonctionnent les points de fidélité ?</h2>
+        <p>Avec un compte, chaque dollar payé rapporte 1 point. 125 points = 1 $ de réduction sur une commande future.</p>
+        <h2>Puis-je retourner un article ?</h2>
+        <p>Oui, sous 14 jours après réception. Détails sur la page <a data-nav="page:returns">Retours</a>.</p>
+        <h2>Dans quelles langues et devise ?</h2>
+        <p>Le site est offert en français, anglais et espagnol. Les prix sont en dollars canadiens (CAD).</p>
+        <h2>Une autre question ?</h2>
+        <p>Écrivez-nous à <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>, nous serons ravis de vous aider.</p>`,
+      en: `
+        <h2>How long does delivery take?</h2>
+        <p>Orders are prepared within 1 to 3 business days, then delivered in 10 to 25 business days depending on your region. See the <a data-nav="page:shipping">Shipping</a> page.</p>
+        <h2>Where do the products ship from?</h2>
+        <p>Our items come from partner suppliers and ship directly to you, which lets us offer great prices.</p>
+        <h2>How do I track my order?</h2>
+        <p>A tracking number is emailed to you as soon as your parcel ships.</p>
+        <h2>Is payment secure?</h2>
+        <p>Yes. Payments are processed by Stripe. No card data is stored by BJMordix.</p>
+        <h2>How do loyalty points work?</h2>
+        <p>With an account, each dollar paid earns 1 point. 125 points = $1 discount on a future order.</p>
+        <h2>Can I return an item?</h2>
+        <p>Yes, within 14 days of receipt. Details on the <a data-nav="page:returns">Returns</a> page.</p>
+        <h2>Which languages and currency?</h2>
+        <p>The site is available in French, English and Spanish. Prices are in Canadian dollars (CAD).</p>
+        <h2>Another question?</h2>
+        <p>Email us at <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a> — we're happy to help.</p>`,
+      es: `
+        <h2>¿Cuánto tarda la entrega?</h2>
+        <p>El pedido se prepara en 1 a 3 días hábiles y se entrega en 10 a 25 días hábiles según tu región. Consulta la página <a data-nav="page:shipping">Envío</a>.</p>
+        <h2>¿Desde dónde se envían los productos?</h2>
+        <p>Nuestros artículos provienen de proveedores asociados y se envían directamente a ti, lo que nos permite ofrecer buenos precios.</p>
+        <h2>¿Cómo sigo mi pedido?</h2>
+        <p>Recibirás un número de seguimiento por correo en cuanto se envíe tu paquete.</p>
+        <h2>¿El pago es seguro?</h2>
+        <p>Sí. Los pagos son procesados por Stripe. BJMordix no conserva ningún dato de tarjeta.</p>
+        <h2>¿Cómo funcionan los puntos de fidelidad?</h2>
+        <p>Con una cuenta, cada dólar pagado otorga 1 punto. 125 puntos = 1 $ de descuento en un pedido futuro.</p>
+        <h2>¿Puedo devolver un artículo?</h2>
+        <p>Sí, dentro de los 14 días tras la recepción. Detalles en la página <a data-nav="page:returns">Devoluciones</a>.</p>
+        <h2>¿En qué idiomas y moneda?</h2>
+        <p>El sitio está disponible en francés, inglés y español. Los precios están en dólares canadienses (CAD).</p>
+        <h2>¿Otra pregunta?</h2>
+        <p>Escríbenos a <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>, estaremos encantados de ayudarte.</p>`
+    }
+  },
+
+  /* -------------------- CONTACT -------------------- */
+  contact: {
+    title: { fr: 'Nous joindre', en: 'Contact us', es: 'Contáctanos' },
+    body: {
+      fr: `
+        <p>Une question sur une commande, un produit ou le programme de fidélité ? Nous sommes là pour vous aider.</p>
+        <h2>Par courriel</h2>
+        <p>Écrivez-nous à <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>. Nous répondons généralement sous 24 à 48 heures (jours ouvrables).</p>
+        <h2>Pour un suivi de commande</h2>
+        <p>Indiquez votre numéro de commande dans votre message pour un traitement plus rapide.</p>
+        <p style="margin-top:22px"><a class="btn btn-primary" href="mailto:${CONTACT_EMAIL}">Nous écrire</a></p>`,
+      en: `
+        <p>A question about an order, a product or the loyalty program? We're here to help.</p>
+        <h2>By email</h2>
+        <p>Email us at <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>. We usually reply within 24 to 48 hours (business days).</p>
+        <h2>For order tracking</h2>
+        <p>Include your order number in your message for faster handling.</p>
+        <p style="margin-top:22px"><a class="btn btn-primary" href="mailto:${CONTACT_EMAIL}">Email us</a></p>`,
+      es: `
+        <p>¿Una pregunta sobre un pedido, un producto o el programa de fidelidad? Estamos aquí para ayudarte.</p>
+        <h2>Por correo</h2>
+        <p>Escríbenos a <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>. Solemos responder en 24 a 48 horas (días hábiles).</p>
+        <h2>Para el seguimiento de un pedido</h2>
+        <p>Incluye tu número de pedido en tu mensaje para una gestión más rápida.</p>
+        <p style="margin-top:22px"><a class="btn btn-primary" href="mailto:${CONTACT_EMAIL}">Escríbenos</a></p>`
     }
   }
 
