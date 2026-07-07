@@ -282,6 +282,34 @@ const PAGES = {
         <p>Incluye tu número de pedido en tu mensaje para una gestión más rápida.</p>
         <p style="margin-top:22px"><a class="btn btn-primary" href="mailto:${CONTACT_EMAIL}">Escríbenos</a></p>`
     }
+  },
+
+  /* -------------------- NOTRE HISTOIRE -------------------- */
+  story: {
+    title: { fr: 'Notre histoire', en: 'Our story', es: 'Nuestra historia' },
+    body: {
+      fr: `
+        <p>Pour moi, la pêche, c'est d'abord une histoire de famille.</p>
+        <p>Tout a commencé au bord du lac, près de la maison, où mon cousin et moi passions des heures à taquiner le poisson. De ces journées sont nés une foule de souvenirs merveilleux — les premières prises, les fous rires, la patience récompensée et le plaisir tout simple d'être dehors, ensemble.</p>
+        <p>C'est cette passion que j'ai eu envie de partager en créant BJMordix. Je voulais un endroit où les pêcheurs, débutants comme passionnés, trouvent du bon matériel à prix juste, sans compromis sur la qualité.</p>
+        <h2>Notre mission</h2>
+        <p>Vous offrir de l'équipement de pêche fiable, choisi avec soin, et vous donner l'envie de créer vos propres souvenirs au bord de l'eau.</p>
+        <p>Merci de faire partie de l'aventure. 🎣</p>`,
+      en: `
+        <p>For me, fishing is first and foremost a family story.</p>
+        <p>It all began by the lake, near the house, where my cousin and I spent hours after the fish. Those days gave us a wealth of wonderful memories — the first catches, the laughter, patience rewarded, and the simple joy of being outdoors, together.</p>
+        <p>That's the passion I wanted to share by creating BJMordix. I wanted a place where anglers, beginners and enthusiasts alike, could find good gear at a fair price, with no compromise on quality.</p>
+        <h2>Our mission</h2>
+        <p>To offer you reliable, carefully chosen fishing gear — and to inspire you to create your own memories by the water.</p>
+        <p>Thank you for being part of the adventure. 🎣</p>`,
+      es: `
+        <p>Para mí, la pesca es ante todo una historia de familia.</p>
+        <p>Todo empezó a orillas del lago, cerca de casa, donde mi primo y yo pasábamos horas tras los peces. De aquellos días nacieron un montón de recuerdos maravillosos — las primeras capturas, las risas, la paciencia recompensada y el simple placer de estar al aire libre, juntos.</p>
+        <p>Es esa pasión la que quise compartir al crear BJMordix. Quería un lugar donde los pescadores, principiantes y aficionados, encontraran buen material a un precio justo, sin renunciar a la calidad.</p>
+        <h2>Nuestra misión</h2>
+        <p>Ofrecerte equipo de pesca fiable, elegido con cuidado, e inspirarte a crear tus propios recuerdos a orillas del agua.</p>
+        <p>Gracias por ser parte de la aventura. 🎣</p>`
+    }
   }
 
 };
