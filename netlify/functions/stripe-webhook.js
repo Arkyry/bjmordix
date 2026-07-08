@@ -83,18 +83,30 @@ async function sendOrderEmail(stripe, session, isDonation) {
   const customerEmail = cust.email || '(non fourni)';
   const totalTxt = money(session.amount_total);
 
-  // Articles achetés
+  // Articles achetés (avec SKU CJ + lien direct pour commander)
   let itemsHtml = '';
   try {
-    const li = await stripe.checkout.sessions.listLineItems(session.id, { limit: 50 });
+    const li = await stripe.checkout.sessions.listLineItems(session.id, { limit: 50, expand: ['data.price.product'] });
+    const td = 'padding:6px 10px;border-bottom:1px solid #eee';
     itemsHtml = (li.data || []).map(function (it) {
-      return '<tr><td style="padding:6px 10px;border-bottom:1px solid #eee">' + esc(it.description) +
-        '</td><td style="padding:6px 10px;border-bottom:1px solid #eee;text-align:center">' + (it.quantity || 1) +
-        '</td><td style="padding:6px 10px;border-bottom:1px solid #eee;text-align:right">' + money(it.amount_total) +
-        '</td></tr>';
+      const prod = it.price && it.price.product;
+      const sku = (prod && prod.metadata && prod.metadata.sku) ? prod.metadata.sku : '';
+      let skuCell;
+      if (sku) {
+        const link = 'https://cjdropshipping.com/search?keyword=' + encodeURIComponent(sku);
+        skuCell = '<a href="' + link + '" style="color:#0e7c86;font-weight:bold;text-decoration:none">' + esc(sku) +
+          '</a><br><span style="font-size:11px;color:#888">↗ Ouvrir sur CJ</span>';
+      } else {
+        skuCell = '<span style="color:#c0392b">SKU manquant</span>';
+      }
+      return '<tr>' +
+        '<td style="' + td + '">' + esc(it.description) + '</td>' +
+        '<td style="' + td + '">' + skuCell + '</td>' +
+        '<td style="' + td + ';text-align:center">' + (it.quantity || 1) + '</td>' +
+        '<td style="' + td + ';text-align:right">' + money(it.amount_total) + '</td></tr>';
     }).join('');
   } catch (e) {
-    itemsHtml = '<tr><td colspan="3" style="padding:6px 10px">(articles indisponibles — voir Stripe)</td></tr>';
+    itemsHtml = '<tr><td colspan="4" style="padding:6px 10px">(articles indisponibles — voir Stripe)</td></tr>';
   }
 
   // Adresse de livraison (selon la version de l'API Stripe)
@@ -126,11 +138,12 @@ async function sendOrderEmail(stripe, session, isDonation) {
       '<h3 style="margin:18px 0 6px">Articles à commander sur CJdropshipping</h3>' +
       '<table style="border-collapse:collapse;width:100%;font-size:14px">' +
       '<tr style="background:#f2f6f7"><th style="padding:6px 10px;text-align:left">Produit</th>' +
+      '<th style="padding:6px 10px;text-align:left">SKU CJ</th>' +
       '<th style="padding:6px 10px">Qté</th><th style="padding:6px 10px;text-align:right">Total</th></tr>' +
       itemsHtml + '</table>' +
       '<h3 style="margin:18px 0 6px">Adresse de livraison</h3>' + addrHtml +
-      '<p style="margin-top:18px;color:#555;font-size:13px">➡️ Passe cette commande sur CJdropshipping avec cette adresse, ' +
-      'puis renvoie le numéro de suivi au client.</p>') +
+      '<p style="margin-top:18px;color:#555;font-size:13px">➡️ Clique sur le SKU de chaque article pour l\'ouvrir sur CJ, ' +
+      'commande-le avec l\'adresse ci-dessus, puis renvoie le numéro de suivi au client.</p>') +
     '<hr style="border:none;border-top:1px solid #eee;margin:22px 0">' +
     '<p style="color:#999;font-size:12px">Courriel automatique — BJMordix</p>' +
     '</div>';

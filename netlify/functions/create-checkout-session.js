@@ -82,7 +82,12 @@ exports.handler = async function (event) {
       const name = (p.name && p.name.fr ? p.name.fr : 'Article') + (it.variant ? ' - ' + it.variant : '');
       line_items.push({
         quantity: qty,
-        price_data: { currency: 'cad', unit_amount: unit_amount, product_data: { name: name } }
+        price_data: {
+          currency: 'cad',
+          unit_amount: unit_amount,
+          // SKU + id stockés pour le courriel de commande (achat sur CJ)
+          product_data: { name: name, metadata: { sku: p.sku || '', pid: p.id } }
+        }
       });
     }
     if (!line_items.length) {
