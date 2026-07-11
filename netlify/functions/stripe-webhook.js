@@ -93,7 +93,7 @@ async function sendOrderEmail(stripe, session, isDonation) {
       const sku = (prod && prod.metadata && prod.metadata.sku) ? prod.metadata.sku : '';
       let skuCell;
       if (sku) {
-        const link = 'https://cjdropshipping.com/search?keyword=' + encodeURIComponent(sku);
+        const link = 'https://cjdropshipping.com/list/search?keyword=' + encodeURIComponent(sku);
         skuCell = '<a href="' + link + '" style="color:#0e7c86;font-weight:bold;text-decoration:none">' + esc(sku) +
           '</a><br><span style="font-size:11px;color:#888">↗ Ouvrir sur CJ</span>';
       } else {
