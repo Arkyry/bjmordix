@@ -13,12 +13,12 @@ const USD_TO_CAD = 1.37; // taux USD -> CAD (à ajuster)
 
 /* Marge dégressive selon le coût du produit en USD :
    - moins de 20 $  -> x3
-   - de 20 à 60 $   -> x2.5
+   - de 20 à 60 $   -> x2
    - plus de 60 $   -> x1.6
    (la marge s'applique AU PRODUIT seulement, jamais aux frais de port) */
 function markupFor(costUSD) {
   if (costUSD < 20) return 3;
-  if (costUSD <= 60) return 2.5;
+  if (costUSD <= 60) return 2;
   return 1.6;
 }
 
