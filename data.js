@@ -83,16 +83,18 @@ const PRODUCTS = [
   /* ---- Catalogue AliExpress (port gratuit inclus dans les coûts) ---- */
   {
     id: 'ali-1', category: 'rods', rating: 4.7, reviews: 3048, badge: 'best', sku: '',
-    /* Coûts relevés en CAD (promo) puis convertis en USD (÷1.37) ; port gratuit */
+    /* Coûts = PRIX DE BASE AliExpress (hors promo), relevés en CAD puis
+       convertis en USD (÷1.37) ; port gratuit. Base plein tarif = marge
+       protégée même quand la promo se termine. */
     variants: [
-      { label: 'Spinning 1.8m 5-25g',  usd: 9.02,  ship: 0 },
-      { label: 'Spinning 2.1m 5-30g',  usd: 10.08, ship: 0 },
-      { label: 'Spinning 2.28m 5-30g', usd: 12.11, ship: 0 },
-      { label: 'Spinning 2.4m 5-30g',  usd: 12.77, ship: 0 },
-      { label: 'Casting 1.8m 5-25g',   usd: 9.27,  ship: 0 },
-      { label: 'Casting 2.1m 5-30g',   usd: 10.28, ship: 0 },
-      { label: 'Casting 2.28m 5-30g',  usd: 12.13, ship: 0 },
-      { label: 'Casting 2.4m 5-30g',   usd: 12.96, ship: 0 },
+      { label: 'Spinning 1.8m 5-25g',  usd: 25.90, ship: 0 },
+      { label: 'Spinning 2.1m 5-30g',  usd: 28.15, ship: 0 },
+      { label: 'Spinning 2.28m 5-30g', usd: 32.47, ship: 0 },
+      { label: 'Spinning 2.4m 5-30g',  usd: 33.88, ship: 0 },
+      { label: 'Casting 1.8m 5-25g',   usd: 26.44, ship: 0 },
+      { label: 'Casting 2.1m 5-30g',   usd: 28.60, ship: 0 },
+      { label: 'Casting 2.28m 5-30g',  usd: 32.51, ship: 0 },
+      { label: 'Casting 2.4m 5-30g',   usd: 34.28, ship: 0 },
     ],
     photos: ['ali1-1.avif','ali1-2.avif','ali1-3.avif','ali1-4.avif','ali1-5.avif','ali1-6.avif'],
     name: {
