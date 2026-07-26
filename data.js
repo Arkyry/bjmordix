@@ -79,7 +79,39 @@ const CATEGORIES = [
      long: { fr: 'Description longue…', en: 'Long description…', es: 'Descripción larga…' },
    },
    ────────────────────────────────────────────────────────── */
-const PRODUCTS = [];
+const PRODUCTS = [
+  /* ---- Catalogue AliExpress (port gratuit inclus dans les coûts) ---- */
+  {
+    id: 'ali-1', category: 'rods', rating: 4.7, reviews: 3048, badge: 'best', sku: '',
+    /* Coûts relevés en CAD (promo) puis convertis en USD (÷1.37) ; port gratuit */
+    variants: [
+      { label: 'Spinning 1.8m 5-25g',  usd: 9.02,  ship: 0 },
+      { label: 'Spinning 2.1m 5-30g',  usd: 10.08, ship: 0 },
+      { label: 'Spinning 2.28m 5-30g', usd: 12.11, ship: 0 },
+      { label: 'Spinning 2.4m 5-30g',  usd: 12.77, ship: 0 },
+      { label: 'Casting 1.8m 5-25g',   usd: 9.27,  ship: 0 },
+      { label: 'Casting 2.1m 5-30g',   usd: 10.28, ship: 0 },
+      { label: 'Casting 2.28m 5-30g',  usd: 12.13, ship: 0 },
+      { label: 'Casting 2.4m 5-30g',   usd: 12.96, ship: 0 },
+    ],
+    photos: ['ali1-1.avif','ali1-2.avif','ali1-3.avif','ali1-4.avif','ali1-5.avif','ali1-6.avif'],
+    name: {
+      fr: 'Canne de voyage carbone mini — spinning ou casting',
+      en: 'Mini Carbon Travel Rod — spinning or casting',
+      es: 'Caña de viaje de carbono mini — spinning o casting'
+    },
+    desc: {
+      fr: 'Ultra-compacte, action rapide, 4 sections — sac de transport inclus.',
+      en: 'Ultra-compact, fast action, 4 sections — cloth bag included.',
+      es: 'Ultracompacta, acción rápida, 4 secciones — bolsa incluida.'
+    },
+    long: {
+      fr: "Canne de voyage en carbone à 4 sections qui se glisse partout : sac à dos, valise, coffre d'auto. Action rapide (F) et pointe fine de 2 mm pour des lancers précis de 5 à 30 g (5-25 g en 1,8 m) — parfaite pour la truite, la perche et le doré au leurre. Offerte en version spinning ou casting et en 4 longueurs (1,80 m à 2,40 m) pour s'adapter à ton style. Puissance 10-14 lb, anneaux guides de qualité et sac de transport en tissu inclus. La compagne idéale des pêcheurs nomades : légère, nerveuse et toujours prête à partir.",
+      en: "Four-section carbon travel rod that fits anywhere: backpack, suitcase, car trunk. Fast (F) action with a fine 2 mm tip for precise 5-30 g casts (5-25 g in the 1.8 m model) — perfect for trout, perch and walleye on lures. Available in spinning or casting versions and 4 lengths (1.8 m to 2.4 m) to match your style. 10-14 lb power, quality guide rings, cloth carry bag included. The ideal companion for anglers on the move: light, crisp and always ready to go.",
+      es: "Caña de viaje de carbono de 4 secciones que cabe en cualquier parte: mochila, maleta o maletero. Acción rápida (F) con puntera fina de 2 mm para lanzados precisos de 5 a 30 g (5-25 g en el modelo de 1,8 m) — perfecta para trucha, perca y lucioperca con señuelos. Disponible en versión spinning o casting y en 4 longitudes (1,80 m a 2,40 m). Potencia 10-14 lb, anillas de calidad y bolsa de transporte incluida. La compañera ideal del pescador viajero: ligera, nerviosa y siempre lista."
+    },
+  },
+];
 
 /* Image principale = 1ʳᵉ photo de la galerie */
 PRODUCTS.forEach(p => { p.image = photo(p.photos[0], p.name.fr); });

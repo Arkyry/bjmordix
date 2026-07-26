@@ -27,3 +27,10 @@ photos/*-done.txt
 photos/*-opt-*.jpg
 photos/* (1).jpg
 photos/* (2).jpg
+
+# Captures privees (tableaux de bord) et dossier de travail AliExpress
+photos/dom*.png
+photos/domaine*.png
+photos/supa.png
+photos/netfly.png
+photos-ali/
