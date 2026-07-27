@@ -770,6 +770,209 @@ const PRODUCTS = [
       es: "Aceite lubricante para carrete con aguja de precisión: una gota exactamente donde hace falta — rodamientos, engranajes, eje. Recuperaciones más suaves y protección anticorrosión. El mantenimiento que duplica la vida del carrete, en 60 o 120 ml."
     },
   },
+  {
+    id: 'ali-33', category: 'reels', rating: 4.7, reviews: 664, badge: null, sku: '', markup: 1.5,
+    /* Prix de base CAD ÷1.37 ; port gratuit ; marge 1.5 (prix barrés gonflés) */
+    variants: [
+      { label: 'Série 2000', usd: 32.20, ship: 0 },
+      { label: 'Série 3000', usd: 32.89, ship: 0 },
+      { label: 'Série 5000', usd: 35.68, ship: 0 },
+      { label: 'Série 7000', usd: 42.85, ship: 0 },
+    ],
+    photos: ['ali33-1.webp','ali33-2.webp','ali33-3.webp','ali33-4.webp','ali33-5.webp','ali33-6.webp','ali33-7.webp'],
+    name: {
+      fr: 'Moulinet spinning frein 12 kg — bobine métal',
+      en: 'Spinning Reel 12 kg drag — metal spool',
+      es: 'Carrete spinning freno 12 kg — bobina metálica'
+    },
+    desc: {
+      fr: 'Du léger au costaud : séries 2000 à 7000.',
+      en: 'From light to heavy: 2000 to 7000 series.',
+      es: 'De ligero a potente: series 2000 a 7000.'
+    },
+    long: {
+      fr: "Moulinet spinning polyvalent à bobine métal et frein puissant de 12 kg. Quatre tailles pour couvrir toutes tes pêches : série 2000 pour la truite et la perche, 3000 pour le doré, 5000 pour le brochet et 7000 pour les gros combats en eau profonde. Récupération fluide, construction robuste — le rapport qualité-prix solide pour monter une deuxième canne ou débuter sérieusement.",
+      en: "Versatile spinning reel with a metal spool and a strong 12 kg drag. Four sizes to cover all your fishing: 2000 series for trout and perch, 3000 for walleye, 5000 for pike and 7000 for heavy deep-water battles. Smooth retrieve, sturdy build — solid value to rig a second rod or start fishing seriously.",
+      es: "Carrete spinning polivalente con bobina metálica y freno potente de 12 kg. Cuatro tallas: 2000 para trucha y perca, 3000 para lucioperca, 5000 para lucio y 7000 para combates fuertes. Recuperación fluida y construcción robusta."
+    },
+  },
+  {
+    id: 'ali-34', category: 'reels', rating: 4.7, reviews: 395, badge: null, sku: '', markup: 1.5,
+    /* Prix de base CAD ÷1.37 ; port gratuit ; marge 1.5 (prix barrés gonflés) */
+    variants: [
+      { label: 'Main droite', usd: 44.39, ship: 0 },
+      { label: 'Main gauche', usd: 44.73, ship: 0 },
+    ],
+    photos: ['ali34-1.webp','ali34-2.webp','ali34-3.webp','ali34-4.webp','ali34-5.webp','ali34-6.webp','ali34-7.webp','ali34-8.webp'],
+    name: {
+      fr: 'Moulinet baitcasting 7.2:1 — eau salée',
+      en: 'Baitcasting Reel 7.2:1 — saltwater ready',
+      es: 'Carrete baitcasting 7.2:1 — apto agua salada'
+    },
+    desc: {
+      fr: 'Ultraléger, 6+1 roulements, longue portée, clicker de frein.',
+      en: 'Ultralight, 6+1 bearings, long cast, drag clicker.',
+      es: 'Ultraligero, 6+1 rodamientos, largo alcance, clicker.'
+    },
+    long: {
+      fr: "Moulinet baitcasting ultraléger au ratio rapide 7.2:1 : récupère vite entre deux lancers et attaque plus de postes. Six roulements + un anti-retour pour une fluidité constante, clicker de frein sonore et construction pensée pour résister à l'eau salée. Offert en version main droite ou main gauche — choisis ton côté de manivelle.",
+      en: "Ultralight baitcasting reel with a fast 7.2:1 ratio: pick up line quickly between casts and cover more water. Six bearings plus anti-reverse for constant smoothness, audible drag clicker and a build made to shrug off salt water. Right- or left-hand versions — pick your crank side.",
+      es: "Carrete baitcasting ultraligero con ratio rápido 7.2:1. Seis rodamientos más antirretorno, clicker de freno sonoro y construcción resistente al agua salada. Versión mano derecha o izquierda."
+    },
+  },
+  {
+    id: 'ali-35', category: 'reels', rating: 4.5, reviews: 299, badge: null, sku: '',
+    /* Prix de base CAD ÷1.37 (prix réel, promo faible) ; port 2,85 $ CAD ; marge auto */
+    variants: [
+      { label: 'Noir — main gauche',        usd: 11.82, ship: 2.08 },
+      { label: 'Rouge/noir — main gauche',  usd: 11.78, ship: 2.08 },
+      { label: 'Bleu/noir — main gauche',   usd: 11.78, ship: 2.08 },
+      { label: 'Or/noir — main droite',     usd: 12.85, ship: 2.08 },
+      { label: 'Rose/noir — main gauche',   usd: 12.91, ship: 2.08 },
+    ],
+    photos: ['ali35-1.webp','ali35-2.webp','ali35-3.webp','ali35-4.webp','ali35-5.webp','ali35-6.webp','ali35-7.webp','ali35-8.webp','ali35-9.webp','ali35-10.webp','ali35-11.webp','ali35-12.webp','ali35-13.webp','ali35-14.webp','ali35-15.webp','ali35-16.webp','ali35-17.webp'],
+    name: {
+      fr: 'Moulinet baitcasting compact 7.2:1 — anti-perruque',
+      en: 'Compact Baitcasting Reel 7.2:1 — anti-backlash',
+      es: 'Carrete baitcasting compacto 7.2:1 — antienredos'
+    },
+    desc: {
+      fr: 'Le baitcasting abordable pour débuter — 5 coloris.',
+      en: 'The affordable baitcaster to get started — 5 colors.',
+      es: 'El baitcasting asequible para empezar — 5 colores.'
+    },
+    long: {
+      fr: "Envie d'essayer le baitcasting sans te ruiner ? Ce moulinet compact au ratio 7.2:1 est fait pour ça : système anti-emmêlement qui pardonne les erreurs de débutant, lancers longs et précis, et il tient l'eau douce comme la salée. Cinq coloris au choix, majoritairement en main gauche (l'or/noir en main droite). Le premier pas idéal vers la pêche au lancer léger.",
+      en: "Want to try baitcasting without breaking the bank? This compact 7.2:1 reel is built for it: an anti-backlash system that forgives beginner mistakes, long accurate casts, and it handles fresh and salt water. Five colors, mostly left-hand (gold/black in right-hand). The ideal first step into casting.",
+      es: "¿Quieres probar el baitcasting sin arruinarte? Este carrete compacto 7.2:1 tiene sistema antienredos que perdona errores, lanzados largos y precisos, y aguanta agua dulce y salada. Cinco colores. El primer paso ideal."
+    },
+  },
+  {
+    id: 'ali-36', category: 'reels', rating: 4.8, reviews: 1747, badge: 'best', sku: '', markup: 1.5,
+    /* Prix de base CAD ÷1.37 ; port gratuit ; marge 1.5 (prix barrés gonflés) */
+    variants: [
+      { label: 'Série 3000', usd: 44.27, ship: 0 },
+      { label: 'Série 5000', usd: 46.50, ship: 0 },
+      { label: 'Série 7000', usd: 55.09, ship: 0 },
+    ],
+    photos: ['ali36-1.webp','ali36-2.webp','ali36-3.webp','ali36-4.webp','ali36-5.webp','ali36-6.webp'],
+    name: {
+      fr: 'Moulinet spinning surfcasting — frein 15 kg',
+      en: 'Surfcasting Spinning Reel — 15 kg drag',
+      es: 'Carrete spinning surfcasting — freno 15 kg'
+    },
+    desc: {
+      fr: 'Ultraléger et costaud — jigging et pêche du bord en mer.',
+      en: 'Ultralight and strong — jigging and shore fishing.',
+      es: 'Ultraligero y potente — jigging y pesca desde orilla.'
+    },
+    long: {
+      fr: "Moulinet spinning taillé pour le surfcasting et le jigging : frein surpuissant de 15 kg pour encaisser les rushs, corps ultraléger pour lancer des heures sans fatigue, et traitement pensé pour l'eau salée. Trois tailles — 3000 polyvalente, 5000 pour les beaux poissons, 7000 pour les monstres du large. Plus de 10 000 pêcheurs conquis (4.8★).",
+      en: "Spinning reel built for surfcasting and jigging: an overpowered 15 kg drag to absorb the runs, an ultralight body to cast for hours without fatigue, and saltwater-minded construction. Three sizes — versatile 3000, 5000 for big fish, 7000 for offshore monsters. Over 10,000 anglers convinced (4.8★).",
+      es: "Carrete spinning para surfcasting y jigging: freno de 15 kg, cuerpo ultraligero y construcción pensada para el agua salada. Tres tallas — 3000, 5000 y 7000. Más de 10 000 pescadores convencidos (4.8★)."
+    },
+  },
+  {
+    id: 'ali-37', category: 'reels', rating: 4.8, reviews: 1234, badge: null, sku: '', markup: 1.5,
+    /* Prix de base CAD ÷1.37 ; port gratuit ; marge 1.5 (prix barrés gonflés) ; série 4000 écartée (prix incohérent) */
+    variants: [
+      { label: 'Série 500',  usd: 59.24, ship: 0 },
+      { label: 'Série 3000', usd: 67.14, ship: 0 },
+      { label: 'Série 5000', usd: 78.04, ship: 0 },
+    ],
+    photos: ['ali37-1.webp','ali37-2.webp','ali37-3.webp','ali37-4.webp','ali37-5.webp','ali37-6.webp','ali37-7.webp','ali37-8.webp'],
+    name: {
+      fr: 'Moulinet spinning premium 9+1 roulements',
+      en: 'Premium Spinning Reel 9+1 bearings',
+      es: 'Carrete spinning premium 9+1 rodamientos'
+    },
+    desc: {
+      fr: 'Fluidité haut de gamme, frein 12 kg — perche, bar, brochet.',
+      en: 'High-end smoothness, 12 kg drag — perch, bass, pike.',
+      es: 'Suavidad de gama alta, freno 12 kg — perca, bass, lucio.'
+    },
+    long: {
+      fr: "Le haut du panier : 9 roulements + 1 anti-retour pour une fluidité de récupération exceptionnelle, frein de 12 kg et ratio 5.2:1 coupleux qui ne faiblit pas sous la charge. Série 500 pour l'ultra-léger et la pêche hivernale, 3000 pour la polyvalence, 5000 pour les gros brochets. Un moulinet qu'on sent monter en gamme dès le premier tour de manivelle (4.8★, 1200+ avis).",
+      en: "Top of the class: 9 bearings plus anti-reverse for exceptionally smooth retrieves, a 12 kg drag and a torquey 5.2:1 ratio that doesn't fade under load. 500 series for ultralight and winter fishing, 3000 for versatility, 5000 for big pike. A reel that feels premium from the first crank (4.8★, 1200+ reviews).",
+      es: "Lo mejor de su clase: 9 rodamientos más antirretorno, freno de 12 kg y ratio 5.2:1 con par que no cede bajo carga. Serie 500 para ultraligero, 3000 polivalente, 5000 para grandes lucios. Se siente premium desde la primera vuelta (4.8★)."
+    },
+  },
+  {
+    id: 'ali-38', category: 'reels', rating: 4.6, reviews: 1590, badge: null, sku: '', markup: 1.5,
+    /* Prix de base CAD ÷1.37 ; port 3,09 $ CAD ; marge 1.5 (prix barrés gonflés) */
+    variants: [
+      { label: 'Série 1000', usd: 24.45, ship: 2.26 },
+      { label: 'Série 3000', usd: 30.11, ship: 2.26 },
+      { label: 'Série 5000', usd: 38.55, ship: 2.26 },
+      { label: 'Série 7000', usd: 40.21, ship: 2.26 },
+    ],
+    photos: ['ali38-1.webp','ali38-2.webp','ali38-3.webp','ali38-4.webp','ali38-5.webp','ali38-6.webp'],
+    name: {
+      fr: 'Moulinet spinning bobine CNC — frein 26 lb',
+      en: 'Spinning Reel CNC spool — 26 lb drag',
+      es: 'Carrete spinning bobina CNC — freno 26 lb'
+    },
+    desc: {
+      fr: 'Finition métal usinée, ratio 5.2:1 — eau douce et salée.',
+      en: 'Machined metal finish, 5.2:1 ratio — fresh and salt water.',
+      es: 'Acabado metálico mecanizado, ratio 5.2:1 — dulce y salada.'
+    },
+    long: {
+      fr: "Moulinet spinning à la bobine métal usinée CNC : équilibrage parfait, sorties de ligne régulières et une allure racée tout en métal. Frein de 26 lb (~12 kg), ratio 5.2:1 coupleux, à l'aise en eau douce comme en mer. Quatre tailles de la série 1000 (truite, perche) à la 7000 (gros brochets, pêche du bord en mer).",
+      en: "Spinning reel with a CNC-machined metal spool: perfect balance, consistent line flow and a sharp all-metal look. 26 lb (~12 kg) drag, torquey 5.2:1 ratio, at home in fresh water and salt. Four sizes from the 1000 series (trout, perch) to the 7000 (big pike, shore fishing).",
+      es: "Carrete spinning con bobina de metal mecanizada CNC: equilibrio perfecto y salida de línea regular. Freno de 26 lb, ratio 5.2:1, para agua dulce y mar. Cuatro tallas de la serie 1000 a la 7000."
+    },
+  },
+  {
+    id: 'ali-39', category: 'reels', rating: 4.8, reviews: 1774, badge: null, sku: '', markup: 1.5,
+    /* Prix de base CAD ÷1.37 ; port gratuit ; marge 1.5 (prix barrés gonflés) */
+    variants: [
+      { label: 'Main gauche', usd: 61.87, ship: 0 },
+      { label: 'Main droite', usd: 62.80, ship: 0 },
+    ],
+    photos: ['ali39-1.webp','ali39-2.webp','ali39-3.webp','ali39-4.webp','ali39-5.webp','ali39-6.webp','ali39-7.webp'],
+    name: {
+      fr: 'Moulinet baitcasting céramique — frein magnétique',
+      en: 'Ceramic Baitcasting Reel — magnetic brake',
+      es: 'Carrete baitcasting cerámico — freno magnético'
+    },
+    desc: {
+      fr: 'Roulements céramique hybrides, frein magnétique, ratio 7.3:1.',
+      en: 'Hybrid ceramic bearings, magnetic brake, 7.3:1 ratio.',
+      es: 'Rodamientos cerámicos híbridos, freno magnético, ratio 7.3:1.'
+    },
+    long: {
+      fr: "Baitcasting de performance : roulements en céramique hybride pour une bobine qui tourne plus longtemps (= lancers plus loin), frein magnétique à aimants puissants qui dompte la perruque, rondelles de frein en fibre de carbone et ratio rapide 7.3:1. En version main gauche ou main droite. Le choix des pêcheurs au leurre exigeants (4.8★, 1700+ avis).",
+      en: "Performance baitcasting: hybrid ceramic bearings for a longer-spinning spool (= longer casts), a strong-magnet brake that tames backlash, carbon-fiber drag washers and a fast 7.3:1 ratio. Left- or right-hand versions. The pick of demanding lure anglers (4.8★, 1700+ reviews).",
+      es: "Baitcasting de rendimiento: rodamientos cerámicos híbridos (lanzados más largos), freno magnético potente, arandelas de fibra de carbono y ratio rápido 7.3:1. Mano izquierda o derecha. La elección de los exigentes (4.8★)."
+    },
+  },
+  {
+    id: 'ali-40', category: 'reels', rating: 4.7, reviews: 2450, badge: 'best', sku: '', markup: 1.5,
+    /* Prix de base CAD ÷1.37 ; port 3,09 $ CAD ; marge 1.5 (prix barrés gonflés) */
+    variants: [
+      { label: 'Série 1000', usd: 27.20, ship: 2.26 },
+      { label: 'Série 3000', usd: 29.14, ship: 2.26 },
+      { label: 'Série 5000', usd: 32.59, ship: 2.26 },
+      { label: 'Série 7000', usd: 37.95, ship: 2.26 },
+    ],
+    photos: ['ali40-1.webp','ali40-2.webp','ali40-3.webp','ali40-4.webp','ali40-5.webp','ali40-6.webp','ali40-7.webp'],
+    name: {
+      fr: 'Moulinet spinning ultra léger — séries 1000 à 7000',
+      en: 'Ultralight Spinning Reel — 1000 to 7000 series',
+      es: 'Carrete spinning ultraligero — series 1000 a 7000'
+    },
+    desc: {
+      fr: 'Le best-seller : frein 26 lb, bobine CNC, gris furtif.',
+      en: 'The best-seller: 26 lb drag, CNC spool, stealth grey.',
+      es: 'El superventas: freno 26 lb, bobina CNC, gris furtivo.'
+    },
+    long: {
+      fr: "Notre moulinet le plus populaire (4.7★, 2400+ avis, 10 000+ vendus) : ultra léger pour pêcher toute la journée, frein max de 26 lb, bobine métal usinée CNC et finition gris foncé furtive. Quatre tailles pour tout couvrir — 1000 pour l'ultraléger truite, 3000 le passe-partout, 5000 et 7000 pour le brochet et la mer. Fiable, fluide, sans fioritures : il fait le travail, sortie après sortie.",
+      en: "Our most popular reel (4.7★, 2400+ reviews, 10,000+ sold): ultralight for all-day fishing, 26 lb max drag, CNC-machined metal spool and a stealthy dark-grey finish. Four sizes to cover everything — 1000 for ultralight trout, 3000 the all-rounder, 5000 and 7000 for pike and salt water. Reliable, smooth, no frills: it does the job, trip after trip.",
+      es: "Nuestro carrete más popular (4.7★, 2400+ opiniones, 10 000+ vendidos): ultraligero, freno máx. de 26 lb, bobina CNC y acabado gris oscuro. Cuatro tallas — 1000 para trucha, 3000 todoterreno, 5000 y 7000 para lucio y mar. Fiable y suave: cumple, salida tras salida."
+    },
+  },
 ];
 
 /* Image principale = 1ʳᵉ photo de la galerie */
