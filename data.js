@@ -309,7 +309,7 @@ const PRODUCTS = [
     },
   },
   {
-    id: 'ali-11', category: 'gear', rating: 4.7, reviews: 142, badge: null, sku: '',
+    id: 'ali-11', category: 'gear', rating: 4.7, reviews: 142, badge: null, sku: '', markup: 1.5,
     /* Prix de base CAD ÷1.37 ; port 2,85 $ CAD */
     variants: [
       { label: '50 pièces',  usd: 5.58, ship: 2.08 },
@@ -333,7 +333,7 @@ const PRODUCTS = [
     },
   },
   {
-    id: 'ali-12', category: 'lures', rating: 4.7, reviews: 1125, badge: null, sku: '',
+    id: 'ali-12', category: 'lures', rating: 4.7, reviews: 1125, badge: null, sku: '', markup: 1.5,
     /* Prix de base CAD ÷1.37 ; port 3,09 $ CAD ; 11 coloris */
     variants: [
       { label: 'Couleur A', usd: 12.47, ship: 2.26 },
@@ -404,7 +404,7 @@ const PRODUCTS = [
     },
   },
   {
-    id: 'ali-14', category: 'gear', rating: 4.9, reviews: 3040, badge: 'best', sku: '',
+    id: 'ali-14', category: 'gear', rating: 4.9, reviews: 3040, badge: 'best', sku: '', markup: 1.5,
     /* Prix de base CAD ÷1.37 ; port 3,09 $ CAD ; tailles 2.0-3.0 épuisées chez le fournisseur */
     variants: [
       { label: 'PE 0.8 (12 lb)', usd: 19.20, ship: 2.26 },
@@ -432,7 +432,7 @@ const PRODUCTS = [
     },
   },
   {
-    id: 'ali-15', category: 'gear', rating: 4.7, reviews: 2251, badge: 'best', sku: '',
+    id: 'ali-15', category: 'gear', rating: 4.7, reviews: 2251, badge: 'best', sku: '', markup: 1.5,
     /* Prix de base CAD ÷1.37 ; port 3,09 $ CAD */
     variants: [
       { label: '0,2 g — 50 pcs', usd: 11.30, ship: 2.26 },
@@ -560,7 +560,8 @@ function salePrice(p, variant) {
     prodUSD = (p.usd != null) ? p.usd : (p.cost / USD_TO_CAD);
     shipUSD = p.ship || 0;
   }
-  return Math.round((prodUSD * markupFor(prodUSD) + shipUSD) * USD_TO_CAD * 100) / 100;
+  const m = p.markup || markupFor(prodUSD);  // marge personnalisée du produit, sinon dégressive
+  return Math.round((prodUSD * m + shipUSD) * USD_TO_CAD * 100) / 100;
 }
 
 /* Prix le plus bas parmi les variantes (pour l'affichage « dès … » sur les cartes). */
