@@ -539,6 +539,237 @@ const PRODUCTS = [
       es: "Gusanos blandos ultra realistas con aroma atractivo: la imitación de lombriz que sustituye al cebo vivo. Tres formatos — 3,5 cm en lotes de 50 (rojo, naranja o luminoso), 8 y 10 cm en lotes de 20. Trucha, perca, lucioperca: a menudo salva el día."
     },
   },
+  {
+    id: 'ali-20', category: 'lures', rating: 4.8, reviews: 581, badge: null, sku: '',
+    /* Prix de base CAD ÷1.37 ; port 2,87 $ CAD */
+    variants: [
+      { label: 'Assortiment A (3 pcs)', usd: 5.07, ship: 2.09 },
+      { label: 'Assortiment B (3 pcs)', usd: 4.94, ship: 2.09 },
+      { label: 'Assortiment C (3 pcs)', usd: 4.95, ship: 2.09 },
+      { label: 'Coloris aléatoires (3 pcs)', usd: 3.61, ship: 2.09 },
+    ],
+    photos: ['ali20-1.webp','ali20-2.webp','ali20-3.webp','ali20-4.webp','ali20-5.webp','ali20-6.webp','ali20-7.webp','ali20-8.webp','ali20-9.webp','ali20-10.webp'],
+    name: {
+      fr: 'Jerkbait coulée lente 12 cm — boîte de 3',
+      en: 'Slow-Sinking Jerkbait 12 cm — box of 3',
+      es: 'Jerkbait de hundimiento lento 12 cm — caja de 3'
+    },
+    desc: {
+      fr: 'Ménés 14 g style japonais — bar et brochet.',
+      en: 'Japan-style 14 g minnows — bass and pike.',
+      es: 'Peces nadadores 14 g estilo japonés — bass y lucio.'
+    },
+    long: {
+      fr: "Boîte de trois poissons-nageurs de 12 cm / 14 g à coulée lente, inspirés des jerkbaits japonais : ils descendent doucement dans la colonne d'eau et restent dans la zone de frappe plus longtemps. Animation en petites secousses (jerks) pour un effet vairon blessé irrésistible sur le bar, le brochet et le doré. Trois assortiments de coloris au choix, ou l'option surprise à prix doux.",
+      en: "Box of three 12 cm / 14 g slow-sinking minnows inspired by Japanese jerkbaits: they fall gently through the water column and stay in the strike zone longer. Twitch them for a wounded-baitfish action irresistible to bass, pike and walleye. Three color assortments, or the budget surprise option.",
+      es: "Caja de tres peces nadadores de 12 cm / 14 g de hundimiento lento, inspirados en los jerkbaits japoneses: caen suavemente y permanecen más tiempo en la zona de ataque. Anímalos a tirones para imitar un alevín herido. Tres surtidos de colores o la opción sorpresa."
+    },
+  },
+  {
+    id: 'ali-21', category: 'gear', rating: 4.8, reviews: 760, badge: null, sku: '', markup: 1.5,
+    /* Prix de base CAD ÷1.37 ; port 2,85 $ CAD ; marge 1.5 (prix barrés gonflés) */
+    variants: [
+      { label: '10 g — lot de 5', usd: 3.36, ship: 2.08 },
+      { label: '20 g — lot de 5', usd: 4.81, ship: 2.08 },
+      { label: '30 g — lot de 5', usd: 6.30, ship: 2.08 },
+      { label: '50 g — lot de 5', usd: 9.50, ship: 2.08 },
+    ],
+    photos: ['ali21-1.webp','ali21-2.webp','ali21-3.webp','ali21-4.webp','ali21-5.webp','ali21-6.webp','ali21-7.webp','ali21-8.webp','ali21-9.webp','ali21-10.webp','ali21-11.webp','ali21-12.webp','ali21-13.webp','ali21-14.webp'],
+    name: {
+      fr: 'Plombs de fond profilés avec connecteur — lot de 5',
+      en: 'Tapered Bottom Sinkers with Connector — 5 pack',
+      es: 'Plomos de fondo perfilados con conector — lote de 5'
+    },
+    desc: {
+      fr: 'Plombs concaves anti-accroc 10 à 50 g, émerillon intégré.',
+      en: 'Snag-resistant concave sinkers 10-50 g, built-in swivel.',
+      es: 'Plomos cóncavos antienganche 10-50 g, esmerillón integrado.'
+    },
+    long: {
+      fr: "Plombs de fond profilés à face concave avec connecteur émerillon intégré : ils tiennent le fond dans le courant, décollent proprement au ferrage et réduisent le vrillage. Leur forme effilée limite les accrocs entre les roches. Vendus par lot de 5, en 10, 20, 30 ou 50 g — de la pêche fine en rivière aux montages de fond musclés.",
+      en: "Tapered concave-face bottom sinkers with a built-in swivel connector: they hold bottom in current, lift cleanly on the strike and reduce line twist. The streamlined shape limits snags between rocks. Sold in packs of 5, in 10, 20, 30 or 50 g — from fine river fishing to heavy bottom rigs.",
+      es: "Plomos de fondo perfilados de cara cóncava con esmerillón integrado: aguantan el fondo en la corriente y reducen el retorcido. Su forma limita los enganches entre rocas. En lotes de 5, de 10, 20, 30 o 50 g."
+    },
+  },
+  {
+    id: 'ali-22', category: 'gear', rating: 4.4, reviews: 1637, badge: null, sku: '', markup: 1.5,
+    /* Prix de base CAD ÷1.37 ; port 3,09 $ CAD ; marge 1.5 (prix barrés gonflés) */
+    variants: [
+      { label: 'D20 — traction 9 kg',  usd: 8.79,  ship: 2.26 },
+      { label: 'D25 — traction 19 kg', usd: 9.56,  ship: 2.26 },
+      { label: 'D32 — traction 32 kg', usd: 10.58, ship: 2.26 },
+      { label: 'D42 — traction 61 kg', usd: 12.36, ship: 2.26 },
+    ],
+    photos: ['ali22-1.webp','ali22-2.webp','ali22-3.webp','ali22-4.webp','ali22-5.webp','ali22-6.webp','ali22-7.webp','ali22-8.webp','ali22-9.webp','ali22-10.webp','ali22-11.webp','ali22-12.webp'],
+    name: {
+      fr: 'Aimant néodyme N52 avec anneau — pêche à l\'aimant',
+      en: 'N52 Neodymium Magnet with Eyebolt — magnet fishing',
+      es: 'Imán de neodimio N52 con argolla — pesca magnética'
+    },
+    desc: {
+      fr: 'Traction de 9 à 61 kg — récupère tout ce qui est en métal.',
+      en: '9 to 61 kg pull — retrieves anything metal.',
+      es: 'Tracción de 9 a 61 kg — recupera todo lo metálico.'
+    },
+    long: {
+      fr: "Aimant néodyme de grade N52 (le plus puissant du marché) avec anneau de levage : attache une corde et pars à la pêche… à l'aimant ! Retrouve un moulinet tombé à l'eau, récupère des objets métalliques ou explore les quais et les ponts. Quatre diamètres, de D20 (9 kg de traction) à D42 (61 kg). Un accessoire fascinant qui double ta sortie de pêche d'une chasse au trésor.",
+      en: "N52-grade neodymium magnet (the strongest on the market) with a lifting eyebolt: tie on a rope and go magnet fishing! Retrieve a reel dropped overboard, recover metal objects or explore docks and bridges. Four diameters, from D20 (9 kg pull) to D42 (61 kg). A fascinating add-on that turns any fishing trip into a treasure hunt.",
+      es: "Imán de neodimio grado N52 (el más potente del mercado) con argolla de izado: ata una cuerda y ¡a pescar imanes! Recupera un carrete caído al agua u objetos metálicos. Cuatro diámetros, de D20 (9 kg) a D42 (61 kg). Convierte la salida de pesca en una búsqueda del tesoro."
+    },
+  },
+  {
+    id: 'ali-23', category: 'reels', rating: 4.7, reviews: 539, badge: 'new', sku: '',
+    /* Prix de base CAD ÷1.37 ; port gratuit ; marge auto (x1.6 au-dessus de 60 USD) */
+    variants: [
+      { label: 'Coloris A', usd: 67.78, ship: 0 },
+      { label: 'Coloris B', usd: 67.75, ship: 0 },
+      { label: 'Coloris C', usd: 67.75, ship: 0 },
+      { label: 'Coloris D', usd: 68.65, ship: 0 },
+    ],
+    photos: ['ali23-1.webp','ali23-2.webp','ali23-3.webp','ali23-4.webp','ali23-5.webp','ali23-6.webp','ali23-7.webp','ali23-8.webp','ali23-9.webp','ali23-10.webp'],
+    name: {
+      fr: 'Moulinet baitcasting électronique — compteur LED',
+      en: 'Electronic Baitcasting Reel — LED line counter',
+      es: 'Carrete de baitcasting electrónico — contador LED'
+    },
+    desc: {
+      fr: 'Écran LED compteur de ligne, ratio 7.2:1, frein 10 kg, étanche.',
+      en: 'LED line-counter display, 7.2:1 ratio, 10 kg drag, waterproof.',
+      es: 'Pantalla LED cuentalíneas, ratio 7.2:1, freno 10 kg, estanco.'
+    },
+    long: {
+      fr: "Moulinet baitcasting nouvelle génération avec grand écran LED : il compte les mètres de ligne sortis en temps réel — un atout précieux pour la pêche à la traîne, sur glace ou en profondeur, où revenir exactement à la bonne profondeur change tout. Ratio rapide 7.2:1, frein puissant de 10 kg, construction étanche compatible eau salée, batterie remplaçable et câble de recharge USB inclus. Quatre coloris au choix.",
+      en: "New-generation baitcasting reel with a large LED display: it counts line out in real time — a precious edge for trolling, ice fishing or deep water, where returning to the exact depth changes everything. Fast 7.2:1 ratio, powerful 10 kg drag, waterproof saltwater-ready build, replaceable battery and USB charging cable included. Four colors available.",
+      es: "Carrete de baitcasting de nueva generación con gran pantalla LED: cuenta los metros de línea en tiempo real — una ventaja clave para curricán, pesca en hielo o aguas profundas. Ratio rápido 7.2:1, freno de 10 kg, construcción estanca apta para agua salada, batería reemplazable y cable USB incluido. Cuatro colores."
+    },
+  },
+  {
+    id: 'ali-24', category: 'gear', rating: 4.8, reviews: 1518, badge: null, sku: '',
+    /* Prix de base CAD ÷1.37 ; port 2,85 $ CAD */
+    variants: [
+      { label: '15 cm — 20 pcs', usd: 3.56, ship: 2.08 },
+      { label: '20 cm — 20 pcs', usd: 3.54, ship: 2.08 },
+      { label: '25 cm — 20 pcs', usd: 3.49, ship: 2.08 },
+      { label: '30 cm — 20 pcs', usd: 3.64, ship: 2.08 },
+    ],
+    photos: ['ali24-1.webp','ali24-2.webp','ali24-3.webp','ali24-4.webp','ali24-5.webp','ali24-6.webp','ali24-7.webp','ali24-8.webp','ali24-9.webp','ali24-10.webp'],
+    name: {
+      fr: 'Bas de ligne acier anti-morsure — lot de 20',
+      en: 'Anti-Bite Steel Leaders — 20 pack',
+      es: 'Bajos de línea de acero antimordida — lote de 20'
+    },
+    desc: {
+      fr: 'Avants en acier avec agrafe et émerillon — spécial brochet.',
+      en: 'Steel traces with snap and swivel — pike special.',
+      es: 'Bajos de acero con grapa y esmerillón — especial lucio.'
+    },
+    long: {
+      fr: "Bas de ligne en fil d'acier ultra résistant avec émerillon d'un côté et agrafe rotative de l'autre : la protection indispensable contre les dents du brochet et du maskinongé, qui tranchent net les lignes classiques. Montage en 2 secondes, rotation anti-vrillage. Quatre longueurs au choix (15, 20, 25 ou 30 cm), vendus par lot de 20 — tu en auras toujours un d'avance.",
+      en: "Ultra-strong steel wire leaders with a swivel on one end and a rotating snap on the other: essential protection against pike and musky teeth that slice ordinary lines clean through. Rigged in 2 seconds, anti-twist rotation. Four lengths (15, 20, 25 or 30 cm), sold in packs of 20 — you'll always have a spare.",
+      es: "Bajos de línea de acero ultrarresistente con esmerillón y grapa giratoria: la protección imprescindible contra los dientes del lucio, que cortan las líneas normales. Montaje en 2 segundos, rotación antigiro. Cuatro longitudes (15-30 cm), en lotes de 20."
+    },
+  },
+  {
+    id: 'ali-25', category: 'lures', rating: 4.6, reviews: 2231, badge: 'best', sku: '', markup: 1.5,
+    /* Prix de base CAD ÷1.37 ; port gratuit ; marge 1.5 (prix barrés gonflés) */
+    variants: [
+      { label: 'Kit 86 pièces',  usd: 13.50, ship: 0 },
+      { label: 'Kit 136 pièces', usd: 25.87, ship: 0 },
+      { label: 'Kit 366 pièces', usd: 57.40, ship: 0 },
+    ],
+    photos: ['ali25-1.webp','ali25-2.webp','ali25-3.webp','ali25-4.webp','ali25-5.webp','ali25-6.webp','ali25-7.webp','ali25-8.webp','ali25-9.webp','ali25-10.webp'],
+    name: {
+      fr: 'Kit de leurres complet avec boîte — 86 à 366 pièces',
+      en: 'Complete Lure Kit with Box — 86 to 366 pieces',
+      es: 'Kit completo de señuelos con caja — 86 a 366 piezas'
+    },
+    desc: {
+      fr: 'L\'arsenal du pêcheur : leurres durs, souples et accessoires.',
+      en: 'The angler\'s arsenal: hard baits, soft baits and accessories.',
+      es: 'El arsenal del pescador: señuelos duros, blandos y accesorios.'
+    },
+    long: {
+      fr: "Le kit qui équipe un pêcheur au complet : poissons-nageurs, cuillers, leurres souples, jigs, hameçons, émerillons et accessoires, rangés dans une boîte compartimentée. Trois formats — 86 pièces pour débuter, 136 pour élargir la gamme, 366 pour l'arsenal complet. Ciblé truite, doré et achigan. Le cadeau parfait pour un débutant… ou pour soi.",
+      en: "The kit that outfits an angler completely: minnows, spoons, soft baits, jigs, hooks, swivels and accessories, organized in a compartment box. Three formats — 86 pieces to start, 136 to expand, 366 for the full arsenal. Aimed at trout, walleye and bass. The perfect gift for a beginner… or yourself.",
+      es: "El kit que equipa a un pescador al completo: peces nadadores, cucharillas, señuelos blandos, jigs, anzuelos y accesorios en caja con compartimentos. Tres formatos — 86, 136 o 366 piezas. Para trucha, lucioperca y bass. El regalo perfecto."
+    },
+  },
+  {
+    id: 'ali-26', category: 'gear', rating: 4.7, reviews: 1410, badge: 'best', sku: '',
+    /* Prix de base CAD ÷1.37 ; port 2,87 $ CAD */
+    variants: [
+      { label: '0,14 mm — 4 lb',  usd: 3.93, ship: 2.09 },
+      { label: '0,20 mm — 7 lb',  usd: 4.11, ship: 2.09 },
+      { label: '0,26 mm — 12 lb', usd: 4.09, ship: 2.09 },
+      { label: '0,35 mm — 21 lb', usd: 4.25, ship: 2.09 },
+      { label: '0,50 mm — 34 lb', usd: 4.45, ship: 2.09 },
+    ],
+    photos: ['ali26-1.webp','ali26-2.webp','ali26-3.webp','ali26-4.webp','ali26-5.webp','ali26-6.webp','ali26-7.webp'],
+    name: {
+      fr: 'Fluorocarbone 100 m — bas de ligne discret',
+      en: 'Fluorocarbon Line 100 m — stealth leader',
+      es: 'Fluorocarbono 100 m — bajo de línea invisible'
+    },
+    desc: {
+      fr: 'Quasi invisible sous l\'eau, souple et résistant à l\'abrasion.',
+      en: 'Nearly invisible underwater, supple and abrasion-resistant.',
+      es: 'Casi invisible bajo el agua, flexible y resistente a la abrasión.'
+    },
+    long: {
+      fr: "Ligne fluorocarbone super souple de 100 m : son indice de réfraction proche de l'eau la rend quasi invisible pour les poissons méfiants — le complément parfait d'une tresse en bas de ligne. Coule naturellement, excellente résistance à l'abrasion sur les roches. Cinq diamètres au choix, de 0,14 mm (4 lb, truite en eau claire) à 0,50 mm (34 lb, brochet et gros carnassiers).",
+      en: "Super-supple 100 m fluorocarbon line: its refraction index close to water makes it nearly invisible to wary fish — the perfect leader companion to braid. Sinks naturally, excellent abrasion resistance on rocks. Five diameters, from 0.14 mm (4 lb, clear-water trout) to 0.50 mm (34 lb, pike and big predators).",
+      es: "Línea de fluorocarbono súper flexible de 100 m: su índice de refracción cercano al agua la hace casi invisible — el complemento perfecto del trenzado. Se hunde de forma natural y resiste la abrasión. Cinco diámetros, de 0,14 mm (4 lb) a 0,50 mm (34 lb)."
+    },
+  },
+  {
+    id: 'ali-27', category: 'gear', rating: 4.7, reviews: 738, badge: null, sku: '',
+    /* Prix de base CAD ÷1.37 ; port 2,87 $ CAD */
+    variants: [
+      { label: 'Doré — 100 pcs',    usd: 2.28, ship: 2.09 },
+      { label: 'Argenté — 100 pcs', usd: 2.34, ship: 2.09 },
+      { label: 'Noir — 100 pcs',    usd: 2.22, ship: 2.09 },
+    ],
+    photos: ['ali27-1.webp','ali27-2.webp','ali27-3.webp','ali27-4.webp','ali27-5.webp','ali27-6.webp','ali27-7.webp','ali27-8.webp','ali27-9.webp'],
+    name: {
+      fr: 'Hameçons acier carbone avec ardillon — boîte de 100',
+      en: 'Carbon Steel Barbed Hooks — box of 100',
+      es: 'Anzuelos de acero al carbono con rebaba — caja de 100'
+    },
+    desc: {
+      fr: '100 hameçons à œillet en boîte de rangement — 3 finitions.',
+      en: '100 eyed hooks in a storage box — 3 finishes.',
+      es: '100 anzuelos con ojal en caja — 3 acabados.'
+    },
+    long: {
+      fr: "Boîte de 100 hameçons à œillet en acier au carbone, avec ardillon pour bien tenir l'esche et le poisson. Tailles assorties dans la boîte de rangement : de quoi couvrir la pêche au coup, la carpe, la mouche et les montages de mer. Trois finitions au choix — dorée, argentée ou noire discrète. La base de toute boîte de pêche, à petit prix.",
+      en: "Box of 100 eyed carbon-steel hooks with barbs to hold bait and fish securely. Assorted sizes in a storage box: covers float fishing, carp, fly and saltwater rigs. Three finishes — gold, silver or stealth black. The foundation of every tackle box, at a small price.",
+      es: "Caja de 100 anzuelos con ojal de acero al carbono, con rebaba para sujetar bien el cebo. Tallas surtidas en caja organizadora: para coup, carpa, mosca y mar. Tres acabados — dorado, plateado o negro. La base de toda caja de pesca."
+    },
+  },
+  {
+    id: 'ali-31', category: 'gear', rating: 4.8, reviews: 362, badge: null, sku: '', markup: 1.5,
+    /* Prix de base CAD ÷1.37 ; port 3,09 $ CAD ; marge 1.5 (prix barrés gonflés) */
+    variants: [
+      { label: '60 ml',  usd: 12.53, ship: 2.26 },
+      { label: '120 ml', usd: 20.30, ship: 2.26 },
+    ],
+    photos: ['ali31-1.webp','ali31-2.webp','ali31-3.webp','ali31-4.webp','ali31-5.webp','ali31-6.webp','ali31-7.webp','ali31-8.webp'],
+    name: {
+      fr: 'Huile de précision pour moulinet',
+      en: 'Precision Reel Oil',
+      es: 'Aceite de precisión para carrete'
+    },
+    desc: {
+      fr: 'Aiguille applicatrice, anticorrosion — eau douce et salée.',
+      en: 'Needle applicator, anti-corrosion — fresh and salt water.',
+      es: 'Aguja aplicadora, anticorrosión — agua dulce y salada.'
+    },
+    long: {
+      fr: "Huile lubrifiante pour moulinet avec aiguille de précision : une goutte exactement où il faut — roulements, pignons, axe de manivelle — sans en mettre partout. Récupérations plus fluides, protection anticorrosion pour l'eau douce comme l'eau salée. L'entretien qui double la durée de vie d'un moulinet, en flacon de 60 ou 120 ml.",
+      en: "Reel lubricating oil with a precision needle: one drop exactly where it's needed — bearings, gears, handle shaft — without mess. Smoother retrieves and corrosion protection for fresh and salt water. The maintenance that doubles a reel's life, in 60 or 120 ml bottles.",
+      es: "Aceite lubricante para carrete con aguja de precisión: una gota exactamente donde hace falta — rodamientos, engranajes, eje. Recuperaciones más suaves y protección anticorrosión. El mantenimiento que duplica la vida del carrete, en 60 o 120 ml."
+    },
+  },
 ];
 
 /* Image principale = 1ʳᵉ photo de la galerie */
