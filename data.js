@@ -113,6 +113,91 @@ const PRODUCTS = [
       es: "Caña de viaje de carbono de 4 secciones que cabe en cualquier parte: mochila, maleta o maletero. Acción rápida (F) con puntera fina de 2 mm para lanzados precisos de 5 a 30 g (5-25 g en el modelo de 1,8 m) — perfecta para trucha, perca y lucioperca con señuelos. Disponible en versión spinning o casting y en 4 longitudes (1,80 m a 2,40 m). Potencia 10-14 lb, anillas de calidad y bolsa de transporte incluida. La compañera ideal del pescador viajero: ligera, nerviosa y siempre lista."
     },
   },
+  {
+    id: 'ali-2', category: 'lures', rating: 4.7, reviews: 815, badge: 'best', sku: '',
+    /* Prix de base CAD ÷1.37 ; port 2,87 $ CAD = 2.09 USD */
+    variants: [
+      { label: '7g — 90mm',   usd: 1.85, ship: 2.09 },
+      { label: '14g — 110mm', usd: 2.18, ship: 2.09 },
+      { label: '40g — 160mm', usd: 3.37, ship: 2.09 },
+    ],
+    photos: ['ali2-1.webp','ali2-2.webp','ali2-3.webp','ali2-4.webp','ali2-5.webp','ali2-6.webp','ali2-7.webp','ali2-8.webp','ali2-9.webp','ali2-10.webp','ali2-11.avif'],
+    name: {
+      fr: 'Poisson-nageur méné lumineux — swimbait flottant',
+      en: 'Luminous Minnow Jerkbait — floating swimbait',
+      es: 'Pez nadador luminoso — swimbait flotante'
+    },
+    desc: {
+      fr: 'Leurre dur longue distance à billes bruiteuses — 3 tailles.',
+      en: 'Long-cast hard bait with rattling balls — 3 sizes.',
+      es: 'Señuelo duro de largo alcance con bolas sonoras — 3 tamaños.'
+    },
+    long: {
+      fr: "Poisson-nageur « bionique » au corps lumineux et au fini laser ultra réaliste. Ses billes internes se déplacent de la tête vers la queue au lancer : équilibre parfait, distances de lancer impressionnantes et vibrations sonores qui attirent les carnassiers de loin. Flottant, armé de 2 hameçons triples, il nage avec une action vive idéale pour le brochet, l'achigan et le doré. Trois tailles au choix : 7 g / 90 mm, 14 g / 110 mm et 40 g / 160 mm. Coloris réalistes variés (livré selon l'arrivage).",
+      en: "'Bionic' minnow with a luminous body and ultra-realistic laser finish. Internal balls shift from head to tail on the cast: perfect balance, impressive casting distance and noisy vibrations that call predators from afar. Floating, armed with 2 treble hooks, it swims with a lively action ideal for pike, bass and walleye. Three sizes: 7 g / 90 mm, 14 g / 110 mm and 40 g / 160 mm. Assorted realistic colors (shipped according to stock).",
+      es: "Pez nadador « biónico » con cuerpo luminoso y acabado láser ultra realista. Sus bolas internas se desplazan de la cabeza a la cola al lanzar: equilibrio perfecto, gran distancia de lanzado y vibraciones sonoras que atraen a los depredadores. Flotante, armado con 2 anzuelos triples, nada con una acción viva ideal para lucio, perca y lucioperca. Tres tamaños: 7 g / 90 mm, 14 g / 110 mm y 40 g / 160 mm. Colores realistas variados (según disponibilidad)."
+    },
+  },
+  {
+    id: 'ali-3', category: 'lures', rating: 4.6, reviews: 462, badge: null, sku: '',
+    /* 1,87 $ CAD base ÷1.37 ; port supposé 2,87 $ CAD (à confirmer) */
+    variants: [
+      { label: 'Style A', usd: 1.36, ship: 2.09 },
+      { label: 'Style B', usd: 1.36, ship: 2.09 },
+      { label: 'Style C', usd: 1.36, ship: 2.09 },
+      { label: 'Style D', usd: 1.36, ship: 2.09 },
+      { label: 'Style E', usd: 1.36, ship: 2.09 },
+      { label: 'Style F', usd: 1.36, ship: 2.09 },
+      { label: 'Style G', usd: 1.36, ship: 2.09 },
+      { label: 'Style H', usd: 1.36, ship: 2.09 },
+      { label: 'Style I', usd: 1.36, ship: 2.09 },
+      { label: 'Style J', usd: 1.36, ship: 2.09 },
+      { label: 'Style K', usd: 1.36, ship: 2.09 },
+      { label: 'Style L', usd: 1.36, ship: 2.09 },
+    ],
+    photos: ['ali3-1.webp','ali3-2.webp','ali3-3.webp','ali3-4.webp','ali3-5.webp','ali3-6.webp','ali3-7.webp','ali3-8.webp','ali3-9.webp','ali3-10.webp','ali3-11.webp','ali3-12.webp','ali3-13.webp','ali3-14.webp','ali3-15.webp','ali3-16.webp','ali3-17.webp','ali3-18.webp','ali3-19.webp','ali3-20.webp','ali3-21.webp'],
+    name: {
+      fr: 'Leurre souple queue en T 75-85 mm — tête plombée',
+      en: 'Soft Swimbait T-Tail 75-85 mm — jig head',
+      es: 'Señuelo blando cola en T 75-85 mm — cabeza plomada'
+    },
+    desc: {
+      fr: 'Souple armé prêt à pêcher — nage ondulante irrésistible.',
+      en: 'Rigged soft bait ready to fish — irresistible wobbling action.',
+      es: 'Señuelo montado listo para pescar — nado ondulante irresistible.'
+    },
+    long: {
+      fr: "Leurre souple en caoutchouc à queue en T, monté sur tête plombée avec hameçon simple : prêt à pêcher dès la sortie de l'emballage. Sa nage ondulante et vibrante imite un petit poisson blessé — un déclencheur redoutable pour le bar, le brochet et la perche. Corps souple et résistant de 75-85 mm (~9,5 g), œil 3D réaliste et coloris variés du blanc nacré au vert fluo. Douze styles au choix : pêche-le en linéaire, en verticale ou en traction près du fond.",
+      en: "Rubber soft bait with a T-tail, rigged on a jig head with a single hook: ready to fish right out of the pack. Its wobbling, vibrating swim mimics a small wounded fish — a deadly trigger for bass, pike and perch. Tough 75-85 mm soft body (~9.5 g), realistic 3D eye and colors from pearl white to fluo green. Twelve styles to choose from: fish it steady, vertical or hopping near the bottom.",
+      es: "Señuelo blando de caucho con cola en T, montado en cabeza plomada con anzuelo simple: listo para pescar. Su nado ondulante y vibrante imita un pececillo herido — un desencadenante mortal para perca, lucio y bass. Cuerpo resistente de 75-85 mm (~9,5 g), ojo 3D realista y colores del blanco nacarado al verde flúor. Doce estilos a elegir: úsalo en lineal, vertical o a tirones cerca del fondo."
+    },
+  },
+  {
+    id: 'ali-4', category: 'gear', rating: 4.7, reviews: 510, badge: null, sku: '',
+    /* Prix de base CAD ÷1.37 ; port 2,87 $ (gratuit pour 100 pcs) */
+    variants: [
+      { label: '15 pièces',  usd: 2.64,  ship: 2.09 },
+      { label: '25 pièces',  usd: 3.88,  ship: 2.09 },
+      { label: '50 pièces',  usd: 7.34,  ship: 2.09 },
+      { label: '100 pièces', usd: 15.71, ship: 0 },
+    ],
+    photos: ['ali4-1.webp','ali4-2.webp','ali4-3.webp','ali4-4.webp','ali4-5.webp','ali4-6.webp','ali4-7.webp','ali4-8.webp','ali4-9.webp','ali4-10.webp','ali4-11.webp','ali4-12.webp','ali4-13.webp','ali4-14.webp','ali4-15.webp','ali4-16.webp','ali4-17.webp','ali4-18.webp','ali4-19.webp'],
+    name: {
+      fr: 'Émerillons à 3 voies en acier inoxydable (taille 8)',
+      en: 'Three-Way Stainless Steel Swivels (size 8)',
+      es: 'Esmerillones de 3 vías de acero inoxidable (talla 8)'
+    },
+    desc: {
+      fr: 'Connecteurs anti-vrillage pour montages à 2 lignes — lots de 15 à 100.',
+      en: 'Anti-twist connectors for two-line rigs — packs of 15 to 100.',
+      es: 'Conectores antigiro para montajes de 2 líneas — lotes de 15 a 100.'
+    },
+    long: {
+      fr: "Émerillons à trois voies à joint triangulaire en acier inoxydable : le connecteur indispensable pour les montages à empile (ligne principale + bas de ligne + plomb). Rotation fluide qui élimine le vrillage, résistance éprouvée pour la pêche au poisson-chat, au jigging de fond et aux montages dérivants. Taille 8, finition anticorrosion pour l'eau douce et salée. Offerts en lots de 15, 25, 50 ou 100 pièces — le format 100 pièces est le plus économique.",
+      en: "Three-way triangle-joint swivels in stainless steel: the must-have connector for dropper rigs (main line + leader + sinker). Smooth rotation that kills line twist, proven strength for catfishing, bottom jigging and drift rigs. Size 8, corrosion-resistant finish for fresh and salt water. Available in packs of 15, 25, 50 or 100 — the 100-piece pack is the best value.",
+      es: "Esmerillones de tres vías con unión triangular en acero inoxidable: el conector imprescindible para montajes con bajos (línea madre + bajo + plomo). Rotación fluida que elimina el retorcido, resistencia probada para el siluro, el jigging de fondo y los montajes a la deriva. Talla 8, acabado anticorrosión para agua dulce y salada. En lotes de 15, 25, 50 o 100 piezas — el de 100 es el más económico."
+    },
+  },
 ];
 
 /* Image principale = 1ʳᵉ photo de la galerie */
