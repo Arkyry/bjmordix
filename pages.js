@@ -313,3 +313,4 @@ const PAGES = {
   }
 
 };
+<link rel="icon" type="image/png" href="/favicon-32x32">
